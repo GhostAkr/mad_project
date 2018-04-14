@@ -51,6 +51,7 @@ private:
     size_t n_of_lines;
     size_t n_of_cols;
     SparseMatrix<Game_object> field;
+
 public:
     game_map(string map_path);
 };
