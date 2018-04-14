@@ -37,15 +37,17 @@ public:
 
 class game_map {
 private:
+    size_t n_of_lines;
+    size_t n_of_cols;
     vector<vector<string>> field;
 public:
-    game_map();
+    game_map(string map_path);
 };
 
 class battle {
 public:
     int fighting(vector<string> chosen_actions);
-    int move(character& person);
+    int move(character& person, size_t new_xcoord, size_t new_ycoord);
     // int play_card(); [LATER]
 };
 

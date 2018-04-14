@@ -21,6 +21,6 @@ size_t character_type::get_ycoord() {
 
 int character_type::set_coords(size_t new_xcoord, size_t new_ycoord) {
     xcoord = new_xcoord;
-    ycoord = new_ycoord; 
-    return 0; 
+    ycoord = new_ycoord;
+    return 0;
 }
