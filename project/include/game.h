@@ -15,7 +15,8 @@ protected:
 public:
     int get_hp();
     int set_hp(int new_hp);
-    int get_coords();
+    size_t get_xcoord();
+    size_t get_ycoord();
     int set_coords(size_t new_xcoord, size_t new_ycoord);
 };
 
