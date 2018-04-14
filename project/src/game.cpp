@@ -8,7 +8,7 @@ int character_type::get_hp() {
 
 int character_type::set_hp(int new_hp) {
     hp = new_hp;
-    return 1;
+    return 0;
 }
 
 size_t character_type::get_xcoord() {
@@ -22,5 +22,5 @@ size_t character_type::get_ycoord() {
 int character_type::set_coords(size_t new_xcoord, size_t new_ycoord) {
     xcoord = new_xcoord;
     ycoord = new_ycoord; 
-    return 1; 
+    return 0; 
 }
