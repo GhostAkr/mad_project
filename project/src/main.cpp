@@ -1,4 +1,5 @@
 #include <iostream>
+#include "game.h"
 
 using std::cout;
 using std::endl;
