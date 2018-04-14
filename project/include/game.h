@@ -1,10 +1,21 @@
 #ifndef PROJECT_INCLUDE_GAME_H_
 #define PROJECT_INCLUDE_GAME_H_
 
+#include <iostream>
+#include <string> 
+#include <fstream>
 #include <vector>
+
+#include "../src/SparseMatrix.cpp"
 
 using std::vector;
 using std::string;
+
+enum Game_object
+{
+    PLAYER=1,
+    ENEMY
+};
 
 class character_type {
 protected:
@@ -37,15 +48,17 @@ public:
 
 class game_map {
 private:
-    vector<vector<string>> field;
+    size_t n_of_lines;
+    size_t n_of_cols;
+    SparseMatrix<Game_object> field;
 public:
-    game_map();
+    game_map(string map_path);
 };
 
 class battle {
 public:
     int fighting(vector<string> chosen_actions);
-    int move(character& person);
+    int move(character& person, size_t new_xcoord, size_t new_ycoord);
     // int play_card(); [LATER]
 };
 
