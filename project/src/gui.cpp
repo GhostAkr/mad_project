@@ -22,8 +22,8 @@ int draw_map::drawing(sf::RenderWindow& win) {
 	s_map.setTexture(map_texture);//заливаем текстуру спрайтом
     for (int i = 0; i < map_height; i++) {
         for (int j = 0; j < map_width; j++) {
-            s_map.setTextureRect(sf::IntRect(0, 0, 32, 32));
-            s_map.setPosition(j * 32, i * 32);
+            s_map.setTextureRect(sf::IntRect(0, 0, 50, 50));
+            s_map.setPosition(j * 50, i * 50);
             win.draw(s_map);
         }
     }
