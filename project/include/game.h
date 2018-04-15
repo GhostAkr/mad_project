@@ -5,7 +5,6 @@
 #include <string>
 #include <fstream>
 #include <vector>
-
 #include "../src/SparseMatrix.cpp"
 
 using std::vector;

@@ -1,4 +1,4 @@
-#include "../include/game.h"
+#include "game.h"
 
 int character_type::get_hp() {
     return hp;

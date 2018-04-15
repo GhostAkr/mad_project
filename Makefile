@@ -7,7 +7,8 @@ HDRS = \
 SRCS = \
        project/src/main.cpp \
        project/src/game.cpp \
-       project/src/SparseMatrix.cpp
+       project/src/SparseMatrix.cpp \
+	   project/src/gui.cpp
 
 .PHONY: all clean
 

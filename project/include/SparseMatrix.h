@@ -6,9 +6,9 @@
  * @link     https://github.com/uestla/Sparse-Matrix
  */
 
-#ifndef __SPARSEMATRIX_H__
+#ifndef _SPARSEMATRIX_H_
 
-	#define	__SPARSEMATRIX_H__
+	#define	_SPARSEMATRIX_H_
 
 	#include <vector>
 	#include <iostream>
@@ -23,7 +23,7 @@
 		public:
 
 			// === CREATION ==============================================
-
+			SparseMatrix();
 			SparseMatrix(int n); // square matrix n×n
 			SparseMatrix(int rows, int columns); // general matrix
 
