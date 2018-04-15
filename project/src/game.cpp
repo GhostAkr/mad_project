@@ -31,10 +31,22 @@ game_map::game_map(string map_path) : field(1) {
     infile >> n_of_lines >> n_of_cols;
     field = SparseMatrix<Game_object>(n_of_lines, n_of_cols);
     size_t temp;
-    size_t temp_x; 
+    size_t temp_x;
     size_t temp_y;
     while(infile >> temp_x >> temp_y >> temp) {
         field.set(Game_object(temp), temp_x + 1, temp_y + 1);
     }
     infile.close();
+}
+
+size_t game_map::get_n_of_lines() {
+    return n_of_lines;
+}
+
+size_t game_map::get_n_of_cols() {
+    return n_of_cols;
+}
+
+SparseMatrix<Game_object> game_map::get_field() {
+    return field;
 }

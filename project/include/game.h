@@ -2,7 +2,7 @@
 #define PROJECT_INCLUDE_GAME_H_
 
 #include <iostream>
-#include <string> 
+#include <string>
 #include <fstream>
 #include <vector>
 
@@ -54,6 +54,9 @@ private:
 
 public:
     game_map(string map_path);
+    size_t get_n_of_lines();
+    size_t get_n_of_cols();
+    SparseMatrix<Game_object> get_field();
 };
 
 class battle {
