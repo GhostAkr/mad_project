@@ -2,10 +2,9 @@
 #define PROJECT_INCLUDE_GAME_H_
 
 #include <iostream>
-#include <string> 
+#include <string>
 #include <fstream>
 #include <vector>
-
 #include "../src/SparseMatrix.cpp"
 
 using std::vector;
@@ -42,8 +41,11 @@ class npc : public character_type {
 class character {
 private:
     character_type* person;
+    Game_object type;
 public:
-    character();
+    character(Game_object obj);
+    character_type*get();
+    Game_object get_type();
 };
 
 class game_map {
@@ -54,12 +56,17 @@ private:
 
 public:
     game_map(string map_path);
+    size_t get_n_of_lines();
+    size_t get_n_of_cols();
+    void set(Game_object obj, size_t new_xcoord, size_t new_ycoord);
+    Game_object get(size_t xcoord,size_t ycoord);
 };
 
 class battle {
 public:
+    battlle();
     int fighting(vector<string> chosen_actions);
-    int move(character& person, size_t new_xcoord, size_t new_ycoord);
+    int move(character& person, game_map& map, size_t new_xcoord, size_t new_ycoord);
     // int play_card(); [LATER]
 };
 
