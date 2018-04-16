@@ -7,12 +7,11 @@ using std::cout;
 using std::endl;
 
 int main(/*int argc, const char** argv*/) {
-
-    game_map field("/mnt/d/test-map");
-    draw_map draw_field(field);
     sf::RenderWindow window(sf::VideoMode(800, 600), "MAD");
+    game_map field("/mnt/d/test-map");
 	while (window.isOpen())
 	{
+        /*action_window act_win(window, field);*/
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -20,7 +19,6 @@ int main(/*int argc, const char** argv*/) {
 				window.close();
 		}
 		window.clear();
-        draw_field.drawing(window);
 		window.display();
 	}
 	return 0;
