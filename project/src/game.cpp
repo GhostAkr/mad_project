@@ -28,23 +28,25 @@ game_map::game_map(string map_path) : field(1) {
     if (!infile) {
         cout << "ERROR!!!" << endl;
     }
-    size_t amount;
-    infile >> n_of_lines >> n_of_cols>>amount;
+    
+    infile >> n_of_lines >> n_of_cols;
     field = SparseMatrix<Game_object>(n_of_lines, n_of_cols);
     size_t temp;
     size_t temp_x;
     size_t temp_y;
 
-    // while(infile >> temp_x >> temp_y >> temp) {
-    //     field.set(Game_object(temp), temp_x + 1, temp_y + 1);
-    // }
-    for (size_t i = 0; i < amount; ++i) {
-      infile >> temp_x >> temp_y >> temp;
-      field.set(Game_object(temp), temp_x + 1, temp_y + 1);   
+    while(infile >> temp_x >> temp_y >> temp) {
+        field.set(Game_object(temp), temp_y + 1, temp_x + 1);
     }
-
+    cout << temp_x << temp_y << endl;
     infile.close();
     cout << field << endl;
+    cout << endl;
+}
+
+void game_map::cout_field() {
+	cout << field << endl;
+	cout << endl;
 }
 
 size_t game_map::get_n_of_lines() {
@@ -56,28 +58,15 @@ size_t game_map::get_n_of_cols() {
 }
 
 void game_map::set(Game_object obj, size_t new_xcoord, size_t new_ycoord) {
-  field.set(obj,new_xcoord,new_ycoord);
+  	cout << new_xcoord << " " << new_ycoord << endl;
+  	field.set(obj,new_ycoord + 1,new_xcoord + 1);
 }
 
 Game_object game_map::get(size_t xcoord,size_t ycoord) {
-  Game_object cell_status = field.get(xcoord,ycoord);
+  Game_object cell_status = field.get(ycoord + 1,xcoord + 1);
   return cell_status;
 }
 
-
-character::character (Game_object obj) {
-  switch(obj) {
-    case PLAYER:
-      person = new player();
-      break;
-  
-    case ENEMY:
-      person = new npc ();
-      break;
-  }
-  type = obj;
-
-}
 character_type *character::get() {
   return person;
 }
@@ -86,9 +75,41 @@ Game_object character::get_type()
 {
   return type;
 }
+
+player::player(string map_path_player) {
+ifstream infile(map_path_player);
+if (!infile) {
+    cout << "ERROR!!!" << endl;
+}
+infile >> xcoord >> ycoord;	
+
+}
+
+npc::npc(string map_path_npc) {
+ifstream infile(map_path_npc);
+if (!infile) {
+    cout << "ERROR!!!" << endl;
+}	
+infile >> xcoord >> ycoord;
+}
+
+character::character (Game_object obj,string map_path_player_or_npc) {			
+  switch(obj) {
+    case PLAYER:
+      person = new player(map_path_player_or_npc);
+      break;
+  
+    case ENEMY:
+      person = new npc (map_path_player_or_npc);
+      break;
+  }
+  type = obj;
+
+}
+
 battle::battle(){};
 int battle::move(character& person, game_map& map, size_t new_xcoord, size_t new_ycoord) {
-  if ((new_xcoord == map.get_n_of_cols()-1) and (new_ycoord == map.get_n_of_lines()-1)) {
+  if ((new_xcoord < map.get_n_of_cols()-1) and (new_ycoord < map.get_n_of_lines()-1) and (new_xcoord > 0) and (new_ycoord > 0)) {
     size_t x = person.get()->get_xcoord();
     size_t y = person.get()->get_ycoord();
     Game_object obj_new = map.get(new_xcoord,new_ycoord);

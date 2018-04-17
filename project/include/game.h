@@ -31,10 +31,14 @@ public:
 };
 
 class player : public character_type {
+public:
+    player(string map_path_player);
 
 };
 
 class npc : public character_type {
+public:
+    npc(string map_path_npc);
 
 };
 
@@ -43,7 +47,7 @@ private:
     character_type* person;
     Game_object type;
 public:
-    character(Game_object obj);
+    character(Game_object obj,string map_path_player_or_npc);
     character_type*get();
     Game_object get_type();
 };
@@ -60,11 +64,12 @@ public:
     size_t get_n_of_cols();
     void set(Game_object obj, size_t new_xcoord, size_t new_ycoord);
     Game_object get(size_t xcoord,size_t ycoord);
+    void cout_field();
 };
 
 class battle {
 public:
-    battlle();
+    battle();
     int fighting(vector<string> chosen_actions);
     int move(character& person, game_map& map, size_t new_xcoord, size_t new_ycoord);
     // int play_card(); [LATER]
