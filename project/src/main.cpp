@@ -8,6 +8,7 @@ using std::cout;
 using std::endl;
 
 int main(/*int argc, const char** argv*/) {
+    Clock clock;
     sf::RenderWindow window(sf::VideoMode(800, 600), "MAD");
     Vector2u win_coords = window.getSize();
     window.setVerticalSyncEnabled(true);
@@ -19,9 +20,12 @@ int main(/*int argc, const char** argv*/) {
     game_map field("/mnt/d/test-map");
     bool scroll_anim = false;
     size_t scroll_coord = win_coords.y + 10;
-    double scroll_speed = 100.0;
+    //double scroll_speed = 100.0;
 	while (window.isOpen())
 	{
+        float tick = clock.getElapsedTime().asMicroseconds(); //дать прошедшее время в микросекундах
+        clock.restart();
+        tick = tick/100;
         window.draw(bgSprite); //background
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -39,7 +43,7 @@ int main(/*int argc, const char** argv*/) {
         if (scroll_anim) {
             if (scroll_coord > 20) {
                 scroll.draw_scroll(window, scroll_coord);
-                scroll_coord -= scroll_speed;
+                scroll_coord -= 0.1 * tick;
             } else {
                 scroll_anim = false;
             }

@@ -5,9 +5,11 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "game.h"
+#include "cards.h"
 
 using std::vector;
 using std::string;
+using namespace sf;
 
 enum Action_Button {
     VOID,
@@ -26,11 +28,14 @@ public:
 
 class planning {
 private:
+    Texture scrollTexture;
+    Sprite scrollSprite;
     vector<int> chosen_actions;  // 6 выбранных действий
     vector<int> chosen_cards;  // 3 выбранные способности
 public:
+    planning();
     vector<int> get_chosen_actions();
-    int draw_scroll(sf::RenderWindow& window, size_t ycoord);  // Анимация выезжающего свитка
+    int draw_scroll(sf::RenderWindow& window, size_t ycoord/*, vector<CardID> avalible_cards*/);  // Анимация выезжающего свитка
     int get_button(sf::RenderWindow& window);  // Считывает нажатие на кнопку на свитке
     /*Заполняется chosen_cards*/
     int remove_scroll(sf::RenderWindow& window);  // Анимация уезжающего свитка

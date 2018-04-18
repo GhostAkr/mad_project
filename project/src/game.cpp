@@ -38,10 +38,6 @@ game_map::game_map(string map_path) : field(1) {
     while(infile >> temp_x >> temp_y >> temp) {
         field.set(Game_object(temp), temp_y + 1, temp_x + 1);
     }
-    cout << temp_x << temp_y << endl;
-    infile.close();
-    cout << field << endl;
-    cout << endl;
 }
 
 void game_map::cout_field() {

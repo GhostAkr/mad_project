@@ -73,11 +73,13 @@ Action_Button action_window::get_button(sf::RenderWindow& window) {
     return VOID;
 }
 
-int planning::draw_scroll(sf::RenderWindow& window, size_t ycoord) {
-    Texture scrollTexture;
-    scrollTexture.loadFromFile("images/scroll.png");
-    Sprite scrollSprite(scrollTexture);
+int planning::draw_scroll(sf::RenderWindow& window, size_t ycoord/*, vector<CardID> avalible_cards*/) {
     scrollSprite.setPosition(0, ycoord);
     window.draw(scrollSprite);
     return 0;
+}
+
+planning::planning() {
+    scrollTexture.loadFromFile("images/scroll.png");
+    scrollSprite.setTexture(scrollTexture, true);
 }

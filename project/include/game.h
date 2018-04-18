@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include "cards.h"
 #include "../src/SparseMatrix.cpp"
 
 using std::vector;
@@ -19,7 +20,7 @@ enum Game_object
 class character_type {
 protected:
     size_t xcoord, ycoord;
-    vector<string> avalible_cards;
+    vector<CardID> avalible_cards;
     vector<string> chosen_actions;
     int hp;
 public:
