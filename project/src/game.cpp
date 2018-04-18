@@ -93,7 +93,7 @@ if (!infile) {
 infile >> xcoord >> ycoord;
 }
 
-character::character (Game_object obj,string map_path_player_or_npc) {
+character::character (Game_object obj, string map_path_player_or_npc) {
   switch(obj) {
     case PLAYER:
       person = new player(map_path_player_or_npc);
@@ -104,7 +104,10 @@ character::character (Game_object obj,string map_path_player_or_npc) {
       break;
   }
   type = obj;
+}
 
+character::~character() {
+    delete person;
 }
 
 battle::battle(){};

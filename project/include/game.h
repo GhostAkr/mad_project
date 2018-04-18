@@ -48,6 +48,7 @@ private:
     Game_object type;
 public:
     character(Game_object obj,string map_path_player_or_npc);
+    ~character();
     character_type*get();
     Game_object get_type();
 };
