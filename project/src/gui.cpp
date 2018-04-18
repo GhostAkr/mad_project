@@ -111,3 +111,51 @@ planning::planning(/*vector<CardID> avalible_cards*/) {
     scrollTexture.loadFromFile("images/scroll.png");
     scrollSprite.setTexture(scrollTexture, true);
 }
+
+//NEED TO IMPROVE
+int planning::get_button(sf::RenderWindow& window) {
+    while (true) {
+        if (Mouse::isButtonPressed(Mouse::Left)) {
+            while (true) {
+                if (!Mouse::isButtonPressed(Mouse::Left)) {
+                    break;
+                }
+            }
+            if (IntRect(130, 200, 80, 180).contains(Mouse::getPosition(window))) {
+                cout << "1" << endl;
+                chosen_cards.push_back(1);
+                return 0;
+            }
+            if (IntRect(240, 200, 80, 180).contains(Mouse::getPosition(window))) {
+                cout << "2" << endl;
+                chosen_cards.push_back(2);
+                return 0;
+            }
+            if (IntRect(350, 200, 80, 180).contains(Mouse::getPosition(window))) {
+                cout << "3" << endl;
+                chosen_cards.push_back(3);
+                return 0;
+            }
+            if (IntRect(460, 200, 80, 180).contains(Mouse::getPosition(window))) {
+                cout << "4" << endl;
+                chosen_cards.push_back(4);
+                return 0;
+            }
+            if (IntRect(570, 200, 80, 180).contains(Mouse::getPosition(window))) {
+                cout << "5" << endl;
+                chosen_cards.push_back(5);
+                return 0;
+            }
+        }
+    }
+    return 0;
+}
+//NEED TO IMPROVE
+
+int planning::get_chosen_cards() {
+    for (size_t i = 0; i < 3; i++) {
+        cout << chosen_cards[i] << " ";
+    }
+    cout << endl;
+    return 0;
+}

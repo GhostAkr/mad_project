@@ -37,6 +37,7 @@ private:
 public:
     planning(/*vector<CardID> avalible_cards*/);
     vector<int> get_chosen_actions();
+    int get_chosen_cards();
     int draw_scroll(sf::RenderWindow& window, size_t ycoord);  // Анимация выезжающего свитка
     int get_button(sf::RenderWindow& window);  // Считывает нажатие на кнопку на свитке
     /*Заполняется chosen_cards*/

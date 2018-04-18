@@ -19,6 +19,7 @@ int main(/*int argc, const char** argv*/) {
     bgSprite.setPosition(0, 0);
     game_map field("/mnt/d/test-map");
     bool scroll_anim = false;
+    bool is_scroll = false;
     size_t scroll_coord = win_coords.y + 10;
     // NEED TO IMPROVE
     player warrior("data/player");
@@ -29,7 +30,7 @@ int main(/*int argc, const char** argv*/) {
 	{
         float tick = clock.getElapsedTime().asMicroseconds();
         clock.restart();
-        tick = tick/100;
+        tick = tick/800;
         window.draw(bgSprite); //background
 		sf::Event event;
 		while (window.pollEvent(event))
@@ -52,8 +53,17 @@ int main(/*int argc, const char** argv*/) {
                 scroll_coord -= 0.1 * tick;
             } else {
                 scroll_anim = false;
+                is_scroll = true;
             }
         }
+        if (is_scroll) {
+            cout << "Test" << endl;
+            scroll.get_button(window);
+            scroll.get_button(window);
+            scroll.get_button(window);
+            is_scroll = false;
+        }
+        //scroll.get_chosen_cards();
         scroll.draw_scroll(window, scroll_coord);
 		window.display();
         //window.clear();
