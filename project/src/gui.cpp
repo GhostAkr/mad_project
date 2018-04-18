@@ -61,8 +61,8 @@ action_window::action_window(sf::RenderWindow& window, game_map& field) {
     field_draw.drawing(window);
     buttons beginButton(10, 530, "images/buttons/begin_button.png");
     beginButton.draw_button(window);
-    buttons endButton(230, 530, "images/buttons/end_button.png");
-    endButton.draw_button(window);
+    //buttons endButton(230, 530, "images/buttons/end_button.png");
+    //endButton.draw_button(window);
 }
 
 Action_Button action_window::get_button(sf::RenderWindow& window) {

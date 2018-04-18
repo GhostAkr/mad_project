@@ -69,7 +69,7 @@ int main(/*int argc, const char** argv*/) {
         if (scroll_draw_anim) {
             if (scroll_coord > 20) {
                 scroll.draw_scroll(window, scroll_coord);
-                scroll_coord -= 0.1 * tick;
+                scroll_coord -= 15;// * tick;
             } else {
                 scroll_draw_anim = false;
                 is_scroll = true;
@@ -83,13 +83,16 @@ int main(/*int argc, const char** argv*/) {
             is_scroll = false;
             scroll_remove_anim = true;
         }
+        //float tick1 = clock.getElapsedTime().asMicroseconds();
+        //clock.restart();
+        //tick1 = tick1/800;
         //scroll.get_chosen_cards();
         if (!is_action_window) {
             scroll.draw_scroll(window, scroll_coord);
         }
         if (scroll_remove_anim) {
             if (scroll_coord < 610) {
-                scroll_coord += 0.1 * tick;
+                scroll_coord += 15;// * tick;
                 scroll.remove_scroll(window, scroll_coord);
             } else {
                 scroll_remove_anim = false;
