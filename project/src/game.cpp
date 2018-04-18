@@ -28,7 +28,7 @@ game_map::game_map(string map_path) : field(1) {
     if (!infile) {
         cout << "ERROR!!!" << endl;
     }
-    
+
     infile >> n_of_lines >> n_of_cols;
     field = SparseMatrix<Game_object>(n_of_lines, n_of_cols);
     size_t temp;
@@ -81,7 +81,7 @@ ifstream infile(map_path_player);
 if (!infile) {
     cout << "ERROR!!!" << endl;
 }
-infile >> xcoord >> ycoord;	
+infile >> xcoord >> ycoord;
 
 }
 
@@ -89,16 +89,16 @@ npc::npc(string map_path_npc) {
 ifstream infile(map_path_npc);
 if (!infile) {
     cout << "ERROR!!!" << endl;
-}	
+}
 infile >> xcoord >> ycoord;
 }
 
-character::character (Game_object obj,string map_path_player_or_npc) {			
+character::character (Game_object obj,string map_path_player_or_npc) {
   switch(obj) {
     case PLAYER:
       person = new player(map_path_player_or_npc);
       break;
-  
+
     case ENEMY:
       person = new npc (map_path_player_or_npc);
       break;
@@ -119,17 +119,9 @@ int battle::move(character& person, game_map& map, size_t new_xcoord, size_t new
           map.set(Game_object(0), x, y);
           map.set(person.get_type(), new_xcoord, new_ycoord);
         }
-    }  
+    }
   }
-  return 0; 
-}
-
-size_t game_map::get_n_of_lines() {
-    return n_of_lines;
-}
-
-size_t game_map::get_n_of_cols() {
-    return n_of_cols;
+  return 0;
 }
 
 SparseMatrix<Game_object> game_map::get_field() {
