@@ -94,9 +94,11 @@ character::character (Game_object obj, string map_path_player_or_npc) {
     case PLAYER:
       person = new player(map_path_player_or_npc);
       break;
-
     case ENEMY:
       person = new npc (map_path_player_or_npc);
+      break;
+    case WALL:
+      cout << "Error" << endl;
       break;
   }
   type = obj;

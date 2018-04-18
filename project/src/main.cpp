@@ -17,7 +17,7 @@ int main(/*int argc, const char** argv*/) {
     bgTexture.loadFromFile("images/background.jpg");
     Sprite bgSprite(bgTexture);
     bgSprite.setPosition(0, 0);
-    game_map field("/mnt/d/test-map");
+    game_map field("data/map");
     bool scroll_draw_anim = false;
     bool scroll_remove_anim = false;
     bool is_scroll = false;

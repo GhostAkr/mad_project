@@ -13,21 +13,30 @@ draw_map::draw_map(game_map& map_object) {
     map_height = map_object.get_n_of_lines();
     map_width = map_object.get_n_of_cols();
     TileMap = map_object.get_field();
-
 }
 
 int draw_map::drawing(sf::RenderWindow& win) {
-    sf::Image map_image;
-	map_image.loadFromFile("images/empty_cell.png");
-	sf::Texture map_texture;
-	map_texture.loadFromImage(map_image);
-	sf::Sprite s_map;
-	s_map.setTexture(map_texture);
-    for (int i = 0; i < map_height; i++) {
-        for (int j = 0; j < map_width; j++) {
-            s_map.setTextureRect(sf::IntRect(0, 0, 50, 50));
-            s_map.setPosition(j * 50, i * 50);
-            win.draw(s_map);
+    //sf::Image map_image;
+	//map_image.loadFromFile("images/empty_cell.png");
+	//sf::Texture map_texture;
+	//map_texture.loadFromImage(map_image);
+	//sf::Sprite s_map;
+	//s_map.setTexture(map_texture);
+    for (size_t i = 0; i < map_height; i++) {
+        for (size_t j = 0; j < map_width; j++) {
+            Texture cellTexture;
+            switch (TileMap.get(i + 1, j + 1)) {
+                case WALL:
+                    cellTexture.loadFromFile("images/wall.png");
+                    break;
+                default:
+                    cellTexture.loadFromFile("images/empty_cell.png");
+                    break;
+            }
+            Sprite cellSprite(cellTexture);
+            cellSprite.setTextureRect(sf::IntRect(0, 0, 50, 50));
+            cellSprite.setPosition(j * 50, i * 50);
+            win.draw(cellSprite);
         }
     }
     return 0;

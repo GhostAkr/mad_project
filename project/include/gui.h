@@ -49,8 +49,8 @@ public:
 
 class draw_map {
 private:
-    int map_height;
-    int map_width;
+    size_t map_height;
+    size_t map_width;
     SparseMatrix<Game_object> TileMap;
 public:
     draw_map(game_map& field);

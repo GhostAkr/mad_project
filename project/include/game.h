@@ -14,7 +14,8 @@ using std::string;
 enum Game_object
 {
     PLAYER=1,
-    ENEMY
+    ENEMY,
+    WALL
 };
 
 class character_type {
