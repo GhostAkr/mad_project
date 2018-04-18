@@ -126,3 +126,14 @@ int battle::move(character& person, game_map& map, size_t new_xcoord, size_t new
 SparseMatrix<Game_object> game_map::get_field() {
     return field;
 }
+
+int player::set_avalible_cards() {
+    for (size_t i = 0; i < 5; i++) {
+        avalible_cards.push_back(FIREBOLT);
+    }
+    return 0;
+}
+
+vector<CardID> player::get_avalible_cards() {
+    return avalible_cards;
+}

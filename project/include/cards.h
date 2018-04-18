@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-//#include "game.h"
 
 using std::string;
 using std::vector;
@@ -24,12 +23,15 @@ protected:
     CardID tag;
     int dmg;
 public:
-    //card(character& pers);
-    card* create_card(CardID tag, size_t x_start, size_t y_start);
+    card* create_card(CardID name);  // For drawing
+    card* create_card(CardID name, size_t x_start, size_t y_start);
+    string get_shirt_image_path();
+    string get_spell_image_path();
 };
 
 class firebolt : public card {
 public:
+    firebolt();  // For drawing
     firebolt(size_t x_start, size_t y_start);
 };
 

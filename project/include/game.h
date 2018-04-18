@@ -34,13 +34,15 @@ public:
 class player : public character_type {
 public:
     player(string map_path_player);
-
+    //NEED TO IMPROVE
+    int set_avalible_cards();
+    //NEED TO IMPROVE
+    vector<CardID> get_avalible_cards();
 };
 
 class npc : public character_type {
 public:
     npc(string map_path_npc);
-
 };
 
 class character {
@@ -50,7 +52,7 @@ private:
 public:
     character(Game_object obj,string map_path_player_or_npc);
     ~character();
-    character_type*get();
+    character_type* get();
     Game_object get_type();
 };
 

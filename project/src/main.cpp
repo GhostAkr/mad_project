@@ -20,10 +20,14 @@ int main(/*int argc, const char** argv*/) {
     game_map field("/mnt/d/test-map");
     bool scroll_anim = false;
     size_t scroll_coord = win_coords.y + 10;
-    //double scroll_speed = 100.0;
+    // NEED TO IMPROVE
+    player warrior("data/player");
+    // NEED TO IMPROVE
+    warrior.set_avalible_cards();
+    // NEED TO IMPROVE
 	while (window.isOpen())
 	{
-        float tick = clock.getElapsedTime().asMicroseconds(); //дать прошедшее время в микросекундах
+        float tick = clock.getElapsedTime().asMicroseconds();
         clock.restart();
         tick = tick/100;
         window.draw(bgSprite); //background
@@ -38,7 +42,9 @@ int main(/*int argc, const char** argv*/) {
         if (act_choice == BEGBTN && scroll_anim == false) {
             scroll_anim = true;
         }
+        // NEED TO IMPROVE
         planning scroll;
+        // NEED TO IMPROVE
         /*Scroll animation*/
         if (scroll_anim) {
             if (scroll_coord > 20) {

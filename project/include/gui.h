@@ -28,14 +28,16 @@ public:
 
 class planning {
 private:
+    Texture card1Texture, card2Texture, card3Texture, card4Texture, card5Texture;
+    Sprite card1Sprite, card2Sprite, card3Sprite, card4Sprite, card5Sprite;
     Texture scrollTexture;
     Sprite scrollSprite;
     vector<int> chosen_actions;  // 6 выбранных действий
     vector<int> chosen_cards;  // 3 выбранные способности
 public:
-    planning();
+    planning(/*vector<CardID> avalible_cards*/);
     vector<int> get_chosen_actions();
-    int draw_scroll(sf::RenderWindow& window, size_t ycoord/*, vector<CardID> avalible_cards*/);  // Анимация выезжающего свитка
+    int draw_scroll(sf::RenderWindow& window, size_t ycoord);  // Анимация выезжающего свитка
     int get_button(sf::RenderWindow& window);  // Считывает нажатие на кнопку на свитке
     /*Заполняется chosen_cards*/
     int remove_scroll(sf::RenderWindow& window);  // Анимация уезжающего свитка
