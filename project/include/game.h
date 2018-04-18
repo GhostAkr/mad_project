@@ -76,11 +76,4 @@ public:
     // int play_card(); [LATER]
 };
 
-class card {
-private:
-    size_t xcoord_start, ycoord_start;
-    string action;
-    vector<string> action_area;
-};
-
 #endif  // PROJECT_INCLUDE_GAME_H_
