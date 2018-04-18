@@ -73,12 +73,12 @@ Game_object character::get_type()
 }
 
 player::player(string map_path_player) {
-ifstream infile(map_path_player);
-if (!infile) {
-    cout << "ERROR!!!" << endl;
-}
-infile >> xcoord >> ycoord;
-
+    ifstream infile(map_path_player);
+    if (!infile) {
+        cout << "ERROR!!!" << endl;
+    }
+    infile >> xcoord >> ycoord;
+    infile.close();
 }
 
 npc::npc(string map_path_npc) {
@@ -107,16 +107,16 @@ character::~character() {
 }
 
 battle::battle(){};
-int battle::move(character& person, game_map& map, size_t new_xcoord, size_t new_ycoord) {
+int battle::move(player& person, game_map& map, size_t new_xcoord, size_t new_ycoord) {
   if ((new_xcoord < map.get_n_of_cols()-1) and (new_ycoord < map.get_n_of_lines()-1) and (new_xcoord > 0) and (new_ycoord > 0)) {
-    size_t x = person.get()->get_xcoord();
-    size_t y = person.get()->get_ycoord();
+    size_t x = person.get_xcoord();
+    size_t y = person.get_ycoord();
     Game_object obj_new = map.get(new_xcoord,new_ycoord);
     if (obj_new == 0) {
         if ((abs((int)x - (int)new_xcoord) + abs((int)y - (int)new_ycoord)) == 1) {
-          person.get()->set_coords(new_xcoord, new_ycoord);
+          person.set_coords(new_xcoord, new_ycoord);
           map.set(Game_object(0), x, y);
-          map.set(person.get_type(), new_xcoord, new_ycoord);
+          map.set(PLAYER, new_xcoord, new_ycoord);
         }
     }
   }
@@ -136,4 +136,24 @@ int player::set_avalible_cards() {
 
 vector<CardID> player::get_avalible_cards() {
     return avalible_cards;
+}
+
+int battle::fighting(int action, player& person, game_map& field) {
+    size_t old_xcoord = person.get_xcoord();
+    size_t old_ycoord = person.get_ycoord();
+    switch (action) {
+        case 0:
+            move(person, field, old_xcoord, old_ycoord - 1);
+            break;
+        case 1:
+            move(person, field, old_xcoord + 1, old_ycoord);
+            break;
+        case 2:
+            move(person, field, old_xcoord, old_ycoord + 1);
+            break;
+        case 3:
+            move(person, field, old_xcoord - 1, old_ycoord);
+            break;
+    }
+    return 0;
 }

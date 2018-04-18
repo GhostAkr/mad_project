@@ -41,8 +41,9 @@ public:
     int draw_scroll(sf::RenderWindow& window, size_t ycoord);  // Анимация выезжающего свитка
     int get_button(sf::RenderWindow& window);  // Считывает нажатие на кнопку на свитке
     /*Заполняется chosen_cards*/
-    int remove_scroll(sf::RenderWindow& window);  // Анимация уезжающего свитка
+    int remove_scroll(sf::RenderWindow& window, size_t ycoord);  // Анимация уезжающего свитка
     int choosing(sf::RenderWindow& window);  // Выбор последовательности действий
+    int draw_options(sf::RenderWindow& window);
     /*Заполняется chosen_actions*/
 };
 
@@ -65,6 +66,11 @@ public:
     Action_Button get_button(sf::RenderWindow& window);  // Считывает нажатие на кнопку
     /*В зависимости от нажатой кнопки вызывает создает необходимый объект
     и вызывает соответствующий метод*/
+};
+
+class pers_anim {
+public:
+    int draw_pers(sf::RenderWindow& window, size_t x, size_t y);
 };
 
 #endif  // PROJECT_INCLUDE_GUI_H_

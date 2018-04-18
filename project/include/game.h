@@ -75,8 +75,8 @@ public:
 class battle {
 public:
     battle();
-    int fighting(vector<string> chosen_actions);
-    int move(character& person, game_map& map, size_t new_xcoord, size_t new_ycoord);
+    int fighting(int action, player& person, game_map& field);
+    int move(player& person, game_map& map, size_t new_xcoord, size_t new_ycoord);
     // int play_card(); [LATER]
 };
 

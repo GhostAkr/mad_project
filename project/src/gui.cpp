@@ -159,3 +159,115 @@ int planning::get_chosen_cards() {
     cout << endl;
     return 0;
 }
+
+int planning::remove_scroll(sf::RenderWindow& window, size_t ycoord) {
+    size_t xcoord = 130;
+    size_t delta_x = 110;
+    size_t delta_y = 200;
+    scrollSprite.setPosition(0, ycoord);
+    card1Sprite.setPosition(xcoord, ycoord + delta_y);
+    card2Sprite.setPosition(xcoord += delta_x, ycoord + delta_y);
+    card3Sprite.setPosition(xcoord += delta_x, ycoord + delta_y);
+    card4Sprite.setPosition(xcoord += delta_x, ycoord + delta_y);
+    card5Sprite.setPosition(xcoord += delta_x, ycoord + delta_y);
+    window.draw(scrollSprite);
+    window.draw(card1Sprite);
+    window.draw(card2Sprite);
+    window.draw(card3Sprite);
+    window.draw(card4Sprite);
+    window.draw(card5Sprite);
+    return 0;
+}
+
+int planning::choosing(sf::RenderWindow& window) {
+    while (true) {
+        if (Keyboard::isKeyPressed(Keyboard::W)) {
+            while (true) {
+                if (!Keyboard::isKeyPressed(Keyboard::W)) {
+                    break;
+                }
+            }
+            cout << "0" << endl;
+            chosen_actions.push_back(0);
+            return 0;
+        }
+        if (Keyboard::isKeyPressed(Keyboard::D)) {
+            while (true) {
+                if (!Keyboard::isKeyPressed(Keyboard::D)) {
+                    break;
+                }
+            }
+            cout << "1" << endl;
+            chosen_actions.push_back(1);
+            return 0;
+        }
+        if (Keyboard::isKeyPressed(Keyboard::S)) {
+            while (true) {
+                if (!Keyboard::isKeyPressed(Keyboard::S)) {
+                    break;
+                }
+            }
+            cout << "2" << endl;
+            chosen_actions.push_back(2);
+            return 0;
+        }
+        if (Keyboard::isKeyPressed(Keyboard::A)) {
+            while (true) {
+                if (!Keyboard::isKeyPressed(Keyboard::A)) {
+                    break;
+                }
+            }
+            cout << "3" << endl;
+            chosen_actions.push_back(3);
+            return 0;
+        }
+        if (Mouse::isButtonPressed(Mouse::Left)) {
+            while (true) {
+                if (!Mouse::isButtonPressed(Mouse::Left)) {
+                    break;
+                }
+            }
+            if (IntRect(510, 10, 80, 180).contains(Mouse::getPosition(window))) {
+                cout << "10" << endl;
+                chosen_actions.push_back(10);
+                return 0;
+            }
+            if (IntRect(510, 200, 80, 180).contains(Mouse::getPosition(window))) {
+                cout << "10" << endl;
+                chosen_actions.push_back(10);
+                return 0;
+            }
+            if (IntRect(510, 390, 80, 180).contains(Mouse::getPosition(window))) {
+                cout << "10" << endl;
+                chosen_actions.push_back(10);
+                return 0;
+            }
+        }
+    }
+    return 0;
+}
+
+int planning::draw_options(sf::RenderWindow& window) {
+    Sprite option1Sprite, option2Sprite, option3Sprite;
+    Texture optionTexture;
+    optionTexture.loadFromFile("images/cards/shirts/firebolt.png");
+    option1Sprite.setTexture(optionTexture, true);
+    option2Sprite.setTexture(optionTexture, true);
+    option3Sprite.setTexture(optionTexture, true);
+    option1Sprite.setPosition(510, 10);
+    option2Sprite.setPosition(510, 200);
+    option3Sprite.setPosition(510, 390);
+    window.draw(option1Sprite);
+    window.draw(option2Sprite);
+    window.draw(option3Sprite);
+    return 0;
+}
+
+int pers_anim::draw_pers(sf::RenderWindow& window, size_t x, size_t y) {
+    Texture persTexture;
+    persTexture.loadFromFile("images/mage.png");
+    Sprite persSprite(persTexture);
+    persSprite.setPosition(x, y);
+    window.draw(persSprite);
+    return 0;
+}
