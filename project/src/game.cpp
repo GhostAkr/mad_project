@@ -123,3 +123,15 @@ int battle::move(character& person, game_map& map, size_t new_xcoord, size_t new
   }
   return 0; 
 }
+
+size_t game_map::get_n_of_lines() {
+    return n_of_lines;
+}
+
+size_t game_map::get_n_of_cols() {
+    return n_of_cols;
+}
+
+SparseMatrix<Game_object> game_map::get_field() {
+    return field;
+}

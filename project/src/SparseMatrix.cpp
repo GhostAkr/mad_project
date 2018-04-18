@@ -8,13 +8,19 @@
 
 #include <vector>
 #include <iostream>
-#include "../include/exceptions.h"
-#include "../include/SparseMatrix.h"
+#include "exceptions.h"
+#include "SparseMatrix.h"
 
 using namespace std;
 
 
 // === CREATION ==============================================
+
+template<typename T>
+SparseMatrix<T>::SparseMatrix()
+{
+	this->construct(1, 1);
+}
 
 template<typename T>
 SparseMatrix<T>::SparseMatrix(int n)

@@ -65,6 +65,7 @@ public:
     void set(Game_object obj, size_t new_xcoord, size_t new_ycoord);
     Game_object get(size_t xcoord,size_t ycoord);
     void cout_field();
+    SparseMatrix<Game_object> get_field();
 };
 
 class battle {
