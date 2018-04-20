@@ -23,6 +23,7 @@ protected:
     CardID tag;
     int dmg;
 public:
+    virtual ~card() {}
     card* create_card(CardID name);
     string get_shirt_image_path();
     string get_spell_image_path();
@@ -31,6 +32,7 @@ public:
 class firebolt : public card {
 public:
     firebolt(size_t x_start, size_t y_start);
+    ~firebolt() {}
 };
 
 #endif  // PROJECT_INCLUDE_CARDS_H_
