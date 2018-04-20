@@ -8,10 +8,10 @@ using std::cout;
 using std::endl;
 
 int main(/*int argc, const char** argv*/) {
+    /*
     sf::RenderWindow window(sf::VideoMode(800, 600), "MAD");
     Vector2u win_coords = window.getSize();
     window.setVerticalSyncEnabled(true);
-    /*background*/
     Texture bgTexture;
     bgTexture.loadFromFile("images/background.jpg");
     Sprite bgSprite(bgTexture);
@@ -35,7 +35,6 @@ int main(/*int argc, const char** argv*/) {
             scroll_anim = true;
         }
         planning scroll;
-        /*Scroll animation*/
         if (scroll_anim) {
             if (scroll_coord > 20) {
                 scroll.draw_scroll(window, scroll_coord);
@@ -48,5 +47,6 @@ int main(/*int argc, const char** argv*/) {
 		window.display();
         //window.clear();
 	}
+    */
 	return 0;
 }

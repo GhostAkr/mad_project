@@ -16,40 +16,32 @@ enum Game_object
     ENEMY
 };
 
-class character_type {
+class character {
 protected:
     size_t xcoord, ycoord;
     vector<string> avalible_cards;
     vector<string> chosen_actions;
     int hp;
 public:
+    static character* create_character(Game_object character_type);
     int get_hp();
     int set_hp(int new_hp);
     size_t get_xcoord();
     size_t get_ycoord();
     int set_coords(size_t new_xcoord, size_t new_ycoord);
+    virtual ~character() {}
 };
 
-class player : public character_type {
+class player : public character{
 public:
     player(string map_path_player);
-
+    ~player() {}
 };
 
-class npc : public character_type {
+class npc : public character {
 public:
     npc(string map_path_npc);
-
-};
-
-class character {
-private:
-    character_type* person;
-    Game_object type;
-public:
-    character(Game_object obj,string map_path_player_or_npc);
-    character_type*get();
-    Game_object get_type();
+    ~npc() {}
 };
 
 class game_map {
@@ -72,7 +64,7 @@ class battle {
 public:
     battle();
     int fighting(vector<string> chosen_actions);
-    int move(character& person, game_map& map, size_t new_xcoord, size_t new_ycoord);
+    int move(character* person, game_map& map, size_t new_xcoord, size_t new_ycoord);
     // int play_card(); [LATER]
 };
 
