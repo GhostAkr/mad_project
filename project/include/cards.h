@@ -9,7 +9,6 @@ using std::string;
 using std::vector;
 using std::pair;
 
-
 enum CardID {
     FIREBOLT = 10
 };
@@ -24,13 +23,16 @@ protected:
     int dmg;
 public:
     virtual ~card() {}
-    card* create_card(CardID name);
-    string get_shirt_image_path();
+    static card* create_card(CardID name);
+    static card* create_card(CardID name, size_t x_start, size_t y_start);
+    virtual string get_shirt_image_path() = 0;
     string get_spell_image_path();
 };
 
 class firebolt : public card {
 public:
+    string get_shirt_image_path();
+    firebolt();
     firebolt(size_t x_start, size_t y_start);
     ~firebolt() {}
 };

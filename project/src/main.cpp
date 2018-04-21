@@ -8,6 +8,10 @@ using std::cout;
 using std::endl;
 
 int main(/*int argc, const char** argv*/) {
+    gui game;
+    game.run();
+    //character* person = character::create_character(PLAYER);
+    //delete person;
     /*
     sf::RenderWindow window(sf::VideoMode(800, 600), "MAD");
     Vector2u win_coords = window.getSize();

@@ -25,7 +25,7 @@ int character::set_coords(size_t new_xcoord, size_t new_ycoord) {
     return 0;
 }
 
-character* character::create_character(Game_object character_type) {
+character* create_character(Game_object character_type) {
     character* ret;
     switch (character_type) {
         case PLAYER:
@@ -33,6 +33,8 @@ character* character::create_character(Game_object character_type) {
             break;
         case ENEMY:
             ret = new npc("data/npc");
+            break;
+        default:
             break;
     };
     return ret;

@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include "../src/SparseMatrix.cpp"
+#include "cards.h"
 
 using std::vector;
 using std::string;
@@ -13,14 +14,15 @@ using std::string;
 enum Game_object
 {
     PLAYER=1,
-    ENEMY
+    ENEMY,
+    WALL
 };
 
 class character {
 protected:
     size_t xcoord, ycoord;
-    vector<string> avalible_cards;
-    vector<string> chosen_actions;
+    vector<int> avalible_cards;
+    vector<int> chosen_actions;
     int hp;
 public:
     static character* create_character(Game_object character_type);
@@ -66,13 +68,6 @@ public:
     int fighting(vector<string> chosen_actions);
     int move(character* person, game_map& map, size_t new_xcoord, size_t new_ycoord);
     // int play_card(); [LATER]
-};
-
-class card {
-private:
-    size_t xcoord_start, ycoord_start;
-    string action;
-    vector<string> action_area;
 };
 
 #endif  // PROJECT_INCLUDE_GAME_H_

@@ -1,6 +1,5 @@
 #include <iostream>
 #include "cards.h"
-#include "game.h"
 
 firebolt::firebolt(size_t x_start, size_t y_start) {
     xcoord_start = x_start;
@@ -14,6 +13,11 @@ firebolt::firebolt(size_t x_start, size_t y_start) {
     }
 }
 
+firebolt::firebolt() {
+    shirt_image_path = "images/cards/shirts/firebolt.png";
+    tag = FIREBOLT;
+}
+
 card* card::create_card(CardID name, size_t x_start, size_t y_start) {
     card* ret;
     switch(name) {
@@ -24,7 +28,19 @@ card* card::create_card(CardID name, size_t x_start, size_t y_start) {
     return ret;
 }
 
-string card::get_shirt_image_path() {
+card* card::create_card(CardID name) {
+    card* ret;
+    switch(name) {
+        case FIREBOLT:
+            ret = new firebolt();
+            break;
+        default:
+            break;
+    }
+    return ret;
+}
+
+string firebolt::get_shirt_image_path() {
     return shirt_image_path;
 }
 

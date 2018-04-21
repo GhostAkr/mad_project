@@ -8,6 +8,7 @@ SRCS = \
        project/src/main.cpp \
        project/src/game.cpp \
        project/src/SparseMatrix.cpp \
+	   project/src/cards.cpp \
 	   project/src/gui.cpp
 
 .PHONY: all clean
