@@ -24,7 +24,7 @@ protected:
 public:
     virtual ~card() {}
     static card* create_card(CardID name);
-    static card* create_card(CardID name, size_t x_start, size_t y_start);
+    static card* create_card(CardID name, size_t x_start, size_t y_start, int direction);
     virtual string get_shirt_image_path() = 0;
     string get_spell_image_path();
 };
@@ -33,7 +33,7 @@ class firebolt : public card {
 public:
     string get_shirt_image_path();
     firebolt();
-    firebolt(size_t x_start, size_t y_start);
+    firebolt(size_t x_start, size_t y_start, int direction);
     ~firebolt() {}
 };
 
