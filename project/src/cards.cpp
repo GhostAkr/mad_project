@@ -1,6 +1,32 @@
 #include <iostream>
 #include "cards.h"
 
+//CARDS METHODS
+
+card* card::create_card(CardID name) {
+    card* ret;
+    switch(name) {
+        case FIREBOLT:
+            ret = new firebolt();
+            break;
+        default:
+            break;
+    }
+    return ret;
+}
+
+card* card::create_card(CardID name, size_t x_start, size_t y_start) {
+    card* ret;
+    switch(name) {
+        case FIREBOLT:
+            ret = new firebolt(x_start, y_start);
+            break;
+    }
+    return ret;
+}
+
+//FIREBOLT METHODS
+
 firebolt::firebolt(size_t x_start, size_t y_start) {
     xcoord_start = x_start;
     ycoord_start = y_start;
@@ -16,28 +42,6 @@ firebolt::firebolt(size_t x_start, size_t y_start) {
 firebolt::firebolt() {
     shirt_image_path = "images/cards/shirts/firebolt.png";
     tag = FIREBOLT;
-}
-
-card* card::create_card(CardID name, size_t x_start, size_t y_start) {
-    card* ret;
-    switch(name) {
-        case FIREBOLT:
-            ret = new firebolt(x_start, y_start);
-            break;
-    }
-    return ret;
-}
-
-card* card::create_card(CardID name) {
-    card* ret;
-    switch(name) {
-        case FIREBOLT:
-            ret = new firebolt();
-            break;
-        default:
-            break;
-    }
-    return ret;
 }
 
 string firebolt::get_shirt_image_path() {
