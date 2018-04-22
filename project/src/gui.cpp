@@ -221,6 +221,13 @@ int bardess_draw::drawCurrent(sf::RenderTarget& target) {
 }
 
 /*
+=======
+#include <SFML/System/Vector2.hpp>
+#include "gui.h"
+
+using namespace sf;
+
+>>>>>>> 1ee49575245c38a7dc10d62ee40ebe6034df25e1
 vector<int> planning::get_chosen_actions() {
     return chosen_actions;
 }
@@ -297,4 +304,5 @@ int planning::draw_scroll(sf::RenderWindow& window, size_t ycoord) {
     window.draw(scrollSprite);
     return 0;
 }
+<<<<<<< HEAD
 */

@@ -151,3 +151,15 @@ int battle::play_card(CardID tag, size_t x, size_t y, int direction, player& pla
     }
     return 0;
 }
+
+size_t game_map::get_n_of_lines() {
+    return n_of_lines;
+}
+
+size_t game_map::get_n_of_cols() {
+    return n_of_cols;
+}
+
+SparseMatrix<Game_object> game_map::get_field() {
+    return field;
+}

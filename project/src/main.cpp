@@ -2,14 +2,13 @@
 #include <iostream>
 #include "game.h"
 #include "gui.h"
-#include <iostream>
-#include <memory>
 
 using namespace sf;
 using std::cout;
 using std::endl;
 
 int main(/*int argc, const char** argv*/) {
+
     gui game;
     game.run();
     //character* person = character::create_character(PLAYER);
@@ -18,6 +17,12 @@ int main(/*int argc, const char** argv*/) {
     sf::RenderWindow window(sf::VideoMode(800, 600), "MAD");
     Vector2u win_coords = window.getSize();
     window.setVerticalSyncEnabled(true);
+
+    sf::RenderWindow window(sf::VideoMode(800, 600), "MAD");
+    Vector2u win_coords = window.getSize();
+    window.setVerticalSyncEnabled(true);
+    /*background*/
+    /*
     Texture bgTexture;
     bgTexture.loadFromFile("images/background.jpg");
     Sprite bgSprite(bgTexture);
@@ -41,6 +46,7 @@ int main(/*int argc, const char** argv*/) {
             scroll_anim = true;
         }
         planning scroll;
+
         if (scroll_anim) {
             if (scroll_coord > 20) {
                 scroll.draw_scroll(window, scroll_coord);
@@ -62,8 +68,5 @@ int main(/*int argc, const char** argv*/) {
     // battle battle1;
     // battle1.play_card(FIREBOLT,7,4,2,player1,npc1); //ход игрока1
     // cout << npc1.get_hp() << endl;
-
-
-
 	return 0;
 }

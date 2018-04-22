@@ -5,8 +5,6 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "game.h"
-//#include "../src/cards.cpp"
-
 using std::vector;
 using std::string;
 
@@ -122,8 +120,14 @@ public:
     vector<int> get_chosen_actions();
     int draw_scroll(sf::RenderWindow& window, size_t ycoord);  // Анимация выезжающего свитка
     int get_button(sf::RenderWindow& window);  // Считывает нажатие на кнопку на свитке
+<<<<<<< HEAD
     int remove_scroll(sf::RenderWindow& window);  // Анимация уезжающего свитка
     int choosing(sf::RenderWindow& window);  // Выбор последовательности действий
+=======
+    /*Заполняется chosen_cards*/
+    int remove_scroll(sf::RenderWindow& window);  // Анимация уезжающего свитка
+    int choosing(sf::RenderWindow& window);  // Выбор последовательности действий
+    /*Заполняется chosen_actions*/
 };
 
 class draw_map {
@@ -139,8 +143,12 @@ public:
 class action_window {
 public:
     action_window(sf::RenderWindow& window, game_map& field);  // Рисует поле и кнопки
+    /*Кнопки рисовать через класс buttons*/
+    /*Карту рисовать через класс draw_map*/
+    /*Позднее сюда можно добавить методы рисования дополнительных элементов*/
     Action_Button get_button(sf::RenderWindow& window);  // Считывает нажатие на кнопку
+    /*В зависимости от нажатой кнопки вызывает создает необходимый объект
+    и вызывает соответствующий метод*/
 };
-*/
 
 #endif  // PROJECT_INCLUDE_GUI_H_
