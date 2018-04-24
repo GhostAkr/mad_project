@@ -101,6 +101,8 @@ private:
     bool isOptions;
     bool isChoosingOptions;
     size_t cardsCounter;
+    size_t cardsChoosed;
+    size_t moveChoosed;
     sf::Clock theclock;
     float tick;
     scroll Scroll;

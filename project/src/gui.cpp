@@ -25,6 +25,8 @@ gui::gui(character* pers1, character* pers2)
     isOptions = false;
     isChoosingOptions = false;
     cardsCounter = 0;
+    cardsChoosed = 0;
+    moveChoosed = 0;
     person1 = pers1;
     person2 = pers2;
 }
@@ -102,6 +104,95 @@ int gui::processEvents() {
                 cardsCounter = 0;
             }
         }
+        if (sf::IntRect(670, 20, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
+            cout << "Choosed card 1" << endl;
+            person1->chosen_actions.push_back(person1->chosen_cards[0]);
+            cardsChoosed++;
+            //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
+            if ((cardsChoosed + moveChoosed) == 6) {
+                cout << "End of choice" << endl;
+                cardsChoosed = 0;
+                moveChoosed = 0;
+                isChoosingOptions = false;
+                isOptions = false;
+            }
+        }
+        if (sf::IntRect(670, 210, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
+            cout << "Choosed card 2" << endl;
+            person1->chosen_actions.push_back(person1->chosen_cards[1]);
+            cardsChoosed++;
+            //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
+            if ((cardsChoosed + moveChoosed) == 6) {
+                cardsChoosed = 0;
+                moveChoosed = 0;
+                isChoosingOptions = false;
+                isOptions = false;
+            }
+        }
+        if (sf::IntRect(670, 400, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
+            cout << "Choosed card 3" << endl;
+            person1->chosen_actions.push_back(person1->chosen_cards[2]);
+            cardsChoosed++;
+            //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
+            if ((cardsChoosed + moveChoosed) == 6) {
+                cardsChoosed = 0;
+                moveChoosed = 0;
+                isChoosingOptions = false;
+                isOptions = false;
+            }
+        }
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && isChoosingOptions && moveChoosed < 3) {
+        while (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {}  // Only one tap
+        cout << "Choosed move up" << endl;
+        person1->chosen_actions.push_back(UP);
+        moveChoosed++;
+        //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
+        if ((cardsChoosed + moveChoosed) == 6) {
+            cardsChoosed = 0;
+            moveChoosed = 0;
+            isChoosingOptions = false;
+            isOptions = false;
+        }
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
+        while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {}  // Only one tap
+        cout << "Choosed move right" << endl;
+        person1->chosen_actions.push_back(RIGHT);
+        moveChoosed++;
+        //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
+        if ((cardsChoosed + moveChoosed) == 6) {
+            cardsChoosed = 0;
+            moveChoosed = 0;
+            isChoosingOptions = false;
+            isOptions = false;
+        }
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && isChoosingOptions && moveChoosed < 3) {
+        while (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {}  // Only one tap
+        cout << "Choosed move down" << endl;
+        person1->chosen_actions.push_back(DOWN);
+        moveChoosed++;
+        //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
+        if ((cardsChoosed + moveChoosed) == 6) {
+            cardsChoosed = 0;
+            moveChoosed = 0;
+            isChoosingOptions = false;
+            isOptions = false;
+        }
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && isChoosingOptions && moveChoosed < 3) {
+        while (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {}  // Only one tap
+        cout << "Choosed move left" << endl;
+        person1->chosen_actions.push_back(LEFT);
+        moveChoosed++;
+        //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
+        if ((cardsChoosed + moveChoosed) == 6) {
+            cardsChoosed = 0;
+            moveChoosed = 0;
+            isChoosingOptions = false;
+            isOptions = false;
+        }
     }
     return 0;
 }
@@ -143,6 +234,7 @@ int gui::render(game_map& field_back) {
     if (isOptions) {
         actions Actions(person1->chosen_cards);
         Actions.drawCurrent(window);
+        isChoosingOptions = true;
     }
     window.display();
     return 0;
