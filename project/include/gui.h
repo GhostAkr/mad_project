@@ -5,14 +5,12 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "game.h"
-//#include "../src/cards.cpp"
 
 using std::vector;
 using std::string;
 
 class entity {
-public:
-    //virtual int drawCurrent(sf::RenderTarget& target, sf::RenderStates states) = 0;
+
 };
 
 class battle_map : public entity {
@@ -39,13 +37,21 @@ private:
     vector <sf::Texture> cardTexture;
     vector <CardID> avalible_cards;
     size_t x_pos, y_pos;
-    //vector <int> cards;
 public:
     scroll();
     int drawCurrent(sf::RenderTarget& target);
     int set_coords(size_t x_delta, size_t y_delta);
     int set_avalible_cards(vector <CardID> new_cards);
     size_t get_y_pos();
+};
+
+class actions : public entity {
+private:
+    vector<sf::Texture> cardTexture;
+    vector<CardID> chosen_cards;
+public:
+    actions(vector<CardID> new_cards);
+    int drawCurrent(sf::RenderTarget& target);
 };
 
 class creature : public entity {
@@ -84,63 +90,27 @@ class gui {
 private:
     int processEvents();
     int update();
-    int render();
+    int render(game_map& field_back);
     sf::RenderWindow window;
     sf::Texture bgTexture;  // Background
     sf::Sprite bgSprite;
     bool scrollUp;
+    bool scrollDown;
+    bool isBegBtn;
+    bool isScrollBtn;
+    bool isOptions;
+    bool isChoosingOptions;
+    size_t cardsCounter;
     sf::Clock theclock;
     float tick;
     scroll Scroll;
+    character* person1;
+    character* person2;
+    vector<CardID> cardNums;
 public:
-    gui();
-    int run();
-    //int handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
+    gui(character* pers1, character* pers2);
+    int run(game_map& field_back);
+    int set_cardNums (character* person, int num);
 };
-
-/*
-enum Action_Button {
-    VOID,
-    BEGBTN,
-    ENDBTN
-};
-
-class buttons {
-private:
-    int xcoord, ycoord;  // Координаты кнопки
-    string image_path;
-public:
-    buttons(int xc, int yc, string path);  // Конструктор принимает размер и координаты кнопки [Done]
-    int draw_button(sf::RenderWindow& window);  // Рисует кнопку на window [Done]
-};
-
-class planning {
-private:
-    vector<int> chosen_actions;  // 6 выбранных действий
-    vector<int> chosen_cards;  // 3 выбранные способности
-public:
-    vector<int> get_chosen_actions();
-    int draw_scroll(sf::RenderWindow& window, size_t ycoord);  // Анимация выезжающего свитка
-    int get_button(sf::RenderWindow& window);  // Считывает нажатие на кнопку на свитке
-    int remove_scroll(sf::RenderWindow& window);  // Анимация уезжающего свитка
-    int choosing(sf::RenderWindow& window);  // Выбор последовательности действий
-};
-
-class draw_map {
-private:
-    int map_height;
-    int map_width;
-    SparseMatrix<Game_object> TileMap;
-public:
-    draw_map(game_map& field);
-    int drawing(sf::RenderWindow& win);
-};
-
-class action_window {
-public:
-    action_window(sf::RenderWindow& window, game_map& field);  // Рисует поле и кнопки
-    Action_Button get_button(sf::RenderWindow& window);  // Считывает нажатие на кнопку
-};
-*/
 
 #endif  // PROJECT_INCLUDE_GUI_H_

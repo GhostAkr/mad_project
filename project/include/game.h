@@ -5,6 +5,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <ctime>
 #include "../src/SparseMatrix.cpp"
 #include "cards.h"
 
@@ -21,27 +22,36 @@ enum Game_object
 class character {
 protected:
     size_t xcoord, ycoord;
-    vector<int> avalible_cards;
-    vector<int> chosen_actions;
+    vector<CardID> deck;
     int hp;
 public:
+    vector<CardID> avalible_cards;
+    vector<CardID> chosen_cards;
+    vector<CardID> chosen_actions;
     static character* create_character(Game_object character_type);
     int get_hp();
     int set_hp(int new_hp);
     size_t get_xcoord();
     size_t get_ycoord();
     int set_coords(size_t new_xcoord, size_t new_ycoord);
+    vector<CardID> get_avalible_cards();
+    virtual int create_avalible_cards() = 0;
     virtual ~character() {}
+    virtual Game_object get_type() = 0;
 };
 
 class player : public character{
 public:
+    Game_object get_type();
+    int create_avalible_cards();
     player(string map_path_player);
     ~player() {}
 };
 
 class npc : public character {
 public:
+    Game_object get_type();
+    int create_avalible_cards();
     npc(string map_path_npc);
     ~npc() {}
 };

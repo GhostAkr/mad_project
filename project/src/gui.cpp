@@ -4,21 +4,29 @@
 
 //GUI METHODS
 
-int gui::run() {
+int gui::run(game_map& field_back) {
     while (window.isOpen()) {
         processEvents();
         update();
-        render();
+        render(field_back);
     }
     return 0;
 }
 
-gui::gui()
+gui::gui(character* pers1, character* pers2)
 :window(sf::VideoMode(1024, 768), "MAD")
 {
     bgTexture.loadFromFile("images/background.jpg");
     bgSprite.setTexture(bgTexture);
     scrollUp = false;
+    scrollDown = false;
+    isBegBtn = true;
+    isScrollBtn = false;
+    isOptions = false;
+    isChoosingOptions = false;
+    cardsCounter = 0;
+    person1 = pers1;
+    person2 = pers2;
 }
 
 int gui::processEvents() {
@@ -34,9 +42,65 @@ int gui::processEvents() {
     }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Getting only one tap
-        if (sf::IntRect(20, 670, 200, 32).contains(sf::Mouse::getPosition(window))) {
+        if (sf::IntRect(20, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isBegBtn) {
             cout << "Scroll Up" << endl;
             scrollUp = true;
+            isBegBtn = false;
+        }
+        if (sf::IntRect(120, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+            cout << "1 Card" << endl;
+            person1->chosen_cards.push_back(person1->avalible_cards[0]);
+            cardsCounter++;
+            if (cardsCounter == 3) {
+                cout << "Scroll down" << endl;
+                isScrollBtn = false;
+                scrollDown = true;
+                cardsCounter = 0;
+            }
+        }
+        if (sf::IntRect(240, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+            cout << "2 Card" << endl;
+            person1->chosen_cards.push_back(person1->avalible_cards[1]);
+            cardsCounter++;
+            if (cardsCounter == 3) {
+                cout << "Scroll down" << endl;
+                isScrollBtn = false;
+                scrollDown = true;
+                cardsCounter = 0;
+            }
+        }
+        if (sf::IntRect(360, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+            cout << "3 Card" << endl;
+            person1->chosen_cards.push_back(person1->avalible_cards[2]);
+            cardsCounter++;
+            if (cardsCounter == 3) {
+                cout << "Scroll down" << endl;
+                isScrollBtn = false;
+                scrollDown = true;
+                cardsCounter = 0;
+            }
+        }
+        if (sf::IntRect(480, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+            cout << "4 Card" << endl;
+            person1->chosen_cards.push_back(person1->avalible_cards[3]);
+            cardsCounter++;
+            if (cardsCounter == 3) {
+                cout << "Scroll down" << endl;
+                isScrollBtn = false;
+                scrollDown = true;
+                cardsCounter = 0;
+            }
+        }
+        if (sf::IntRect(600, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+            cout << "5 Card" << endl;
+            person1->chosen_cards.push_back(person1->avalible_cards[4]);
+            cardsCounter++;
+            if (cardsCounter == 3) {
+                cout << "Scroll down" << endl;
+                isScrollBtn = false;
+                scrollDown = true;
+                cardsCounter = 0;
+            }
         }
     }
     return 0;
@@ -44,35 +108,49 @@ int gui::processEvents() {
 
 int gui::update() {
     if (scrollUp) {
-        Scroll.set_coords(0, -2 * tick);
+        Scroll.set_coords(0, -5 * tick);
         if (Scroll.get_y_pos() < 50) {
             scrollUp = false;
+            isScrollBtn = true;
+        }
+    }
+    if (scrollDown) {
+        Scroll.set_coords(0, 5 * tick);
+        if (Scroll.get_y_pos() > 768) {
+            scrollDown = false;
+            isOptions = true;
         }
     }
     return 0;
 }
 
-int gui::render() {
+int gui::render(game_map& field_back) {
     tick = theclock.getElapsedTime().asMicroseconds();
     theclock.restart();
-    tick /= 1000;
+    tick /= 5000;
     window.clear();
     window.draw(bgSprite);
-    game_map field_back("data/map");
     battle_map field_front(field_back.get_field());
     field_front.drawCurrent(window);
-    // NEED IMPROVEMENT
-    player Player("data/player");
-    dark_mage_draw person1(Player.get_xcoord(), Player.get_ycoord());
-    npc NPC("data/npc");
-    bardess_draw person2(NPC.get_xcoord(), NPC.get_ycoord());
-    // NEED IMPROVEMENT
-    person1.drawCurrent(window);
-    person2.drawCurrent(window);
+    dark_mage_draw person1_draw(person1->get_xcoord(), person1->get_ycoord());
+    bardess_draw person2_draw(person2->get_xcoord(), person2->get_ycoord());
+    person1_draw.drawCurrent(window);
+    person2_draw.drawCurrent(window);
     start_turn_button startBTN;
     startBTN.drawCurrent(window);
+    Scroll.set_avalible_cards(person1->get_avalible_cards());
     Scroll.drawCurrent(window);
+    if (isOptions) {
+        actions Actions(person1->chosen_cards);
+        Actions.drawCurrent(window);
+    }
     window.display();
+    return 0;
+}
+
+int gui::set_cardNums (character* person, int num) {
+    vector<CardID> cards = person->get_avalible_cards();
+    cardNums.push_back(cards[num]);
     return 0;
 }
 
@@ -152,14 +230,6 @@ scroll::scroll() {
     scrollSprite.setTexture(scrollTexture);
     x_pos = 0;
     y_pos = 1030;
-    /*
-    for (size_t i = 0; i < 5; i++) {
-        card* Card = card::create_card(avalible_cards[i]);
-        sf::Texture texture;
-        texture.loadFromFile(Card->get_shirt_image_path());
-        cardTexture.push_back(texture);
-    }
-    */
 }
 
 int scroll::set_coords(size_t x_delta, size_t y_delta) {
@@ -171,13 +241,17 @@ int scroll::set_coords(size_t x_delta, size_t y_delta) {
 int scroll::drawCurrent(sf::RenderTarget& target) {
     scrollSprite.setPosition(x_pos, y_pos);
     target.draw(scrollSprite);
-    /*
+    for (size_t i = 0; i < 5; i++) {
+        card* Card = card::create_card(avalible_cards[i]);
+        sf::Texture texture;
+        texture.loadFromFile(Card->get_shirt_image_path());
+        cardTexture.push_back(texture);
+    }
     for (size_t i = 0; i < 5; i++) {
         sf::Sprite sprite(cardTexture[i]);
-        sprite.setPosition((x_pos + 100) * i, y_pos + 100);
+        sprite.setPosition((x_pos + 120) * (i + 1), y_pos + 165);
         target.draw(sprite);
     }
-    */
     return 0;
 }
 
@@ -187,6 +261,33 @@ size_t scroll::get_y_pos() {
 
 int scroll::set_avalible_cards(vector <CardID> new_cards) {
     avalible_cards = new_cards;
+    return 0;
+}
+
+//ACTIONS METHODS
+
+actions::actions(vector<CardID> new_cards) {
+    chosen_cards = new_cards;
+    for (size_t i = 0; i < 3; i++) {
+        if (chosen_cards[i] != VOID) {
+            card* Card = card::create_card(chosen_cards[i]);
+            sf::Texture texture;
+            texture.loadFromFile(Card->get_shirt_image_path());
+            cardTexture.push_back(texture);
+        }
+    }
+}
+
+int actions::drawCurrent(sf::RenderTarget& target) {
+    sf::Sprite card1Sprite(cardTexture[0]);
+    sf::Sprite card2Sprite(cardTexture[1]);
+    sf::Sprite card3Sprite(cardTexture[2]);
+    card1Sprite.setPosition(670, 20);
+    card2Sprite.setPosition(670, 210);
+    card3Sprite.setPosition(670, 400);
+    target.draw(card1Sprite);
+    target.draw(card2Sprite);
+    target.draw(card3Sprite);
     return 0;
 }
 
@@ -219,82 +320,3 @@ int bardess_draw::drawCurrent(sf::RenderTarget& target) {
     target.draw(creatureSprite);
     return 0;
 }
-
-/*
-vector<int> planning::get_chosen_actions() {
-    return chosen_actions;
-}
-
-draw_map::draw_map(game_map& map_object) {
-    map_height = map_object.get_n_of_lines();
-    map_width = map_object.get_n_of_cols();
-    TileMap = map_object.get_field();
-
-}
-
-int draw_map::drawing(sf::RenderWindow& win) {
-    sf::Image map_image;
-	map_image.loadFromFile("images/empty_cell.png");
-	sf::Texture map_texture;
-	map_texture.loadFromImage(map_image);
-	sf::Sprite s_map;
-	s_map.setTexture(map_texture);
-    for (int i = 0; i < map_height; i++) {
-        for (int j = 0; j < map_width; j++) {
-            s_map.setTextureRect(sf::IntRect(0, 0, 50, 50));
-            s_map.setPosition(j * 50, i * 50);
-            win.draw(s_map);
-        }
-    }
-    return 0;
-}
-
-buttons::buttons(int xc, int yc, string path) {
-    xcoord = xc;
-    ycoord = yc;
-    image_path = path;
-}
-
-int buttons::draw_button(sf::RenderWindow& window) {
-    Texture buttonTexture;
-    buttonTexture.loadFromFile(image_path);
-    Sprite buttonSprite(buttonTexture);
-    buttonSprite.setPosition(xcoord, ycoord);
-    window.draw(buttonSprite);
-    return 0;
-}
-action_window::action_window(sf::RenderWindow& window, game_map& field) {
-    draw_map field_draw(field);
-    field_draw.drawing(window);
-    buttons beginButton(10, 530, "images/buttons/begin_button.png");
-    beginButton.draw_button(window);
-    buttons endButton(230, 530, "images/buttons/end_button.png");
-    endButton.draw_button(window);
-}
-
-Action_Button action_window::get_button(sf::RenderWindow& window) {
-    if (Mouse::isButtonPressed(Mouse::Left)) {
-        while (true) {
-            if (!Mouse::isButtonPressed(Mouse::Left)) {
-                break;
-            }
-        }
-        if (IntRect(10, 530, 200, 32).contains(Mouse::getPosition(window))) {
-            return BEGBTN;
-        }
-        if (IntRect(230, 530, 200, 32).contains(Mouse::getPosition(window))) {
-            return ENDBTN;
-        }
-    }
-    return VOID;
-}
-
-int planning::draw_scroll(sf::RenderWindow& window, size_t ycoord) {
-    Texture scrollTexture;
-    scrollTexture.loadFromFile("images/scroll.png");
-    Sprite scrollSprite(scrollTexture);
-    scrollSprite.setPosition(0, ycoord);
-    window.draw(scrollSprite);
-    return 0;
-}
-*/

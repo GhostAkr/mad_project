@@ -21,6 +21,8 @@ card* card::create_card(CardID name, size_t x_start, size_t y_start, int directi
         case FIREBOLT:
             ret = new firebolt(x_start, y_start, direction);
             break;
+        default:
+            break;
     }
     return ret;
 }

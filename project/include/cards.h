@@ -10,6 +10,7 @@ using std::vector;
 using std::pair;
 
 enum CardID {
+    VOID = 1111,
     FIREBOLT = 10
 };
 

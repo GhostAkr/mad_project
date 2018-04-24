@@ -25,7 +25,7 @@ int character::set_coords(size_t new_xcoord, size_t new_ycoord) {
     return 0;
 }
 
-character* create_character(Game_object character_type) {
+character* character::create_character(Game_object character_type) {
     character* ret;
     switch (character_type) {
         case PLAYER:
@@ -38,6 +38,10 @@ character* create_character(Game_object character_type) {
             break;
     };
     return ret;
+}
+
+vector<CardID> character::get_avalible_cards() {
+    return avalible_cards;
 }
 
 // GAME_MAP METHODS
@@ -92,7 +96,28 @@ player::player(string map_path_player) {
         cout << "Player creation error!" << endl;
     }
     infile >> xcoord >> ycoord;
+    int tag;
+    while (true) {
+        infile >> tag;
+        if (tag == 1111) {
+            break;
+        }
+        deck.push_back(CardID(tag));
+    }
     infile.close();
+}
+
+int player::create_avalible_cards() {
+    srand(time(0));
+    for (size_t i = 0; i < 5; i++) {
+        size_t card_num = rand() % deck.size() + 1;
+        avalible_cards.push_back(deck[card_num - 1]);
+    }
+    return 0;
+}
+
+Game_object player::get_type() {
+    return PLAYER;
 }
 
 // NPC METHODS
@@ -103,7 +128,28 @@ npc::npc(string map_path_npc) {
         cout << "NPC creation error!" << endl;
     }
     infile >> xcoord >> ycoord;
+    int tag;
+    while (true) {
+        infile >> tag;
+        if (tag == 1111) {
+            break;
+        }
+        deck.push_back(CardID(tag));
+    }
     infile.close();
+}
+
+int npc::create_avalible_cards() {
+    srand(time(0));
+    for (size_t i = 0; i < 5; i++) {
+        size_t card_num = rand() % deck.size() + 1;
+        avalible_cards.push_back(deck[card_num - 1]);
+    }
+    return 0;
+}
+
+Game_object npc::get_type() {
+    return ENEMY;
 }
 
 // BATTLE METHODS
@@ -115,9 +161,8 @@ int battle::move(character* person, game_map& map, size_t new_xcoord, size_t new
     Game_object obj_new = map.get(new_xcoord,new_ycoord);
     if (obj_new == 0) {
         if ((abs((int)x - (int)new_xcoord) + abs((int)y - (int)new_ycoord)) == 1) {
-          person->set_coords(new_xcoord, new_ycoord);
           map.set(Game_object(0), x, y);
-          //map.set(person->get_type(), new_xcoord, new_ycoord);
+          map.set(person->get_type(), new_xcoord, new_ycoord);
         }
     }
   }

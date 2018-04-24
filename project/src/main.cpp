@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "game.h"
+//#include "game.h"
 #include "gui.h"
 
 using namespace sf;
@@ -8,49 +8,16 @@ using std::cout;
 using std::endl;
 
 int main(/*int argc, const char** argv*/) {
-    gui game;
-    game.run();
-    //character* person = character::create_character(PLAYER);
-    //delete person;
-    /*
-    sf::RenderWindow window(sf::VideoMode(800, 600), "MAD");
-    Vector2u win_coords = window.getSize();
-    window.setVerticalSyncEnabled(true);
-    Texture bgTexture;
-    bgTexture.loadFromFile("images/background.jpg");
-    Sprite bgSprite(bgTexture);
-    bgSprite.setPosition(0, 0);
-    game_map field("/mnt/d/test-map");
-    bool scroll_anim = false;
-    size_t scroll_coord = win_coords.y + 10;
-    double scroll_speed = 100.0;
-	while (window.isOpen())
-	{
-        window.draw(bgSprite); //background
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-        action_window act_win(window, field);
-        Action_Button act_choice = act_win.get_button(window);
-        if (act_choice == BEGBTN && scroll_anim == false) {
-            scroll_anim = true;
-        }
-        planning scroll;
-        if (scroll_anim) {
-            if (scroll_coord > 20) {
-                scroll.draw_scroll(window, scroll_coord);
-                scroll_coord -= scroll_speed;
-            } else {
-                scroll_anim = false;
-            }
-        }
-        scroll.draw_scroll(window, scroll_coord);
-		window.display();
-        //window.clear();
-	}
-    */
+    game_map field_back("data/map");
+    //NEED IMPROVEMENT
+    character* person1 = character::create_character(PLAYER);
+    character* person2 = character::create_character(ENEMY);
+    //NEED IMPROVEMENT
+    person1->create_avalible_cards();
+    person2->create_avalible_cards();
+    gui game(person1 , person2);
+    game.run(field_back);
+    delete person1;
+    delete person2;
 	return 0;
 }
