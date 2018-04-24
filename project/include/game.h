@@ -77,7 +77,7 @@ public:
     battle();
     int fighting(vector<string> chosen_actions);
     int move(character* person, game_map& map, size_t new_xcoord, size_t new_ycoord);
-    // int play_card(); [LATER]
+    int play_card(CardID tag, size_t x, size_t y, int direction, player& player1, npc& npc1);
 };
 
 #endif  // PROJECT_INCLUDE_GAME_H_

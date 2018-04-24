@@ -5,7 +5,6 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "game.h"
-
 using std::vector;
 using std::string;
 

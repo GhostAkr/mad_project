@@ -31,6 +31,14 @@ string card::get_spell_image_path() {
     return spell_image_path;
 }
 
+vector<pair<int, int>> card::get_action_area () {
+    return action_area;
+}
+
+int card::get_dmg() {
+    return dmg;
+}
+
 //FIREBOLT METHODS
 
 firebolt::firebolt(size_t x_start, size_t y_start, int direction) {

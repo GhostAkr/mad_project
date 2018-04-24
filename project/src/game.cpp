@@ -168,3 +168,28 @@ int battle::move(character* person, game_map& map, size_t new_xcoord, size_t new
   }
   return 0;
 }
+
+int battle::play_card(CardID tag, size_t x, size_t y, int direction, player& player1, npc& npc1) {
+    card* current_card = card::create_card (tag, x, y, direction);
+    auto area = current_card->get_action_area();
+    for (size_t i = 0; i < area.size(); ++i) {
+        if((area[i].first + x == player1.get_xcoord()) and (area[i].second + y == player1.get_ycoord())) {
+            cout << "111" << endl;
+            int hp = player1.get_hp() - current_card->get_dmg();
+            player1.set_hp(hp);
+        }
+
+        for (size_t i = 0; i < area.size(); ++i) {
+            cout << area[i].first + x;
+            cout << area[i].second + y <<"  ";
+        }
+        cout << "npc"<< npc1.get_xcoord() << npc1.get_ycoord() << endl;
+
+        if((area[i].first + x == npc1.get_xcoord()) and (area[i].second +y == npc1.get_ycoord())) {
+            cout << "222" << endl;
+            int hp = npc1.get_hp() - current_card->get_dmg();
+            npc1.set_hp(hp);
+        }
+    }
+    return 0;
+}

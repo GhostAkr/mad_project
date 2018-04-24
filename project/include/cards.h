@@ -31,7 +31,9 @@ public:
     static card* create_card(CardID name);
     static card* create_card(CardID name, size_t x_start, size_t y_start, int direction);
     virtual string get_shirt_image_path() = 0;
+    vector<pair<int, int>> get_action_area ();
     string get_spell_image_path();
+    int get_dmg();
 };
 
 class firebolt : public card {

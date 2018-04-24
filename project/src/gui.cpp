@@ -3,7 +3,6 @@
 #include "gui.h"
 
 //GUI METHODS
-
 int gui::run(game_map& field_back) {
     while (window.isOpen()) {
         processEvents();
@@ -12,6 +11,11 @@ int gui::run(game_map& field_back) {
     }
     return 0;
 }
+/*
+vector<int> planning::get_chosen_actions() {
+    return chosen_actions;
+}
+*/
 
 gui::gui(character* pers1, character* pers2)
 :window(sf::VideoMode(1024, 768), "MAD")
