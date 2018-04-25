@@ -404,10 +404,13 @@ int gui::render(game_map& field_back) {
                     fight.play_card(person1->chosen_actions[step1], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection1], person1, person2);
                     isDrawSpell1 = true;
                     isMoveSpell1 = true;
+                    isNPC = true;
                     step1++;
                     stepDirection1++;
                     break;
             }
+            cout << "Player move" << endl;
+            //cout << "Player hp: " << person1->get_hp() << "; NPC hp: " << person2->get_hp() << endl;
         }
         if (!isMoveAnim1 && !isMoveAnim2 && step2 < 6 && !isDrawSpell1 && !isDrawSpell2 && isNPC) {
             switch (person2->chosen_actions[step2]) {
@@ -440,13 +443,16 @@ int gui::render(game_map& field_back) {
                     fight.play_card(person2->chosen_actions[step2], person2->get_xcoord(), person2->get_ycoord(), person2->directions[stepDirection2], person1, person2);
                     isDrawSpell1 = true;
                     isMoveSpell1 = true;
+                    isNPC = false;
                     step2++;
                     stepDirection2++;
                     break;
             }
+            cout << "NPC move" << endl;
+            //cout << "Player hp: " << person1->get_hp() << "; NPC hp: " << person2->get_hp() << endl;
         }
     }
-    if (isDrawSpell1) {
+    if (isDrawSpell1 && !isMoveAnim1 && !isMoveAnim2) {
         Card->drawCurrent(window);
     }
     if (step1 == 6 && step2 == 6) {

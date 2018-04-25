@@ -137,6 +137,7 @@ private:
     creature* creature1;
     creature* creature2;
     vector<CardID> cardNums;
+    //string stat;
 public:
     gui(character* pers1, character* pers2);
     int run(game_map& field_back);
