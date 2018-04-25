@@ -30,6 +30,27 @@ gui::gui(character* pers1, character* pers2)
     person2 = pers2;
 }
 
+int gui::handleDirection() {
+    while (true) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            while (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {}  //Onle one tap
+            return 0;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {}  //Onle one tap
+            return 1;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            while (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {}  //Onle one tap
+            return 2;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            while (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {}  //Onle one tap
+            return 3;
+        }
+    }
+}
+
 int gui::processEvents() {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -105,6 +126,8 @@ int gui::processEvents() {
         }
         if (sf::IntRect(670, 20, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
             cout << "Choosed card 1" << endl;
+            person1->directions.push_back(handleDirection());
+            cout << "Direction: " << person1->directions[person1->directions.size() - 1] << endl;
             person1->chosen_actions.push_back(person1->chosen_cards[0]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
@@ -117,6 +140,8 @@ int gui::processEvents() {
         }
         if (sf::IntRect(670, 210, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
             cout << "Choosed card 2" << endl;
+            person1->directions.push_back(handleDirection());
+            cout << "Direction: " << person1->directions[person1->directions.size() - 1] << endl;
             person1->chosen_actions.push_back(person1->chosen_cards[1]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
@@ -128,6 +153,8 @@ int gui::processEvents() {
         }
         if (sf::IntRect(670, 400, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
             cout << "Choosed card 3" << endl;
+            person1->directions.push_back(handleDirection());
+            cout << "Direction: " << person1->directions[person1->directions.size() - 1] << endl;
             person1->chosen_actions.push_back(person1->chosen_cards[2]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
@@ -368,7 +395,6 @@ int actions::drawCurrent(sf::RenderTarget& target, character* person1) {
         card* Card = card::create_card(person1->chosen_actions[i]);
         string new_action = Card->get_name();
         choiceString += (new_action + "\n");
-        cout << choiceString << endl;
     }
     sf::Font font;
     font.loadFromFile("data/font.ttf");

@@ -28,6 +28,7 @@ public:
     vector<CardID> avalible_cards;
     vector<CardID> chosen_cards;
     vector<CardID> chosen_actions;
+    vector<int> directions;
     static character* create_character(Game_object character_type);
     int get_hp();
     int set_hp(int new_hp);

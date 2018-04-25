@@ -112,6 +112,7 @@ public:
     gui(character* pers1, character* pers2);
     int run(game_map& field_back);
     int set_cardNums (character* person, int num);
+    int handleDirection();
 };
 
 #endif  // PROJECT_INCLUDE_GUI_H_
