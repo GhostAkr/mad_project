@@ -11,11 +11,6 @@ int gui::run(game_map& field_back) {
     }
     return 0;
 }
-/*
-vector<int> planning::get_chosen_actions() {
-    return chosen_actions;
-}
-*/
 
 gui::gui(character* pers1, character* pers2)
 :window(sf::VideoMode(1024, 768), "MAD")
@@ -112,7 +107,6 @@ int gui::processEvents() {
             cout << "Choosed card 1" << endl;
             person1->chosen_actions.push_back(person1->chosen_cards[0]);
             cardsChoosed++;
-            //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
             if ((cardsChoosed + moveChoosed) == 6) {
                 cout << "End of choice" << endl;
                 cardsChoosed = 0;
@@ -125,7 +119,6 @@ int gui::processEvents() {
             cout << "Choosed card 2" << endl;
             person1->chosen_actions.push_back(person1->chosen_cards[1]);
             cardsChoosed++;
-            //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
             if ((cardsChoosed + moveChoosed) == 6) {
                 cardsChoosed = 0;
                 moveChoosed = 0;
@@ -137,7 +130,6 @@ int gui::processEvents() {
             cout << "Choosed card 3" << endl;
             person1->chosen_actions.push_back(person1->chosen_cards[2]);
             cardsChoosed++;
-            //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
             if ((cardsChoosed + moveChoosed) == 6) {
                 cardsChoosed = 0;
                 moveChoosed = 0;
@@ -151,7 +143,6 @@ int gui::processEvents() {
         cout << "Choosed move up" << endl;
         person1->chosen_actions.push_back(UP);
         moveChoosed++;
-        //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
         if ((cardsChoosed + moveChoosed) == 6) {
             cardsChoosed = 0;
             moveChoosed = 0;
@@ -164,7 +155,6 @@ int gui::processEvents() {
         cout << "Choosed move right" << endl;
         person1->chosen_actions.push_back(RIGHT);
         moveChoosed++;
-        //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
         if ((cardsChoosed + moveChoosed) == 6) {
             cardsChoosed = 0;
             moveChoosed = 0;
@@ -177,7 +167,6 @@ int gui::processEvents() {
         cout << "Choosed move down" << endl;
         person1->chosen_actions.push_back(DOWN);
         moveChoosed++;
-        //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
         if ((cardsChoosed + moveChoosed) == 6) {
             cardsChoosed = 0;
             moveChoosed = 0;
@@ -190,7 +179,6 @@ int gui::processEvents() {
         cout << "Choosed move left" << endl;
         person1->chosen_actions.push_back(LEFT);
         moveChoosed++;
-        //cout << "cards: " << cardsChoosed << "; moves: " << moveChoosed << endl;
         if ((cardsChoosed + moveChoosed) == 6) {
             cardsChoosed = 0;
             moveChoosed = 0;
@@ -237,7 +225,7 @@ int gui::render(game_map& field_back) {
     Scroll.drawCurrent(window);
     if (isOptions) {
         actions Actions(person1->chosen_cards);
-        Actions.drawCurrent(window);
+        Actions.drawCurrent(window, person1);
         isChoosingOptions = true;
     }
     window.display();
@@ -374,13 +362,26 @@ actions::actions(vector<CardID> new_cards) {
     }
 }
 
-int actions::drawCurrent(sf::RenderTarget& target) {
+int actions::drawCurrent(sf::RenderTarget& target, character* person1) {
+    string choiceString = "";
+    for (size_t i = 0; i < person1->chosen_actions.size(); i++) {
+        card* Card = card::create_card(person1->chosen_actions[i]);
+        string new_action = Card->get_name();
+        choiceString += (new_action + "\n");
+        cout << choiceString << endl;
+    }
+    sf::Font font;
+    font.loadFromFile("data/font.ttf");
+    sf::Text choiceText(choiceString, font, 20);
+    choiceText.setColor(sf::Color::Black);
+    choiceText.setPosition(870, 20);
     sf::Sprite card1Sprite(cardTexture[0]);
     sf::Sprite card2Sprite(cardTexture[1]);
     sf::Sprite card3Sprite(cardTexture[2]);
     card1Sprite.setPosition(670, 20);
     card2Sprite.setPosition(670, 210);
     card3Sprite.setPosition(670, 400);
+    target.draw(choiceText);
     target.draw(card1Sprite);
     target.draw(card2Sprite);
     target.draw(card3Sprite);

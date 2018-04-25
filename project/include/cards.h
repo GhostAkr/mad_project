@@ -26,12 +26,14 @@ protected:
     vector<pair<int, int>> action_area;
     CardID tag;
     int dmg;
+    string name;
 public:
     virtual ~card() {}
     static card* create_card(CardID name);
     static card* create_card(CardID name, size_t x_start, size_t y_start, int direction);
     virtual string get_shirt_image_path() = 0;
-    vector<pair<int, int>> get_action_area ();
+    vector<pair<int, int>> get_action_area();
+    string get_name();
     string get_spell_image_path();
     int get_dmg();
 };
@@ -44,4 +46,27 @@ public:
     ~firebolt() {}
 };
 
+class up : public card {
+public:
+    string get_shirt_image_path();
+    up();
+};
+
+class right : public card {
+public:
+    string get_shirt_image_path();
+    right();
+};
+
+class down : public card {
+public:
+    string get_shirt_image_path();
+    down();
+};
+
+class left : public card {
+public:
+    string get_shirt_image_path();
+    left();
+};
 #endif  // PROJECT_INCLUDE_CARDS_H_

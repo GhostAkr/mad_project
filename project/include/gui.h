@@ -50,7 +50,7 @@ private:
     vector<CardID> chosen_cards;
 public:
     actions(vector<CardID> new_cards);
-    int drawCurrent(sf::RenderTarget& target);
+    int drawCurrent(sf::RenderTarget& target, character* person1);
 };
 
 class creature : public entity {
