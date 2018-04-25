@@ -30,6 +30,8 @@ gui::gui(character* pers1, character* pers2)
     isMoveDown = false;
     isMoveLeft = false;
     isPlay = false;
+    isMoveAnim = false;
+    isBattle = false;
     cardsCounter = 0;
     cardsChoosed = 0;
     moveChoosed = 0;
@@ -146,6 +148,7 @@ int gui::processEvents() {
                 isChoosingOptions = false;
                 isOptions = false;
                 isPlay = true;
+                isBattle = true;
             }
         }
         if (sf::IntRect(670, 210, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
@@ -160,6 +163,7 @@ int gui::processEvents() {
                 isChoosingOptions = false;
                 isOptions = false;
                 isPlay = true;
+                isBattle = true;
             }
         }
         if (sf::IntRect(670, 400, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
@@ -174,6 +178,7 @@ int gui::processEvents() {
                 isChoosingOptions = false;
                 isOptions = false;
                 isPlay = true;
+                isBattle = true;
             }
         }
     }
@@ -188,6 +193,7 @@ int gui::processEvents() {
             isChoosingOptions = false;
             isOptions = false;
             isPlay = true;
+            isBattle = true;
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
@@ -201,6 +207,7 @@ int gui::processEvents() {
             isChoosingOptions = false;
             isOptions = false;
             isPlay = true;
+            isBattle = true;
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && isChoosingOptions && moveChoosed < 3) {
@@ -214,6 +221,7 @@ int gui::processEvents() {
             isChoosingOptions = false;
             isOptions = false;
             isPlay = true;
+            isBattle = true;
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && isChoosingOptions && moveChoosed < 3) {
@@ -227,6 +235,7 @@ int gui::processEvents() {
             isChoosingOptions = false;
             isOptions = false;
             isPlay = true;
+            isBattle = true;
         }
     }
     return 0;
@@ -247,6 +256,34 @@ int gui::update() {
             isOptions = true;
         }
     }
+    if (isMoveUp) {
+        if (creature1->y_pos < person1->get_ycoord() * 50) {
+            isMoveUp = false;
+            isMoveAnim = false;
+        }
+        creature1->y_pos -= 0.1 * tick;
+    }
+    if (isMoveRight) {
+        if (creature1->x_pos > person1->get_xcoord() * 50) {
+            isMoveRight = false;
+            isMoveAnim = false;
+        }
+        creature1->x_pos += 0.5 * tick;
+    }
+    if (isMoveDown) {
+        if (creature1->y_pos > person1->get_ycoord() * 50) {
+            isMoveDown = false;
+            isMoveAnim = false;
+        }
+        creature1->y_pos += 0.5 * tick;
+    }
+    if (isMoveLeft) {
+        if (creature1->x_pos < person1->get_xcoord() * 50) {
+            isMoveLeft = false;
+            isMoveAnim = false;
+        }
+        creature1->x_pos -= 0.1 * tick;
+    }
     return 0;
 }
 
@@ -258,8 +295,6 @@ int gui::render(game_map& field_back) {
     window.draw(bgSprite);
     battle_map field_front(field_back.get_field());
     field_front.drawCurrent(window);
-    //dark_mage_draw person1_draw(person1->get_xcoord(), person1->get_ycoord());
-    //bardess_draw person2_draw(person2->get_xcoord(), person2->get_ycoord());
     creature1->drawCurrent(window);
     creature2->drawCurrent(window);
     start_turn_button startBTN;
@@ -271,28 +306,43 @@ int gui::render(game_map& field_back) {
         Actions.drawCurrent(window, person1);
         isChoosingOptions = true;
     }
-    if (isPlay) {
-        battle fight;
+    battle fight;
+    /*
+    if (isBattle) {
         fight.fighting(person1, person2, field_back);
-        switch (person1->chosen_actions[step]) {
-            case UP:
-                isMoveUp = true;
-                step++;
-                break;
-            case RIGHT:
-                isMoveRight = true;
-                step++;
-                break;
-            case DOWN:
-                isMoveDown = true;
-                step++;
-                break;
-            case LEFT:
-                isMoveLeft = true;
-                step++;
-                break;
-            default:
-                break;
+        isBattle = false;
+    }
+    */
+    if (isPlay) {
+        if (!isMoveAnim) {
+            switch (person1->chosen_actions[step]) {
+                case UP:
+                    fight.move(person1, field_back, person1->get_xcoord(), person1->get_ycoord() - 1);
+                    isMoveAnim = true;
+                    isMoveUp = true;
+                    step++;
+                    break;
+                case RIGHT:
+                    fight.move(person1, field_back, person1->get_xcoord() + 1, person1->get_ycoord());
+                    isMoveAnim = true;
+                    isMoveRight = true;
+                    step++;
+                    break;
+                case DOWN:
+                    fight.move(person1, field_back, person1->get_xcoord(), person1->get_ycoord() + 1);
+                    isMoveAnim = true;
+                    isMoveDown = true;
+                    step++;
+                    break;
+                case LEFT:
+                    fight.move(person1, field_back, person1->get_xcoord() - 1, person1->get_ycoord());
+                    isMoveAnim = true;
+                    isMoveLeft = true;
+                    step++;
+                    break;
+                default:
+                    break;
+            }
         }
     }
     window.display();
@@ -383,9 +433,11 @@ scroll::scroll() {
     y_pos = 1030;
 }
 
-int scroll::set_coords(size_t x_delta, size_t y_delta) {
+int scroll::set_coords(int x_delta, int y_delta) {
     x_pos += x_delta;
     y_pos += y_delta;
+    x_pos = abs(x_pos);
+    y_pos = abs(y_pos);
     return 0;
 }
 
@@ -476,12 +528,12 @@ creature* creature::create_creature(creature_type new_type, size_t xcoord, size_
 dark_mage_draw::dark_mage_draw(size_t x_coord, size_t y_coord) {
     creatureTexture.loadFromFile("images/creatures/mage.png");
     creatureSprite.setTexture(creatureTexture);
-    x_pos = x_coord;
-    y_pos = y_coord;
+    x_pos = x_coord * 50;
+    y_pos = y_coord * 50;
 }
 
 int dark_mage_draw::drawCurrent(sf::RenderTarget& target) {
-    creatureSprite.setPosition(x_pos * 50, y_pos * 50);
+    creatureSprite.setPosition(x_pos, y_pos);
     target.draw(creatureSprite);
     return 0;
 }
@@ -491,12 +543,12 @@ int dark_mage_draw::drawCurrent(sf::RenderTarget& target) {
 bardess_draw::bardess_draw(size_t x_coord, size_t y_coord) {
     creatureTexture.loadFromFile("images/creatures/timmy.png");
     creatureSprite.setTexture(creatureTexture);
-    x_pos = x_coord;
-    y_pos = y_coord;
+    x_pos = x_coord * 50;
+    y_pos = y_coord * 50;
 }
 
 int bardess_draw::drawCurrent(sf::RenderTarget& target) {
-    creatureSprite.setPosition(x_pos * 50, y_pos * 50);
+    creatureSprite.setPosition(x_pos, y_pos);
     target.draw(creatureSprite);
     return 0;
 }

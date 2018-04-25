@@ -35,11 +35,11 @@ private:
     sf::Sprite scrollSprite;
     vector <sf::Texture> cardTexture;
     vector <CardID> avalible_cards;
-    size_t x_pos, y_pos;
+    int x_pos, y_pos;
 public:
     scroll();
     int drawCurrent(sf::RenderTarget& target);
-    int set_coords(size_t x_delta, size_t y_delta);
+    int set_coords(int x_delta, int y_delta);
     int set_avalible_cards(vector <CardID> new_cards);
     size_t get_y_pos();
 };
@@ -57,9 +57,9 @@ class creature : public entity {
 protected:
     sf::Texture creatureTexture;
     sf::Sprite creatureSprite;
-    size_t x_pos, y_pos;
     creature_type type;
 public:
+    size_t x_pos, y_pos;
     static creature* create_creature(creature_type new_type, size_t xcoord, size_t ycoord);
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
 };
@@ -103,11 +103,13 @@ private:
     bool isScrollBtn;
     bool isOptions;
     bool isChoosingOptions;
+    bool isMoveAnim;
     bool isMoveUp;
     bool isMoveRight;
     bool isMoveDown;
     bool isMoveLeft;
     bool isPlay;
+    bool isBattle;
     size_t cardsCounter;
     size_t cardsChoosed;
     size_t moveChoosed;

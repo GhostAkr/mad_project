@@ -165,6 +165,7 @@ int battle::move(character* person, game_map& map, size_t new_xcoord, size_t new
         if ((abs((int)x - (int)new_xcoord) + abs((int)y - (int)new_ycoord)) == 1) {
           map.set(Game_object(0), x, y);
           map.set(person->get_type(), new_xcoord, new_ycoord);
+          person->set_coords(new_xcoord, new_ycoord);
         }
     }
   }
@@ -211,7 +212,9 @@ int battle::fighting(character* person1, character* person2, game_map& map) {
                 this->move(person1, map, person1->get_xcoord(), person1->get_ycoord() + 1);
                 break;
             case LEFT:
+                cout << "Old coord = " << person1->get_xcoord() << endl;
                 this->move(person1, map, person1->get_xcoord() - 1, person1->get_ycoord());
+                cout << "New coord = " << person1->get_xcoord() << endl;
                 break;
             default:
                 break;
