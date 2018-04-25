@@ -67,22 +67,22 @@ firebolt::firebolt(size_t x_start, size_t y_start, int direction) {
     dmg = 3;
     switch (direction) {
         case 0:  // UP
-            for (size_t i = 0; i < ycoord_start; i++) {
+            for (size_t i = 1; i <= ycoord_start; i++) {
                 action_area.push_back(pair<int, int> (0, -i));
             }
             break;
         case 1:  // RIGHT
-            for (size_t i = 0; i < 12 - xcoord_start; i++) {
+            for (size_t i = 1; i <= 12 - xcoord_start; i++) {
                 action_area.push_back(pair<int, int> (i, 0));
             }
             break;
         case 2:  // DOWN
-            for (size_t i = 0; i < 12 - ycoord_start; i++) {
+            for (size_t i = 1; i <= 12 - ycoord_start; i++) {
                 action_area.push_back(pair<int, int> (0, i));
             }
             break;
         case 3:  // LEFT
-            for (size_t i = 0; i < xcoord_start; i++) {
+            for (size_t i = 1; i <= xcoord_start; i++) {
                 action_area.push_back(pair<int, int> (-i, 0));
             }
             break;

@@ -307,14 +307,8 @@ int gui::render(game_map& field_back) {
         isChoosingOptions = true;
     }
     battle fight;
-    /*
-    if (isBattle) {
-        fight.fighting(person1, person2, field_back);
-        isBattle = false;
-    }
-    */
     if (isPlay) {
-        if (!isMoveAnim) {
+        if (!isMoveAnim && step < 6) {
             switch (person1->chosen_actions[step]) {
                 case UP:
                     fight.move(person1, field_back, person1->get_xcoord(), person1->get_ycoord() - 1);
@@ -341,6 +335,12 @@ int gui::render(game_map& field_back) {
                     step++;
                     break;
                 default:
+                    //card* Card = card::create_card(chosen_actions[step], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection]);
+                    cout << "Old player hp = " << person1->get_hp() << "; Old NPC hp = " << person2->get_hp() << endl;
+                    fight.play_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection], person1, person2);
+                    cout << "New player hp = " << person1->get_hp() << "; New NPC hp = " << person2->get_hp() << endl;
+                    step++;
+                    stepDirection++;
                     break;
             }
         }

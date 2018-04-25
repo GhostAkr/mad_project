@@ -84,7 +84,7 @@ public:
     //battle();
     int fighting(character* person1, character* person2, game_map& map);
     int move(character* person, game_map& map, size_t new_xcoord, size_t new_ycoord);
-    int play_card(CardID tag, size_t x, size_t y, int direction, player& player1, npc& npc1);
+    int play_card(CardID tag, size_t x, size_t y, int direction, character* player1, character* npc1);
 };
 
 #endif  // PROJECT_INCLUDE_GAME_H_
