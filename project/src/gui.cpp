@@ -19,6 +19,7 @@ gui::gui(character* pers1, character* pers2)
     creature2 = creature::create_creature(pers2->cr_type, pers2->get_xcoord(), pers2->get_ycoord());
     bgTexture.loadFromFile("images/background.jpg");
     bgSprite.setTexture(bgTexture);
+    Card = NULL;
     scrollUp = false;
     scrollDown = false;
     isBegBtn = true;
@@ -32,6 +33,8 @@ gui::gui(character* pers1, character* pers2)
     isPlay = false;
     isMoveAnim = false;
     isBattle = false;
+    isDrawSpell = false;
+    isMoveSpell = false;
     cardsCounter = 0;
     cardsChoosed = 0;
     moveChoosed = 0;
@@ -284,6 +287,12 @@ int gui::update() {
         }
         creature1->x_pos -= 0.1 * tick;
     }
+    if (isMoveSpell) {
+        Card->updateSpell(tick, &isMoveSpell);
+        if (!isMoveSpell) {
+            isDrawSpell = false;
+        }
+    }
     return 0;
 }
 
@@ -308,7 +317,7 @@ int gui::render(game_map& field_back) {
     }
     battle fight;
     if (isPlay) {
-        if (!isMoveAnim && step < 6) {
+        if (!isMoveAnim && step < 6 && !isDrawSpell) {
             switch (person1->chosen_actions[step]) {
                 case UP:
                     fight.move(person1, field_back, person1->get_xcoord(), person1->get_ycoord() - 1);
@@ -335,15 +344,18 @@ int gui::render(game_map& field_back) {
                     step++;
                     break;
                 default:
-                    //card* Card = card::create_card(chosen_actions[step], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection]);
-                    cout << "Old player hp = " << person1->get_hp() << "; Old NPC hp = " << person2->get_hp() << endl;
+                    Card = card::create_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection]);
                     fight.play_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection], person1, person2);
-                    cout << "New player hp = " << person1->get_hp() << "; New NPC hp = " << person2->get_hp() << endl;
+                    isDrawSpell = true;
+                    isMoveSpell = true;
                     step++;
                     stepDirection++;
                     break;
             }
         }
+    }
+    if (isDrawSpell) {
+        Card->drawCurrent(window);
     }
     window.display();
     return 0;

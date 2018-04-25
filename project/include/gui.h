@@ -110,6 +110,8 @@ private:
     bool isMoveLeft;
     bool isPlay;
     bool isBattle;
+    bool isDrawSpell;
+    bool isMoveSpell;
     size_t cardsCounter;
     size_t cardsChoosed;
     size_t moveChoosed;
@@ -118,6 +120,7 @@ private:
     sf::Clock theclock;
     float tick;
     scroll Scroll;
+    card* Card;
     character* person1;
     character* person2;
     creature* creature1;
