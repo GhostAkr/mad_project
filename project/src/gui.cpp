@@ -26,20 +26,29 @@ gui::gui(character* pers1, character* pers2)
     isScrollBtn = false;
     isOptions = false;
     isChoosingOptions = false;
-    isMoveUp = false;
-    isMoveRight = false;
-    isMoveDown = false;
-    isMoveLeft = false;
+    isMoveUp1 = false;
+    isMoveRight1 = false;
+    isMoveDown1 = false;
+    isMoveLeft1 = false;
+    isMoveUp2 = false;
+    isMoveRight2 = false;
+    isMoveDown2 = false;
+    isMoveLeft2 = false;
     isPlay = false;
-    isMoveAnim = false;
+    isMoveAnim1 = false;
+    isMoveAnim2 = false;
     isBattle = false;
-    isDrawSpell = false;
-    isMoveSpell = false;
+    isDrawSpell1 = false;
+    isMoveSpell1 = false;
+    isNPCPlay = false;
+    isNPC = false;
     cardsCounter = 0;
     cardsChoosed = 0;
     moveChoosed = 0;
-    step = 0;
-    stepDirection = 0;
+    step1 = 0;
+    stepDirection1 = 0;
+    step2 = 0;
+    stepDirection2 = 0;
     person1 = pers1;
     person2 = pers2;
 }
@@ -152,6 +161,7 @@ int gui::processEvents() {
                 isOptions = false;
                 isPlay = true;
                 isBattle = true;
+                isNPCPlay = true;
             }
         }
         if (sf::IntRect(670, 210, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
@@ -167,6 +177,7 @@ int gui::processEvents() {
                 isOptions = false;
                 isPlay = true;
                 isBattle = true;
+                isNPCPlay = true;
             }
         }
         if (sf::IntRect(670, 400, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
@@ -182,6 +193,7 @@ int gui::processEvents() {
                 isOptions = false;
                 isPlay = true;
                 isBattle = true;
+                isNPCPlay = true;
             }
         }
     }
@@ -197,6 +209,7 @@ int gui::processEvents() {
             isOptions = false;
             isPlay = true;
             isBattle = true;
+            isNPCPlay = true;
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
@@ -211,6 +224,7 @@ int gui::processEvents() {
             isOptions = false;
             isPlay = true;
             isBattle = true;
+            isNPCPlay = true;
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && isChoosingOptions && moveChoosed < 3) {
@@ -225,6 +239,7 @@ int gui::processEvents() {
             isOptions = false;
             isPlay = true;
             isBattle = true;
+            isNPCPlay = true;
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && isChoosingOptions && moveChoosed < 3) {
@@ -239,6 +254,7 @@ int gui::processEvents() {
             isOptions = false;
             isPlay = true;
             isBattle = true;
+            isNPCPlay = true;
         }
     }
     return 0;
@@ -259,38 +275,74 @@ int gui::update() {
             isOptions = true;
         }
     }
-    if (isMoveUp) {
+    if (isMoveUp1) {
         if (creature1->y_pos < person1->get_ycoord() * 50) {
-            isMoveUp = false;
-            isMoveAnim = false;
+            isMoveUp1 = false;
+            isNPC = true;
+            isMoveAnim1 = false;
         }
         creature1->y_pos -= 0.1 * tick;
     }
-    if (isMoveRight) {
+    if (isMoveRight1) {
         if (creature1->x_pos > person1->get_xcoord() * 50) {
-            isMoveRight = false;
-            isMoveAnim = false;
+            isMoveRight1 = false;
+            isNPC = true;
+            isMoveAnim1 = false;
         }
         creature1->x_pos += 0.5 * tick;
     }
-    if (isMoveDown) {
+    if (isMoveDown1) {
         if (creature1->y_pos > person1->get_ycoord() * 50) {
-            isMoveDown = false;
-            isMoveAnim = false;
+            isMoveDown1 = false;
+            isNPC = true;
+            isMoveAnim1 = false;
         }
         creature1->y_pos += 0.5 * tick;
     }
-    if (isMoveLeft) {
+    if (isMoveLeft1) {
         if (creature1->x_pos < person1->get_xcoord() * 50) {
-            isMoveLeft = false;
-            isMoveAnim = false;
+            isMoveLeft1 = false;
+            isNPC = true;
+            isMoveAnim1 = false;
         }
         creature1->x_pos -= 0.1 * tick;
     }
-    if (isMoveSpell) {
-        Card->updateSpell(tick, &isMoveSpell);
-        if (!isMoveSpell) {
-            isDrawSpell = false;
+    if (isMoveUp2) {
+        if (creature2->y_pos < person2->get_ycoord() * 50) {
+            isMoveUp2 = false;
+            isMoveAnim2 = false;
+            isNPC = false;
+        }
+        creature2->y_pos -= 0.1 * tick;
+    }
+    if (isMoveRight2) {
+        if (creature2->x_pos > person2->get_xcoord() * 50) {
+            isMoveRight2 = false;
+            isMoveAnim2 = false;
+            isNPC = false;
+        }
+        creature2->x_pos += 0.5 * tick;
+    }
+    if (isMoveDown2) {
+        if (creature2->y_pos > person2->get_ycoord() * 50) {
+            isMoveDown2 = false;
+            isMoveAnim2 = false;
+            isNPC = false;
+        }
+        creature2->y_pos += 0.5 * tick;
+    }
+    if (isMoveLeft2) {
+        if (creature2->x_pos < person2->get_xcoord() * 50) {
+            isMoveLeft2 = false;
+            isMoveAnim2 = false;
+            isNPC = false;
+        }
+        creature2->x_pos -= 0.1 * tick;
+    }
+    if (isMoveSpell1) {
+        Card->updateSpell(tick, &isMoveSpell1);
+        if (!isMoveSpell1) {
+            isDrawSpell1 = false;
         }
     }
     return 0;
@@ -315,47 +367,126 @@ int gui::render(game_map& field_back) {
         Actions.drawCurrent(window, person1);
         isChoosingOptions = true;
     }
+    if (isNPCPlay) {
+        person2->play_dark_mage(person1);
+        isNPCPlay = false;
+    }
     battle fight;
     if (isPlay) {
-        if (!isMoveAnim && step < 6 && !isDrawSpell) {
-            switch (person1->chosen_actions[step]) {
+        if (!isMoveAnim1 && !isMoveAnim2 && step1 < 6 && !isDrawSpell1 && !isDrawSpell2 && !isNPC) {
+            switch (person1->chosen_actions[step1]) {
                 case UP:
                     fight.move(person1, field_back, person1->get_xcoord(), person1->get_ycoord() - 1);
-                    isMoveAnim = true;
-                    isMoveUp = true;
-                    step++;
+                    isMoveAnim1 = true;
+                    isMoveUp1 = true;
+                    step1++;
                     break;
                 case RIGHT:
                     fight.move(person1, field_back, person1->get_xcoord() + 1, person1->get_ycoord());
-                    isMoveAnim = true;
-                    isMoveRight = true;
-                    step++;
+                    isMoveAnim1 = true;
+                    isMoveRight1 = true;
+                    step1++;
                     break;
                 case DOWN:
                     fight.move(person1, field_back, person1->get_xcoord(), person1->get_ycoord() + 1);
-                    isMoveAnim = true;
-                    isMoveDown = true;
-                    step++;
+                    isMoveAnim1 = true;
+                    isMoveDown1 = true;
+                    step1++;
                     break;
                 case LEFT:
                     fight.move(person1, field_back, person1->get_xcoord() - 1, person1->get_ycoord());
-                    isMoveAnim = true;
-                    isMoveLeft = true;
-                    step++;
+                    isMoveAnim1 = true;
+                    isMoveLeft1 = true;
+                    step1++;
                     break;
                 default:
-                    Card = card::create_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection]);
-                    fight.play_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection], person1, person2);
-                    isDrawSpell = true;
-                    isMoveSpell = true;
-                    step++;
-                    stepDirection++;
+                    Card = card::create_card(person1->chosen_actions[step1], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection1]);
+                    fight.play_card(person1->chosen_actions[step1], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection1], person1, person2);
+                    isDrawSpell1 = true;
+                    isMoveSpell1 = true;
+                    step1++;
+                    stepDirection1++;
+                    break;
+            }
+        }
+        if (!isMoveAnim1 && !isMoveAnim2 && step2 < 6 && !isDrawSpell1 && !isDrawSpell2 && isNPC) {
+            switch (person2->chosen_actions[step2]) {
+                case UP:
+                    fight.move(person2, field_back, person2->get_xcoord(), person2->get_ycoord() - 1);
+                    isMoveAnim2 = true;
+                    isMoveUp2 = true;
+                    step2++;
+                    break;
+                case RIGHT:
+                    fight.move(person2, field_back, person2->get_xcoord() + 1, person2->get_ycoord());
+                    isMoveAnim2 = true;
+                    isMoveRight2 = true;
+                    step2++;
+                    break;
+                case DOWN:
+                    fight.move(person2, field_back, person2->get_xcoord(), person2->get_ycoord() + 1);
+                    isMoveAnim2 = true;
+                    isMoveDown2 = true;
+                    step2++;
+                    break;
+                case LEFT:
+                    fight.move(person2, field_back, person2->get_xcoord() - 1, person2->get_ycoord());
+                    isMoveAnim2 = true;
+                    isMoveLeft2 = true;
+                    step2++;
+                    break;
+                default:
+                    Card = card::create_card(person2->chosen_actions[step2], person2->get_xcoord(), person2->get_ycoord(), person2->directions[stepDirection2]);
+                    fight.play_card(person2->chosen_actions[step2], person2->get_xcoord(), person2->get_ycoord(), person2->directions[stepDirection2], person1, person2);
+                    isDrawSpell1 = true;
+                    isMoveSpell1 = true;
+                    step2++;
+                    stepDirection2++;
                     break;
             }
         }
     }
-    if (isDrawSpell) {
+    if (isDrawSpell1) {
         Card->drawCurrent(window);
+    }
+    if (step1 == 6 && step2 == 6) {
+        isBegBtn = true;
+        person1->chosen_cards.clear();
+        person1->chosen_actions.clear();
+        person1->directions.clear();
+        person2->chosen_cards.clear();
+        person2->chosen_actions.clear();
+        person2->directions.clear();
+        Card = NULL;
+        scrollUp = false;
+        scrollDown = false;
+        isBegBtn = true;
+        isScrollBtn = false;
+        isOptions = false;
+        isChoosingOptions = false;
+        isMoveUp1 = false;
+        isMoveRight1 = false;
+        isMoveDown1 = false;
+        isMoveLeft1 = false;
+        isMoveUp2 = false;
+        isMoveRight2 = false;
+        isMoveDown2 = false;
+        isMoveLeft2 = false;
+        isPlay = false;
+        isMoveAnim1 = false;
+        isMoveAnim2 = false;
+        isBattle = false;
+        isDrawSpell1 = false;
+        isMoveSpell1 = false;
+        isNPCPlay = false;
+        isNPC = false;
+        cardsCounter = 0;
+        cardsChoosed = 0;
+        moveChoosed = 0;
+        step1 = 0;
+        stepDirection1 = 0;
+        step2 = 0;
+        stepDirection2 = 0;
     }
     window.display();
     return 0;

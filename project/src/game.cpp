@@ -122,6 +122,11 @@ Game_object player::get_type() {
     return PLAYER;
 }
 
+int player::play_dark_mage(character* player) {
+    characterDummy = player;
+    return 0;
+}
+
 // NPC METHODS
 
 npc::npc(string map_path_npc, creature_type type) {
@@ -154,6 +159,134 @@ int npc::create_avalible_cards() {
 
 Game_object npc::get_type() {
     return ENEMY;
+}
+
+int npc::play_dark_mage(character* player) {
+    size_t player_x = player->get_xcoord();
+    size_t player_y = player->get_ycoord();
+    size_t delta_x = abs(player_x - xcoord);
+    size_t delta_y = abs(player_y - ycoord);
+    int dir = 0;
+    //size_t movesCounter = 0;
+    //size_t cardsCounter = 0;
+    if (delta_x == 0) {
+        chosen_actions.push_back(FIREBOLT);
+        directions.push_back(2);
+        srand(time(0));
+        dir = rand() % 2;
+        if (dir == 0) {
+            chosen_actions.push_back(RIGHT);
+        } else {
+            chosen_actions.push_back(LEFT);
+        }
+        chosen_actions.push_back(FIREBOLT);
+        directions.push_back(2);
+        if (dir == 0) {
+            chosen_actions.push_back(LEFT);
+        } else {
+            chosen_actions.push_back(RIGHT);
+        }
+        chosen_actions.push_back(FIREBOLT);
+        directions.push_back(2);
+        srand(time(0));
+        dir = rand() % 2;
+        if (dir == 0) {
+            chosen_actions.push_back(RIGHT);
+        } else {
+            chosen_actions.push_back(LEFT);
+        }
+    }
+    if (delta_y == 0) {
+        chosen_actions.push_back(FIREBOLT);
+        directions.push_back(1);
+        srand(time(0));
+        dir = rand() % 2;
+        if (dir == 0) {
+            chosen_actions.push_back(UP);
+        } else {
+            chosen_actions.push_back(DOWN);
+        }
+        chosen_actions.push_back(FIREBOLT);
+        directions.push_back(1);
+        if (dir == 0) {
+            chosen_actions.push_back(DOWN);
+        } else {
+            chosen_actions.push_back(UP);
+        }
+        chosen_actions.push_back(FIREBOLT);
+        directions.push_back(1);
+        srand(time(0));
+        dir = rand() % 2;
+        if (dir == 0) {
+            chosen_actions.push_back(UP);
+        } else {
+            chosen_actions.push_back(DOWN);
+        }
+    }
+    if (delta_x <= delta_y) {
+        if (delta_x > 0) {
+            if (xcoord > player_x) {
+                chosen_actions.push_back(LEFT);
+                delta_x--;
+            }
+            if (xcoord < player_x) {
+                chosen_actions.push_back(RIGHT);
+                delta_x--;
+            }
+            chosen_actions.push_back(FIREBOLT);
+            directions.push_back(2);
+        }
+        if (delta_x > 0) {
+            if (xcoord > player_x) {
+                chosen_actions.push_back(LEFT);
+                delta_x--;
+            }
+            if (xcoord < player_x) {
+                chosen_actions.push_back(RIGHT);
+                delta_x--;
+            }
+            chosen_actions.push_back(FIREBOLT);
+            directions.push_back(2);
+            chosen_actions.push_back(FIREBOLT);
+            directions.push_back(2);
+            srand(time(0));
+            dir = rand() % 2;
+            if (dir == 0) {
+                chosen_actions.push_back(RIGHT);
+            } else {
+                chosen_actions.push_back(LEFT);
+            }
+        } else {
+            chosen_actions.push_back(FIREBOLT);
+            directions.push_back(2);
+            srand(time(0));
+            dir = rand() % 2;
+            if (dir == 0) {
+                chosen_actions.push_back(RIGHT);
+            } else {
+                chosen_actions.push_back(LEFT);
+            }
+            chosen_actions.push_back(FIREBOLT);
+            directions.push_back(2);
+            srand(time(0));
+            dir = rand() % 2;
+            if (dir == 0) {
+                chosen_actions.push_back(RIGHT);
+            } else {
+                chosen_actions.push_back(LEFT);
+            }
+        }
+    } else if (delta_x > delta_y) {
+        if (delta_y > 0) {
+            if (ycoord > player_y) {
+                chosen_actions.push_back(UP);
+            }
+            if (ycoord < player_y) {
+                chosen_actions.push_back(DOWN);
+            }
+        }
+    }
+    return 0;
 }
 
 // BATTLE METHODS

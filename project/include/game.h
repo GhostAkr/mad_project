@@ -29,6 +29,7 @@ protected:
     size_t xcoord, ycoord;
     vector<CardID> deck;
     int hp;
+    character* characterDummy;
 public:
     vector<CardID> avalible_cards;
     vector<CardID> chosen_cards;
@@ -45,6 +46,7 @@ public:
     virtual int create_avalible_cards() = 0;
     virtual ~character() {}
     virtual Game_object get_type() = 0;
+    virtual int play_dark_mage(character* player) = 0;
 };
 
 class player : public character{
@@ -53,6 +55,8 @@ public:
     int create_avalible_cards();
     player(string map_path_player, creature_type type);
     ~player() {}
+    //AI
+    int play_dark_mage(character* player);
 };
 
 class npc : public character {
@@ -61,6 +65,9 @@ public:
     int create_avalible_cards();
     npc(string map_path_npc, creature_type type);
     ~npc() {}
+    // AI
+    int play_dark_mage(character* player);
+
 };
 
 class game_map {
