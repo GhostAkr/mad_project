@@ -10,8 +10,8 @@ using std::endl;
 int main(/*int argc, const char** argv*/) {
     game_map field_back("data/map");
     //NEED IMPROVEMENT
-    character* person1 = character::create_character(PLAYER);
-    character* person2 = character::create_character(ENEMY);
+    character* person1 = character::create_character(PLAYER, DARKMAGE);
+    character* person2 = character::create_character(ENEMY, DARKMAGE);
     //NEED IMPROVEMENT
     person1->create_avalible_cards();
     person2->create_avalible_cards();

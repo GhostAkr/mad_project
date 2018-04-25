@@ -25,14 +25,14 @@ int character::set_coords(size_t new_xcoord, size_t new_ycoord) {
     return 0;
 }
 
-character* character::create_character(Game_object character_type) {
+character* character::create_character(Game_object character_type, creature_type type) {
     character* ret;
     switch (character_type) {
         case PLAYER:
-            ret = new player("data/player");
+            ret = new player("data/player", type);
             break;
         case ENEMY:
-            ret = new npc("data/npc");
+            ret = new npc("data/npc", type);
             break;
         default:
             break;
@@ -90,7 +90,8 @@ SparseMatrix<Game_object> game_map::get_field() {
 
 // PLAYER METHODS
 
-player::player(string map_path_player) {
+player::player(string map_path_player, creature_type type) {
+    cr_type = type;
     ifstream infile(map_path_player);
     if (!infile) {
         cout << "Player creation error!" << endl;
@@ -122,7 +123,8 @@ Game_object player::get_type() {
 
 // NPC METHODS
 
-npc::npc(string map_path_npc) {
+npc::npc(string map_path_npc, creature_type type) {
+    cr_type = type;
     ifstream infile(map_path_npc);
     if (!infile) {
         cout << "NPC creation error!" << endl;
@@ -189,6 +191,30 @@ int battle::play_card(CardID tag, size_t x, size_t y, int direction, player& pla
             cout << "222" << endl;
             int hp = npc1.get_hp() - current_card->get_dmg();
             npc1.set_hp(hp);
+        }
+    }
+    return 0;
+}
+
+int battle::fighting(character* person1, character* person2, game_map& map) {
+    vector<CardID> chosen_actions1 = person1->chosen_actions;
+    vector<CardID> chosen_actions2 = person2->chosen_actions;
+    for (size_t i = 0; i < 6; i++) {
+        switch (chosen_actions1[i]) {
+            case UP:
+                this->move(person1, map, person1->get_xcoord(), person1->get_ycoord() - 1);
+                break;
+            case RIGHT:
+                this->move(person1, map, person1->get_xcoord() + 1, person1->get_ycoord());
+                break;
+            case DOWN:
+                this->move(person1, map, person1->get_xcoord(), person1->get_ycoord() + 1);
+                break;
+            case LEFT:
+                this->move(person1, map, person1->get_xcoord() - 1, person1->get_ycoord());
+                break;
+            default:
+                break;
         }
     }
     return 0;

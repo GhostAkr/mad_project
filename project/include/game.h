@@ -19,6 +19,11 @@ enum Game_object
     WALL
 };
 
+enum creature_type {
+    DARKMAGE,
+    BARDESS
+};
+
 class character {
 protected:
     size_t xcoord, ycoord;
@@ -29,7 +34,8 @@ public:
     vector<CardID> chosen_cards;
     vector<CardID> chosen_actions;
     vector<int> directions;
-    static character* create_character(Game_object character_type);
+    creature_type cr_type;
+    static character* create_character(Game_object character_type, creature_type type);
     int get_hp();
     int set_hp(int new_hp);
     size_t get_xcoord();
@@ -45,7 +51,7 @@ class player : public character{
 public:
     Game_object get_type();
     int create_avalible_cards();
-    player(string map_path_player);
+    player(string map_path_player, creature_type type);
     ~player() {}
 };
 
@@ -53,7 +59,7 @@ class npc : public character {
 public:
     Game_object get_type();
     int create_avalible_cards();
-    npc(string map_path_npc);
+    npc(string map_path_npc, creature_type type);
     ~npc() {}
 };
 
@@ -75,8 +81,8 @@ public:
 
 class battle {
 public:
-    battle();
-    int fighting(vector<string> chosen_actions);
+    //battle();
+    int fighting(character* person1, character* person2, game_map& map);
     int move(character* person, game_map& map, size_t new_xcoord, size_t new_ycoord);
     int play_card(CardID tag, size_t x, size_t y, int direction, player& player1, npc& npc1);
 };

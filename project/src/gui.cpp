@@ -15,6 +15,8 @@ int gui::run(game_map& field_back) {
 gui::gui(character* pers1, character* pers2)
 :window(sf::VideoMode(1024, 768), "MAD")
 {
+    creature1 = creature::create_creature(pers1->cr_type, pers1->get_xcoord(), pers1->get_ycoord());
+    creature2 = creature::create_creature(pers2->cr_type, pers2->get_xcoord(), pers2->get_ycoord());
     bgTexture.loadFromFile("images/background.jpg");
     bgSprite.setTexture(bgTexture);
     scrollUp = false;
@@ -23,9 +25,16 @@ gui::gui(character* pers1, character* pers2)
     isScrollBtn = false;
     isOptions = false;
     isChoosingOptions = false;
+    isMoveUp = false;
+    isMoveRight = false;
+    isMoveDown = false;
+    isMoveLeft = false;
+    isPlay = false;
     cardsCounter = 0;
     cardsChoosed = 0;
     moveChoosed = 0;
+    step = 0;
+    stepDirection = 0;
     person1 = pers1;
     person2 = pers2;
 }
@@ -136,6 +145,7 @@ int gui::processEvents() {
                 moveChoosed = 0;
                 isChoosingOptions = false;
                 isOptions = false;
+                isPlay = true;
             }
         }
         if (sf::IntRect(670, 210, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
@@ -149,6 +159,7 @@ int gui::processEvents() {
                 moveChoosed = 0;
                 isChoosingOptions = false;
                 isOptions = false;
+                isPlay = true;
             }
         }
         if (sf::IntRect(670, 400, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
@@ -162,6 +173,7 @@ int gui::processEvents() {
                 moveChoosed = 0;
                 isChoosingOptions = false;
                 isOptions = false;
+                isPlay = true;
             }
         }
     }
@@ -175,6 +187,7 @@ int gui::processEvents() {
             moveChoosed = 0;
             isChoosingOptions = false;
             isOptions = false;
+            isPlay = true;
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
@@ -187,6 +200,7 @@ int gui::processEvents() {
             moveChoosed = 0;
             isChoosingOptions = false;
             isOptions = false;
+            isPlay = true;
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && isChoosingOptions && moveChoosed < 3) {
@@ -199,6 +213,7 @@ int gui::processEvents() {
             moveChoosed = 0;
             isChoosingOptions = false;
             isOptions = false;
+            isPlay = true;
         }
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && isChoosingOptions && moveChoosed < 3) {
@@ -211,6 +226,7 @@ int gui::processEvents() {
             moveChoosed = 0;
             isChoosingOptions = false;
             isOptions = false;
+            isPlay = true;
         }
     }
     return 0;
@@ -242,10 +258,10 @@ int gui::render(game_map& field_back) {
     window.draw(bgSprite);
     battle_map field_front(field_back.get_field());
     field_front.drawCurrent(window);
-    dark_mage_draw person1_draw(person1->get_xcoord(), person1->get_ycoord());
-    bardess_draw person2_draw(person2->get_xcoord(), person2->get_ycoord());
-    person1_draw.drawCurrent(window);
-    person2_draw.drawCurrent(window);
+    //dark_mage_draw person1_draw(person1->get_xcoord(), person1->get_ycoord());
+    //bardess_draw person2_draw(person2->get_xcoord(), person2->get_ycoord());
+    creature1->drawCurrent(window);
+    creature2->drawCurrent(window);
     start_turn_button startBTN;
     startBTN.drawCurrent(window);
     Scroll.set_avalible_cards(person1->get_avalible_cards());
@@ -254,6 +270,30 @@ int gui::render(game_map& field_back) {
         actions Actions(person1->chosen_cards);
         Actions.drawCurrent(window, person1);
         isChoosingOptions = true;
+    }
+    if (isPlay) {
+        battle fight;
+        fight.fighting(person1, person2, field_back);
+        switch (person1->chosen_actions[step]) {
+            case UP:
+                isMoveUp = true;
+                step++;
+                break;
+            case RIGHT:
+                isMoveRight = true;
+                step++;
+                break;
+            case DOWN:
+                isMoveDown = true;
+                step++;
+                break;
+            case LEFT:
+                isMoveLeft = true;
+                step++;
+                break;
+            default:
+                break;
+        }
     }
     window.display();
     return 0;
@@ -412,6 +452,23 @@ int actions::drawCurrent(sf::RenderTarget& target, character* person1) {
     target.draw(card2Sprite);
     target.draw(card3Sprite);
     return 0;
+}
+
+// CREATURE METHODS
+
+creature* creature::create_creature(creature_type new_type, size_t xcoord, size_t ycoord) {
+    creature* ret;
+    switch (new_type) {
+        case DARKMAGE:
+            ret = new dark_mage_draw(xcoord, ycoord);
+            break;
+        case BARDESS:
+            ret = new bardess_draw(xcoord, ycoord);
+            break;
+        default:
+            break;
+    }
+    return ret;
 }
 
 // DARK MAGE METHODS

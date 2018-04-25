@@ -58,6 +58,10 @@ protected:
     sf::Texture creatureTexture;
     sf::Sprite creatureSprite;
     size_t x_pos, y_pos;
+    creature_type type;
+public:
+    static creature* create_creature(creature_type new_type, size_t xcoord, size_t ycoord);
+    virtual int drawCurrent(sf::RenderTarget& target) = 0;
 };
 
 class dark_mage_draw : public creature {
@@ -99,14 +103,23 @@ private:
     bool isScrollBtn;
     bool isOptions;
     bool isChoosingOptions;
+    bool isMoveUp;
+    bool isMoveRight;
+    bool isMoveDown;
+    bool isMoveLeft;
+    bool isPlay;
     size_t cardsCounter;
     size_t cardsChoosed;
     size_t moveChoosed;
+    size_t step;
+    size_t stepDirection;
     sf::Clock theclock;
     float tick;
     scroll Scroll;
     character* person1;
     character* person2;
+    creature* creature1;
+    creature* creature2;
     vector<CardID> cardNums;
 public:
     gui(character* pers1, character* pers2);
