@@ -323,7 +323,7 @@ int gui::update() {
             isMoveAnim2 = false;
             isNPC = false;
         }
-        creature2->x_pos += 0.5 * tick;
+        creature2->x_pos += 0.1 * tick;
     }
     if (isMoveDown2) {
         //cout << "New xcoord = " << person2->get_xcoord() << "; new ycoord = " << person2->get_ycoord() << endl;

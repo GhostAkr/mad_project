@@ -162,13 +162,18 @@ Game_object npc::get_type() {
 }
 
 int npc::play_dark_mage(character* player) {
-    size_t player_x = player->get_xcoord();
-    size_t player_y = player->get_ycoord();
-    size_t delta_x = abs(player_x - xcoord);
-    size_t delta_y = abs(player_y - ycoord);
+    int player_x = (int)player->get_xcoord();
+    int player_y = (int)player->get_ycoord();
+    int xcoordT = (int)xcoord;
+    int ycoordT = (int)ycoord;
+    //cout << player_x - xcoord;
+    size_t delta_x = abs(player_x - xcoordT);
+    size_t delta_y = abs(player_y - ycoordT);
+    cout << "NPCX = " << xcoordT << endl;
+    cout << "PLayerX = " << player_x << endl;
+    cout << "DeltaX = " << delta_x << endl;
+    cout << "DeltaY = " << delta_y << endl;
     int dir = 0;
-    //size_t movesCounter = 0;
-    //size_t cardsCounter = 0;
     if (delta_x == 0) {
         chosen_actions.push_back(FIREBOLT);
         directions.push_back(2);
@@ -224,12 +229,13 @@ int npc::play_dark_mage(character* player) {
         }
     }
     if (delta_x <= delta_y) {
+        cout << "QQ" << endl;
         if (delta_x > 0) {
-            if (xcoord > player_x) {
+            if (xcoordT > player_x) {
                 chosen_actions.push_back(LEFT);
                 delta_x--;
             }
-            if (xcoord < player_x) {
+            if (xcoordT < player_x) {
                 chosen_actions.push_back(RIGHT);
                 delta_x--;
             }
@@ -237,11 +243,11 @@ int npc::play_dark_mage(character* player) {
             directions.push_back(2);
         }
         if (delta_x > 0) {
-            if (xcoord > player_x) {
+            if (xcoordT > player_x) {
                 chosen_actions.push_back(LEFT);
                 delta_x--;
             }
-            if (xcoord < player_x) {
+            if (xcoordT < player_x) {
                 chosen_actions.push_back(RIGHT);
                 delta_x--;
             }
@@ -277,15 +283,58 @@ int npc::play_dark_mage(character* player) {
             }
         }
     } else if (delta_x > delta_y) {
+        cout << "FF" << endl;
         if (delta_y > 0) {
-            if (ycoord > player_y) {
+            if (ycoordT > player_y) {
                 chosen_actions.push_back(UP);
             }
-            if (ycoord < player_y) {
+            if (ycoordT < player_y) {
+                chosen_actions.push_back(DOWN);
+            }
+            chosen_actions.push_back(FIREBOLT);
+            directions.push_back(3);
+        }
+        if (delta_y > 0) {
+            if (xcoordT > player_x) {
+                chosen_actions.push_back(UP);
+                delta_x--;
+            }
+            if (xcoordT < player_x) {
+                chosen_actions.push_back(DOWN);
+                delta_x--;
+            }
+            chosen_actions.push_back(FIREBOLT);
+            directions.push_back(3);
+            chosen_actions.push_back(FIREBOLT);
+            directions.push_back(3);
+            srand(time(0));
+            dir = rand() % 2;
+            if (dir == 0) {
+                chosen_actions.push_back(UP);
+            } else {
                 chosen_actions.push_back(DOWN);
             }
         }
-    }
+        } else {
+            chosen_actions.push_back(FIREBOLT);
+            directions.push_back(3);
+            srand(time(0));
+            dir = rand() % 2;
+            if (dir == 0) {
+                chosen_actions.push_back(RIGHT);
+            } else {
+                chosen_actions.push_back(LEFT);
+            }
+            chosen_actions.push_back(FIREBOLT);
+            directions.push_back(3);
+            srand(time(0));
+            dir = rand() % 2;
+            if (dir == 0) {
+                chosen_actions.push_back(RIGHT);
+            } else {
+                chosen_actions.push_back(LEFT);
+            }
+        }
     return 0;
 }
 
