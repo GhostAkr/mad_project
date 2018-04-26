@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include <ctime>
+#include <sstream>
 #include "../src/SparseMatrix.cpp"
 #include "cards.h"
 

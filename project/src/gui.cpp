@@ -308,6 +308,7 @@ int gui::update() {
         creature1->x_pos -= 0.1 * tick;
     }
     if (isMoveUp2) {
+        //cout << "New xcoord = " << person2->get_xcoord() << "; new ycoord = " << person2->get_ycoord() << endl;
         if (creature2->y_pos < person2->get_ycoord() * 50) {
             isMoveUp2 = false;
             isMoveAnim2 = false;
@@ -316,6 +317,7 @@ int gui::update() {
         creature2->y_pos -= 0.1 * tick;
     }
     if (isMoveRight2) {
+        //cout << "New xcoord = " << person2->get_xcoord() << "; new ycoord = " << person2->get_ycoord() << endl;
         if (creature2->x_pos > person2->get_xcoord() * 50) {
             isMoveRight2 = false;
             isMoveAnim2 = false;
@@ -324,6 +326,7 @@ int gui::update() {
         creature2->x_pos += 0.5 * tick;
     }
     if (isMoveDown2) {
+        //cout << "New xcoord = " << person2->get_xcoord() << "; new ycoord = " << person2->get_ycoord() << endl;
         if (creature2->y_pos > person2->get_ycoord() * 50) {
             isMoveDown2 = false;
             isMoveAnim2 = false;
@@ -332,6 +335,7 @@ int gui::update() {
         creature2->y_pos += 0.5 * tick;
     }
     if (isMoveLeft2) {
+        //cout << "New xcoord = " << person2->get_xcoord() << "; new ycoord = " << person2->get_ycoord() << endl;
         if (creature2->x_pos < person2->get_xcoord() * 50) {
             isMoveLeft2 = false;
             isMoveAnim2 = false;
@@ -356,6 +360,22 @@ int gui::render(game_map& field_back) {
     window.draw(bgSprite);
     battle_map field_front(field_back.get_field());
     field_front.drawCurrent(window);
+    //NEED IMPROVEMENT (Stats info)
+    stringstream hp1, hp2;
+    string hp1Str;
+    string hp2Str;
+    hp1 << person1->get_hp();
+    hp2 << person2->get_hp();
+    hp1 >> hp1Str;
+    hp2 >> hp2Str;
+    string stat = "Your HP: " + hp1Str + "\nEnemy HP: " + hp2Str;
+    sf::Font font;
+    font.loadFromFile("data/font.ttf");
+    sf::Text choiceText(stat, font, 20);
+    choiceText.setColor(sf::Color::Black);
+    choiceText.setPosition(840, 650);
+    window.draw(choiceText);
+    //NEED IMPROVEMENT
     creature1->drawCurrent(window);
     creature2->drawCurrent(window);
     start_turn_button startBTN;
@@ -380,24 +400,28 @@ int gui::render(game_map& field_back) {
                     isMoveAnim1 = true;
                     isMoveUp1 = true;
                     step1++;
+                    //cout << "Player move" << endl;
                     break;
                 case RIGHT:
                     fight.move(person1, field_back, person1->get_xcoord() + 1, person1->get_ycoord());
                     isMoveAnim1 = true;
                     isMoveRight1 = true;
                     step1++;
+                    //cout << "Player move" << endl;
                     break;
                 case DOWN:
                     fight.move(person1, field_back, person1->get_xcoord(), person1->get_ycoord() + 1);
                     isMoveAnim1 = true;
                     isMoveDown1 = true;
                     step1++;
+                    //cout << "Player move" << endl;
                     break;
                 case LEFT:
                     fight.move(person1, field_back, person1->get_xcoord() - 1, person1->get_ycoord());
                     isMoveAnim1 = true;
                     isMoveLeft1 = true;
                     step1++;
+                    //cout << "Player move" << endl;
                     break;
                 default:
                     Card = card::create_card(person1->chosen_actions[step1], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection1]);
@@ -407,9 +431,9 @@ int gui::render(game_map& field_back) {
                     isNPC = true;
                     step1++;
                     stepDirection1++;
+                    //cout << "Player hit" << endl;
                     break;
             }
-            cout << "Player move" << endl;
             //cout << "Player hp: " << person1->get_hp() << "; NPC hp: " << person2->get_hp() << endl;
         }
         if (!isMoveAnim1 && !isMoveAnim2 && step2 < 6 && !isDrawSpell1 && !isDrawSpell2 && isNPC) {
@@ -419,24 +443,28 @@ int gui::render(game_map& field_back) {
                     isMoveAnim2 = true;
                     isMoveUp2 = true;
                     step2++;
+                    //cout << "NPC Move" << endl;
                     break;
                 case RIGHT:
                     fight.move(person2, field_back, person2->get_xcoord() + 1, person2->get_ycoord());
                     isMoveAnim2 = true;
                     isMoveRight2 = true;
                     step2++;
+                    //cout << "NPC Move" << endl;
                     break;
                 case DOWN:
                     fight.move(person2, field_back, person2->get_xcoord(), person2->get_ycoord() + 1);
                     isMoveAnim2 = true;
                     isMoveDown2 = true;
                     step2++;
+                    //cout << "NPC Move" << endl;
                     break;
                 case LEFT:
                     fight.move(person2, field_back, person2->get_xcoord() - 1, person2->get_ycoord());
                     isMoveAnim2 = true;
                     isMoveLeft2 = true;
                     step2++;
+                    //cout << "NPC Move" << endl;
                     break;
                 default:
                     Card = card::create_card(person2->chosen_actions[step2], person2->get_xcoord(), person2->get_ycoord(), person2->directions[stepDirection2]);
@@ -446,16 +474,16 @@ int gui::render(game_map& field_back) {
                     isNPC = false;
                     step2++;
                     stepDirection2++;
+                    //cout << "NPC hit" << endl;
                     break;
             }
-            cout << "NPC move" << endl;
             //cout << "Player hp: " << person1->get_hp() << "; NPC hp: " << person2->get_hp() << endl;
         }
     }
     if (isDrawSpell1 && !isMoveAnim1 && !isMoveAnim2) {
         Card->drawCurrent(window);
     }
-    if (step1 == 6 && step2 == 6) {
+    if (step1 == 6 && step2 == 6 && !isMoveAnim1 && !isMoveAnim2) {
         isBegBtn = true;
         person1->chosen_cards.clear();
         person1->chosen_actions.clear();
