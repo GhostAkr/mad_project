@@ -15,8 +15,8 @@ int main(/*int argc, const char** argv*/) {
     //NEED IMPROVEMENT
     person1->create_avalible_cards();
     person2->create_avalible_cards();
-    gui game(person1 , person2);
-    game.run(field_back);
+    gui game(person1 , person2, field_back);
+    game.run();
     delete person1;
     delete person2;
 	return 0;

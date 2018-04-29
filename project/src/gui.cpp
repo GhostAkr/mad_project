@@ -4,7 +4,7 @@
 #include "gui.h"
 
 //GUI METHODS
-int gui::run(game_map& field_back) {
+int gui::run() {
     while (window.isOpen()) {
         tick = theclock.getElapsedTime().asMicroseconds();
         theclock.restart();
@@ -17,15 +17,14 @@ int gui::run(game_map& field_back) {
     return 0;
 }
 
-gui::gui(character* pers1, character* pers2)
-:window(sf::VideoMode(1024, 768), "MAD")
+gui::gui(character* pers1, character* pers2, game_map& field)
+:window(sf::VideoMode(1024, 768), "MAD"),
+field_back(field)
 {
-    //window.setFramerateLimit(60);
     creature1 = creature::create_creature(pers1->cr_type, pers1->get_xcoord(), pers1->get_ycoord());
     creature2 = creature::create_creature(pers2->cr_type, pers2->get_xcoord(), pers2->get_ycoord());
     bgTexture.loadFromFile("images/background.jpg");
     bgSprite.setTexture(bgTexture);
-    //passedTime = 0;
     Card = NULL;
     scrollUp = false;
     scrollDown = false;
@@ -41,6 +40,8 @@ gui::gui(character* pers1, character* pers2)
     isMoveSpell1 = false;
     isNPCPlay = false;
     isNPC = false;
+    isDrawDirection = false;
+    isChooseDirection = false;
     cardsCounter = 0;
     cardsChoosed = 0;
     moveChoosed = 0;
@@ -49,27 +50,6 @@ gui::gui(character* pers1, character* pers2)
     stepDirection2 = 0;
     person1 = pers1;
     person2 = pers2;
-}
-
-int gui::handleDirection() {
-    while (true) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            while (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {}  //Onle one tap
-            return 0;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {}  //Onle one tap
-            return 1;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            while (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {}  //Onle one tap
-            return 2;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            while (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {}  //Onle one tap
-            return 3;
-        }
-    }
 }
 
 int gui::processEvents() {
@@ -82,6 +62,12 @@ int gui::processEvents() {
             default:
                 break;
         }
+    }
+    if (isChooseDirection) {
+        card* Card = card::create_card(person1->chosen_cards[cardsChoosed - 1], person1->get_xcoord(), person1->get_ycoord());
+        person1->directions.push_back(Card->handleDirection(window, field_back.get_field()));
+        isChooseDirection = false;
+        isDrawDirection = false;
     }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Getting only one tap
@@ -147,8 +133,7 @@ int gui::processEvents() {
         }
         if (sf::IntRect(670, 20, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
             cout << "Choosed card 1" << endl;
-            person1->directions.push_back(handleDirection());
-            cout << "Direction: " << person1->directions[person1->directions.size() - 1] << endl;
+            isDrawDirection = true;
             person1->chosen_actions.push_back(person1->chosen_cards[0]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
@@ -164,8 +149,7 @@ int gui::processEvents() {
         }
         if (sf::IntRect(670, 210, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
             cout << "Choosed card 2" << endl;
-            person1->directions.push_back(handleDirection());
-            cout << "Direction: " << person1->directions[person1->directions.size() - 1] << endl;
+            isDrawDirection = true;
             person1->chosen_actions.push_back(person1->chosen_cards[1]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
@@ -180,8 +164,7 @@ int gui::processEvents() {
         }
         if (sf::IntRect(670, 400, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
             cout << "Choosed card 3" << endl;
-            person1->directions.push_back(handleDirection());
-            cout << "Direction: " << person1->directions[person1->directions.size() - 1] << endl;
+            isDrawDirection = true;
             person1->chosen_actions.push_back(person1->chosen_cards[2]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
@@ -209,7 +192,6 @@ int gui::processEvents() {
             isBattle = true;
             isNPCPlay = true;
         }
-        cout << "Test" << endl;
         cout << person1->chosen_actions.size() << endl;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
@@ -294,9 +276,8 @@ int gui::update() {
     return 0;
 }
 
-void gui::play(battle& fight, game_map& field_back) {
+void gui::play(battle& fight) {
     if (step < 6 && !isMoveAnim1 && !isMoveAnim2) {
-        //cout << "Play action" << endl;
         switch (person1->chosen_actions[step]) {
             case UP:
                 fight.move(person1, field_back, person1->get_xcoord(), person1->get_ycoord() - 1);
@@ -393,22 +374,18 @@ int gui::render(game_map& field_back) {
         Actions.drawCurrent(window, person1);
         isChoosingOptions = true;
     }
-    //cout << "End" << endl;
     if (isNPCPlay) {
         person2->play_dark_mage(person1);
         isNPCPlay = false;
     }
+    if (isDrawDirection) {
+        card* Card = card::create_card(person1->chosen_cards[cardsChoosed - 1], person1->get_xcoord(), person1->get_ycoord());
+        Card->drawActionArea(window, field_back.get_field());
+        isChooseDirection = true;
+    }
     battle fight;
     if (isPlay) {
-        this->play(fight, field_back);
-        //if (!isMoveAnim1 && !isMoveAnim2 && step1 < 6 && !isDrawSpell1 && !isDrawSpell2 && !isNPC) {
-
-            //cout << "Player hp: " << person1->get_hp() << "; NPC hp: " << person2->get_hp() << endl;
-        //}
-        //if (!isMoveAnim1 && !isMoveAnim2 && step2 < 6 && !isDrawSpell1 && !isDrawSpell2 && isNPC) {
-
-            //cout << "Player hp: " << person1->get_hp() << "; NPC hp: " << person2->get_hp() << endl;
-        //}
+        this->play(fight);
     }
     if (isDrawSpell1 && !isMoveAnim1 && !isMoveAnim2) {
         Card->drawCurrent(window);

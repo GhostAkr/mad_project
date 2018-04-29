@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "SparseMatrix.h"
 #include <SFML/Graphics.hpp>
 
 using std::string;
@@ -19,6 +20,13 @@ enum CardID {
     FIREBOLT = 10
 };
 
+enum Game_object
+{
+    PLAYER=1,
+    ENEMY,
+    WALL
+};
+
 class card {
 protected:
     size_t spell_x, spell_y;
@@ -29,6 +37,7 @@ protected:
     CardID tag;
     int dmg;
     string name;
+    sf::Texture choiceTexture;
     sf::Texture spellTexture;
     int side;
     float tickDummy;
@@ -41,7 +50,7 @@ public:
     size_t get_spell_y();
     virtual ~card() {}
     static card* create_card(CardID name);
-    static card* create_card(CardID name, size_t x_start, size_t y_start, int direction);
+    static card* create_card(CardID name, size_t x_start, size_t y_start);
     virtual string get_shirt_image_path() = 0;
     vector<pair<int, int>> get_action_area();
     string get_name();
@@ -49,17 +58,20 @@ public:
     int get_dmg();
     virtual void updateSpell(float tick, bool* isMoveSpell) = 0;
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
-    //virtual int set_action_area(int direction) = 0;
+    virtual void set_action_area(int direction) = 0;
+    virtual int handleDirection(sf::Window& source, SparseMatrix<Game_object> field) = 0;
+    void drawActionArea(sf::RenderTarget& target, SparseMatrix<Game_object> field);
 };
 
 class firebolt : public card {
 public:
-    //int set_action_area(int direction);
+    int handleDirection(sf::Window& source, SparseMatrix<Game_object> field);
+    void set_action_area(int direction);
     void updateSpell(float tick, bool* isMoveSpell);
     int drawCurrent(sf::RenderTarget& target);
     string get_shirt_image_path();
     firebolt();
-    firebolt(size_t x_start, size_t y_start, int direction);
+    firebolt(size_t x_start, size_t y_start);
     ~firebolt() {}
 };
 

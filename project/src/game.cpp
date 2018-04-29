@@ -169,10 +169,6 @@ int npc::play_dark_mage(character* player) {
     //cout << player_x - xcoord;
     size_t delta_x = abs(player_x - xcoordT);
     size_t delta_y = abs(player_y - ycoordT);
-    cout << "NPCX = " << xcoordT << endl;
-    cout << "PLayerX = " << player_x << endl;
-    cout << "DeltaX = " << delta_x << endl;
-    cout << "DeltaY = " << delta_y << endl;
     int dir = 0;
     if (delta_x == 0) {
         chosen_actions.push_back(FIREBOLT);
@@ -356,11 +352,9 @@ int battle::move(character* person, game_map& map, size_t new_xcoord, size_t new
   return 0;
 }
 
-int battle::play_card(CardID tag, int x, int y, int direction, character* player1, character* npc1) {
-    card* current_card = card::create_card (tag, x, y, direction);
+int battle::play_card(CardID tag, int x, int y, character* player1, character* npc1) {
+    card* current_card = card::create_card (tag, x, y);
     auto area = current_card->get_action_area();
-    //cout << "Player x = " << player1->get_xcoord() << endl;
-    //cout << "Area x = " << area[0].first << endl;
     for (size_t i = 0; i < area.size(); ++i) {
         if((area[i].first + x == player1->get_xcoord()) and (area[i].second + y == player1->get_ycoord())) {
             int hp = player1->get_hp() - current_card->get_dmg();
@@ -389,9 +383,7 @@ int battle::fighting(character* person1, character* person2, game_map& map) {
                 this->move(person1, map, person1->get_xcoord(), person1->get_ycoord() + 1);
                 break;
             case LEFT:
-                cout << "Old coord = " << person1->get_xcoord() << endl;
                 this->move(person1, map, person1->get_xcoord() - 1, person1->get_ycoord());
-                cout << "New coord = " << person1->get_xcoord() << endl;
                 break;
             default:
                 break;

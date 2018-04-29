@@ -4,7 +4,7 @@
 using std::cout;
 using std::endl;
 
-//CARDS METHODS
+//CARD METHODS
 
 card* card::create_card(CardID name) {
     card* ret;
@@ -13,16 +13,17 @@ card* card::create_card(CardID name) {
             ret = new firebolt();
             break;
         default:
+            cout << "Wrong CardID" << endl;
             break;
     }
     return ret;
 }
 
-card* card::create_card(CardID name, size_t x_start, size_t y_start, int direction) {
+card* card::create_card(CardID name, size_t x_start, size_t y_start) {
     card* ret;
     switch(name) {
         case FIREBOLT:
-            ret = new firebolt(x_start, y_start, direction);
+            ret = new firebolt(x_start, y_start);
             break;
         default:
             cout << "Wrong CardID" << endl;
@@ -59,9 +60,20 @@ vector<pair<int, int>> card::get_direction_area() {
     return direction_area;
 }
 
+void card::drawActionArea(sf::RenderTarget& target, SparseMatrix<Game_object> field) {
+    choiceTexture.loadFromFile("images/direction.jpg");
+    sf::Sprite choiceSprite(choiceTexture);
+    for (size_t i = 0; i < direction_area.size(); i++) {
+        if (field.get(xcoord_start + direction_area[i].first + 1, ycoord_start + direction_area[i].second + 1) == 0) {
+            choiceSprite.setPosition((xcoord_start + direction_area[i].first) * 50, (ycoord_start + direction_area[i].second) * 50);
+            target.draw(choiceSprite);
+        }
+    }
+}
+
 //FIREBOLT METHODS
 
-firebolt::firebolt(size_t x_start, size_t y_start, int direction) {
+firebolt::firebolt(size_t x_start, size_t y_start) {
     spell_x = x_start * 50;
     spell_y = y_start * 50;
     xcoord_start = x_start;
@@ -77,35 +89,36 @@ firebolt::firebolt(size_t x_start, size_t y_start, int direction) {
     direction_area.push_back(pair<int, int> (1, 0));
     direction_area.push_back(pair<int, int> (0, 1));
     direction_area.push_back(pair<int, int> (-1, 0));
-    //side = direction;
-    switch (direction) {
-        case 0:  // UP
-            for (size_t i = 1; i <= ycoord_start; i++) {
-                action_area.push_back(pair<int, int> (0, -i));
-            }
-            break;
-        case 1:  // RIGHT
-            for (size_t i = 1; i <= 12 - xcoord_start; i++) {
-                action_area.push_back(pair<int, int> (i, 0));
-            }
-            break;
-        case 2:  // DOWN
-            for (size_t i = 1; i <= 12 - ycoord_start; i++) {
-                action_area.push_back(pair<int, int> (0, i));
-            }
-            break;
-        case 3:  // LEFT
-            for (size_t i = 1; i <= xcoord_start; i++) {
-                action_area.push_back(pair<int, int> (-i, 0));
-            }
-            break;
-    }
 }
 
 firebolt::firebolt() {
     shirt_image_path = "images/cards/shirts/firebolt.png";
     tag = FIREBOLT;
     name = "FIREBOLT";
+}
+
+int firebolt::handleDirection(sf::Window& source, SparseMatrix<Game_object> field) {
+    while (true) {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  //Onle one tap
+            if (sf::IntRect(xcoord_start * 50, (ycoord_start - 1) * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            field.get(xcoord_start + 1, (ycoord_start - 1) + 1) == 0) {  // UP
+                return 0;
+            }
+            if (sf::IntRect((xcoord_start + 1) * 50, ycoord_start * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            field.get((xcoord_start + 1) + 1, ycoord_start + 1) == 0) {  // RIGHT
+                return 1;
+            }
+            if (sf::IntRect(xcoord_start * 50, (ycoord_start + 1) * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            field.get(xcoord_start + 1, (ycoord_start + 1) + 1) == 0) {  // DOWN
+                return 2;
+            }
+            if (sf::IntRect((xcoord_start - 1) * 50, ycoord_start * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            field.get((xcoord_start - 1) + 1, ycoord_start + 1) == 0) {  // LEFT
+                return 3;
+            }
+        }
+    }
 }
 
 string firebolt::get_shirt_image_path() {
@@ -146,4 +159,29 @@ int firebolt::drawCurrent(sf::RenderTarget& target) {
     spellSprite.setPosition(spell_x, spell_y);
     target.draw(spellSprite);
     return 0;
+}
+
+void firebolt::set_action_area(int direction) {
+    switch (direction) {
+        case 0:  // UP
+            for (size_t i = 1; i <= ycoord_start; i++) {
+                action_area.push_back(pair<int, int> (0, -i));
+            }
+            break;
+        case 1:  // RIGHT
+            for (size_t i = 1; i <= 12 - xcoord_start; i++) {
+                action_area.push_back(pair<int, int> (i, 0));
+            }
+            break;
+        case 2:  // DOWN
+            for (size_t i = 1; i <= 12 - ycoord_start; i++) {
+                action_area.push_back(pair<int, int> (0, i));
+            }
+            break;
+        case 3:  // LEFT
+            for (size_t i = 1; i <= xcoord_start; i++) {
+                action_area.push_back(pair<int, int> (-i, 0));
+            }
+            break;
+    }
 }

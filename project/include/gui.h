@@ -71,14 +71,12 @@ class dark_mage_draw : public creature {
 public:
     dark_mage_draw(size_t x_coord, size_t y_coord);
     int drawCurrent(sf::RenderTarget& target);
-    //void updateCurrent(int direction);
 };
 
 class bardess_draw : public creature {
 public:
     bardess_draw(size_t x_coord, size_t y_coord);
     int drawCurrent(sf::RenderTarget& target);
-    //void updateCurrent(int direction);
 };
 
 class button : public entity {
@@ -118,6 +116,8 @@ private:
     bool isMoveSpell2;
     bool isNPCPlay;
     bool isNPC;
+    bool isDrawDirection;
+    bool isChooseDirection;
     size_t cardsCounter;
     size_t cardsChoosed;
     size_t moveChoosed;
@@ -133,14 +133,15 @@ private:
     character* person2;
     creature* creature1;
     creature* creature2;
+    game_map field_back;
     vector<CardID> cardNums;
     //string stat;
 public:
-    gui(character* pers1, character* pers2);
-    int run(game_map& field_back);
+    gui(character* pers1, character* pers2, game_map& field);
+    int run();
     int set_cardNums (character* person, int num);
-    void play(battle& fight, game_map& field_back);
-    int handleDirection();
+    void play(battle& fight);
+    //int handleDirection();
 };
 
 #endif  // PROJECT_INCLUDE_GUI_H_
