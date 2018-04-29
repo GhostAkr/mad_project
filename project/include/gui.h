@@ -58,22 +58,26 @@ protected:
     sf::Texture creatureTexture;
     sf::Sprite creatureSprite;
     creature_type type;
+    int delta_x, delta_y;  // For updateCurrent
 public:
-    size_t x_pos, y_pos;
+    int x_pos, y_pos;
     static creature* create_creature(creature_type new_type, size_t xcoord, size_t ycoord);
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
+    int updateCurrent(character* person, float tick);  //Returns 1 to stop animation, 0 - other case
 };
 
 class dark_mage_draw : public creature {
 public:
     dark_mage_draw(size_t x_coord, size_t y_coord);
     int drawCurrent(sf::RenderTarget& target);
+    //void updateCurrent(int direction);
 };
 
 class bardess_draw : public creature {
 public:
     bardess_draw(size_t x_coord, size_t y_coord);
     int drawCurrent(sf::RenderTarget& target);
+    //void updateCurrent(int direction);
 };
 
 class button : public entity {
@@ -105,14 +109,6 @@ private:
     bool isChoosingOptions;
     bool isMoveAnim1;
     bool isMoveAnim2;
-    bool isMoveUp1;
-    bool isMoveRight1;
-    bool isMoveDown1;
-    bool isMoveLeft1;
-    bool isMoveUp2;
-    bool isMoveRight2;
-    bool isMoveDown2;
-    bool isMoveLeft2;
     bool isPlay;
     bool isBattle;
     bool isDrawSpell1;
@@ -124,9 +120,8 @@ private:
     size_t cardsCounter;
     size_t cardsChoosed;
     size_t moveChoosed;
-    size_t step1;
+    size_t step;
     size_t stepDirection1;
-    size_t step2;
     size_t stepDirection2;
     sf::Clock theclock;
     float tick;
@@ -142,6 +137,7 @@ public:
     gui(character* pers1, character* pers2);
     int run(game_map& field_back);
     int set_cardNums (character* person, int num);
+    void play(battle& fight, game_map& field_back);
     int handleDirection();
 };
 

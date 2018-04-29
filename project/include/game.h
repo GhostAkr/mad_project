@@ -27,7 +27,7 @@ enum creature_type {
 
 class character {
 protected:
-    size_t xcoord, ycoord;
+    int xcoord, ycoord;
     vector<CardID> deck;
     int hp;
     character* characterDummy;
@@ -40,8 +40,8 @@ public:
     static character* create_character(Game_object character_type, creature_type type);
     int get_hp();
     int set_hp(int new_hp);
-    size_t get_xcoord();
-    size_t get_ycoord();
+    int get_xcoord();
+    int get_ycoord();
     int set_coords(size_t new_xcoord, size_t new_ycoord);
     vector<CardID> get_avalible_cards();
     virtual int create_avalible_cards() = 0;
@@ -92,7 +92,7 @@ public:
     //battle();
     int fighting(character* person1, character* person2, game_map& map);
     int move(character* person, game_map& map, size_t new_xcoord, size_t new_ycoord);
-    int play_card(CardID tag, size_t x, size_t y, int direction, character* player1, character* npc1);
+    int play_card(CardID tag, int x, int y, int direction, character* player1, character* npc1);
 };
 
 #endif  // PROJECT_INCLUDE_GAME_H_

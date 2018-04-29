@@ -11,11 +11,11 @@ int character::set_hp(int new_hp) {
     return 0;
 }
 
-size_t character::get_xcoord() {
+int character::get_xcoord() {
     return xcoord;
 }
 
-size_t character::get_ycoord() {
+int character::get_ycoord() {
     return ycoord;
 }
 
@@ -356,7 +356,7 @@ int battle::move(character* person, game_map& map, size_t new_xcoord, size_t new
   return 0;
 }
 
-int battle::play_card(CardID tag, size_t x, size_t y, int direction, character* player1, character* npc1) {
+int battle::play_card(CardID tag, int x, int y, int direction, character* player1, character* npc1) {
     card* current_card = card::create_card (tag, x, y, direction);
     auto area = current_card->get_action_area();
     //cout << "Player x = " << player1->get_xcoord() << endl;
