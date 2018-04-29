@@ -12,18 +12,6 @@ card* card::create_card(CardID name) {
         case FIREBOLT:
             ret = new firebolt();
             break;
-        case UP:
-            ret = new up();
-            break;
-        case RIGHT:
-            ret = new right();
-            break;
-        case DOWN:
-            ret = new down();
-            break;
-        case LEFT:
-            ret = new left();
-            break;
         default:
             break;
     }
@@ -37,6 +25,7 @@ card* card::create_card(CardID name, size_t x_start, size_t y_start, int directi
             ret = new firebolt(x_start, y_start, direction);
             break;
         default:
+            cout << "Wrong CardID" << endl;
             break;
     }
     return ret;
@@ -66,6 +55,10 @@ size_t card::get_spell_y() {
     return spell_y;
 }
 
+vector<pair<int, int>> card::get_direction_area() {
+    return direction_area;
+}
+
 //FIREBOLT METHODS
 
 firebolt::firebolt(size_t x_start, size_t y_start, int direction) {
@@ -79,7 +72,12 @@ firebolt::firebolt(size_t x_start, size_t y_start, int direction) {
     name = "FIREBOLT";
     tag = FIREBOLT;
     dmg = 3;
-    side = direction;
+    // Direction area
+    direction_area.push_back(pair<int, int> (0, -1));
+    direction_area.push_back(pair<int, int> (1, 0));
+    direction_area.push_back(pair<int, int> (0, 1));
+    direction_area.push_back(pair<int, int> (-1, 0));
+    //side = direction;
     switch (direction) {
         case 0:  // UP
             for (size_t i = 1; i <= ycoord_start; i++) {
@@ -146,94 +144,6 @@ void firebolt::updateSpell(float tick, bool* isMoveSpell) {
 int firebolt::drawCurrent(sf::RenderTarget& target) {
     sf::Sprite spellSprite(spellTexture);
     spellSprite.setPosition(spell_x, spell_y);
-    //spellSprite.setPosition(500, 500);
     target.draw(spellSprite);
-    //while (true) {}
     return 0;
-}
-
-//UP METHODS
-
-up::up() {
-    tag = UP;
-    name = "UP";
-}
-
-
-void up::updateSpell(float tick, bool* isMoveSpell) {
-    boolDummy = *isMoveSpell;
-    tickDummy = tick;
-}
-
-int up::drawCurrent(sf::RenderTarget& target) {
-    targetDummy = &target;
-    return 0;
-}
-
-
-string up::get_shirt_image_path() {
-    return "";
-}
-
-//RIGHT METHODS
-
-right::right() {
-    tag = RIGHT;
-    name = "RIGHT";
-}
-
-void right::updateSpell(float tick, bool* isMoveSpell) {
-    boolDummy = *isMoveSpell;
-    tickDummy = tick;
-}
-
-int right::drawCurrent(sf::RenderTarget& target) {
-    targetDummy = &target;
-    return 0;
-}
-
-string right::get_shirt_image_path() {
-    return "";
-}
-
-//DOWN METHODS
-
-down::down() {
-    tag = DOWN;
-    name = "DOWN";
-}
-
-void down::updateSpell(float tick, bool* isMoveSpell) {
-    boolDummy = *isMoveSpell;
-    tickDummy = tick;
-}
-
-int down::drawCurrent(sf::RenderTarget& target) {
-    targetDummy = &target;
-    return 0;
-}
-
-string down::get_shirt_image_path() {
-    return "";
-}
-
-//LEFT MRTHODS
-
-left::left() {
-    tag = LEFT;
-    name = "LEFT";
-}
-
-void left::updateSpell(float tick, bool* isMoveSpell) {
-    boolDummy = *isMoveSpell;
-    tickDummy = tick;
-}
-
-int left::drawCurrent(sf::RenderTarget& target) {
-    targetDummy = &target;
-    return 0;
-}
-
-string left::get_shirt_image_path() {
-    return "";
 }

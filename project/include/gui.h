@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include "game.h"
 using std::vector;
 using std::string;
@@ -125,6 +126,7 @@ private:
     size_t stepDirection2;
     sf::Clock theclock;
     float tick;
+    //sf::Time tick;
     scroll Scroll;
     card* Card;
     character* person1;

@@ -1,13 +1,18 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 #include "gui.h"
 
 //GUI METHODS
 int gui::run(game_map& field_back) {
     while (window.isOpen()) {
+        tick = theclock.getElapsedTime().asMicroseconds();
+        theclock.restart();
+        tick /= 5000;
         processEvents();
         update();
         render(field_back);
+        sf::sleep(sf::microseconds(1));
     }
     return 0;
 }
@@ -15,10 +20,12 @@ int gui::run(game_map& field_back) {
 gui::gui(character* pers1, character* pers2)
 :window(sf::VideoMode(1024, 768), "MAD")
 {
+    //window.setFramerateLimit(60);
     creature1 = creature::create_creature(pers1->cr_type, pers1->get_xcoord(), pers1->get_ycoord());
     creature2 = creature::create_creature(pers2->cr_type, pers2->get_xcoord(), pers2->get_ycoord());
     bgTexture.loadFromFile("images/background.jpg");
     bgSprite.setTexture(bgTexture);
+    //passedTime = 0;
     Card = NULL;
     scrollUp = false;
     scrollDown = false;
@@ -202,6 +209,8 @@ int gui::processEvents() {
             isBattle = true;
             isNPCPlay = true;
         }
+        cout << "Test" << endl;
+        cout << person1->chosen_actions.size() << endl;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {}  // Only one tap
@@ -353,9 +362,6 @@ void gui::play(battle& fight, game_map& field_back) {
 }
 
 int gui::render(game_map& field_back) {
-    tick = theclock.getElapsedTime().asMicroseconds();
-    theclock.restart();
-    tick /= 5000;
     window.clear();
     window.draw(bgSprite);
     battle_map field_front(field_back.get_field());
@@ -387,6 +393,7 @@ int gui::render(game_map& field_back) {
         Actions.drawCurrent(window, person1);
         isChoosingOptions = true;
     }
+    //cout << "End" << endl;
     if (isNPCPlay) {
         person2->play_dark_mage(person1);
         isNPCPlay = false;
@@ -576,9 +583,25 @@ actions::actions(vector<CardID> new_cards) {
 int actions::drawCurrent(sf::RenderTarget& target, character* person1) {
     string choiceString = "";
     for (size_t i = 0; i < person1->chosen_actions.size(); i++) {
-        card* Card = card::create_card(person1->chosen_actions[i]);
-        string new_action = Card->get_name();
-        choiceString += (new_action + "\n");
+        switch (person1->chosen_actions[i]) {
+            case UP:
+                choiceString += "UP\n";
+                break;
+            case RIGHT:
+                choiceString += "RIGHT\n";
+                break;
+            case DOWN:
+                choiceString += "DOWN\n";
+                break;
+            case LEFT:
+                choiceString += "LEFT\n";
+                break;
+            default:
+                card* Card = card::create_card(person1->chosen_actions[i]);
+                string new_action = Card->get_name();
+                choiceString += (new_action + "\n");
+                break;
+        }
     }
     sf::Font font;
     font.loadFromFile("data/font.ttf");

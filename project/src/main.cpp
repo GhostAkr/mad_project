@@ -3,7 +3,7 @@
 //#include "game.h"
 #include "gui.h"
 
-using namespace sf;
+//using namespace sf;
 using std::cout;
 using std::endl;
 

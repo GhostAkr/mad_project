@@ -34,7 +34,9 @@ protected:
     float tickDummy;
     sf::RenderTarget* targetDummy;
     bool boolDummy;
+    vector<pair<int, int>> direction_area;
 public:
+    vector<pair<int, int>> get_direction_area();
     size_t get_spell_x();
     size_t get_spell_y();
     virtual ~card() {}
@@ -47,10 +49,12 @@ public:
     int get_dmg();
     virtual void updateSpell(float tick, bool* isMoveSpell) = 0;
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
+    //virtual int set_action_area(int direction) = 0;
 };
 
 class firebolt : public card {
 public:
+    //int set_action_area(int direction);
     void updateSpell(float tick, bool* isMoveSpell);
     int drawCurrent(sf::RenderTarget& target);
     string get_shirt_image_path();
@@ -59,35 +63,4 @@ public:
     ~firebolt() {}
 };
 
-class up : public card {
-public:
-    void updateSpell(float tick, bool* isMoveSpell);
-    int drawCurrent(sf::RenderTarget& target);
-    string get_shirt_image_path();
-    up();
-};
-
-class right : public card {
-public:
-    void updateSpell(float tick, bool* isMoveSpell);
-    int drawCurrent(sf::RenderTarget& target);
-    string get_shirt_image_path();
-    right();
-};
-
-class down : public card {
-public:
-    void updateSpell(float tick, bool* isMoveSpell);
-    int drawCurrent(sf::RenderTarget& target);
-    string get_shirt_image_path();
-    down();
-};
-
-class left : public card {
-public:
-    void updateSpell(float tick, bool* isMoveSpell);
-    int drawCurrent(sf::RenderTarget& target);
-    string get_shirt_image_path();
-    left();
-};
 #endif  // PROJECT_INCLUDE_CARDS_H_
