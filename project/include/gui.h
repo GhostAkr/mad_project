@@ -118,8 +118,8 @@ private:
     bool isNPC;
     bool isDrawDirection;
     bool isChooseDirection;
-    size_t cardsCounter;
-    size_t cardsChoosed;
+    int cardsCounter;
+    int cardsChoosed;
     size_t moveChoosed;
     size_t step;
     size_t stepDirection1;

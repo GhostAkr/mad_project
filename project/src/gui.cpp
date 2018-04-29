@@ -138,8 +138,8 @@ int gui::processEvents() {
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
                 cout << "End of choice" << endl;
-                cardsChoosed = 0;
-                moveChoosed = 0;
+                //cardsChoosed = 0;
+                //moveChoosed = 0;
                 isChoosingOptions = false;
                 isOptions = false;
                 isPlay = true;
@@ -153,8 +153,8 @@ int gui::processEvents() {
             person1->chosen_actions.push_back(person1->chosen_cards[1]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
-                cardsChoosed = 0;
-                moveChoosed = 0;
+                //cardsChoosed = 0;
+                //moveChoosed = 0;
                 isChoosingOptions = false;
                 isOptions = false;
                 isPlay = true;
@@ -166,10 +166,14 @@ int gui::processEvents() {
             cout << "Choosed card 3" << endl;
             isDrawDirection = true;
             person1->chosen_actions.push_back(person1->chosen_cards[2]);
+            //if (person1->chosen_actions[person1->chosen_actions.size() - 1] == FIREBOLT) {
+            //    cout << "Pushed " << person1->chosen_actions.size() << endl;
+            //}
             cardsChoosed++;
+            cout << cardsChoosed << endl;
             if ((cardsChoosed + moveChoosed) == 6) {
-                cardsChoosed = 0;
-                moveChoosed = 0;
+                //cardsChoosed = 0;
+                //moveChoosed = 0;
                 isChoosingOptions = false;
                 isOptions = false;
                 isPlay = true;
@@ -184,15 +188,15 @@ int gui::processEvents() {
         person1->chosen_actions.push_back(UP);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
-            cardsChoosed = 0;
-            moveChoosed = 0;
+            //cardsChoosed = 0;
+            //moveChoosed = 0;
             isChoosingOptions = false;
             isOptions = false;
             isPlay = true;
             isBattle = true;
             isNPCPlay = true;
         }
-        cout << person1->chosen_actions.size() << endl;
+        //cout << person1->chosen_actions.size() << endl;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {}  // Only one tap
@@ -200,8 +204,8 @@ int gui::processEvents() {
         person1->chosen_actions.push_back(RIGHT);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
-            cardsChoosed = 0;
-            moveChoosed = 0;
+            //cardsChoosed = 0;
+            //moveChoosed = 0;
             isChoosingOptions = false;
             isOptions = false;
             isPlay = true;
@@ -215,8 +219,8 @@ int gui::processEvents() {
         person1->chosen_actions.push_back(DOWN);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
-            cardsChoosed = 0;
-            moveChoosed = 0;
+            //cardsChoosed = 0;
+            //moveChoosed = 0;
             isChoosingOptions = false;
             isOptions = false;
             isPlay = true;
@@ -230,8 +234,6 @@ int gui::processEvents() {
         person1->chosen_actions.push_back(LEFT);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
-            cardsChoosed = 0;
-            moveChoosed = 0;
             isChoosingOptions = false;
             isOptions = false;
             isPlay = true;
@@ -379,9 +381,18 @@ int gui::render(game_map& field_back) {
         isNPCPlay = false;
     }
     if (isDrawDirection) {
-        card* Card = card::create_card(person1->chosen_cards[cardsChoosed - 1], person1->get_xcoord(), person1->get_ycoord());
+        cout << "TT" << endl;
+        cout << person1->chosen_actions.size() << endl;
+        cout << "cardsChoosed = " << cardsChoosed << endl;
+        cout << "moveChoosed = " << moveChoosed << endl;
+        if (person1->chosen_actions[cardsChoosed + moveChoosed - 1] == UP) {
+            cout << "UP" << endl;
+            cout << cardsChoosed<< endl;
+        }
+        card* Card = card::create_card(person1->chosen_actions[cardsChoosed + moveChoosed - 1], person1->get_xcoord(), person1->get_ycoord());
         Card->drawActionArea(window, field_back.get_field());
         isChooseDirection = true;
+        //cout << "Test" << endl;
     }
     battle fight;
     if (isPlay) {
