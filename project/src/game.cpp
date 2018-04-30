@@ -225,7 +225,7 @@ int npc::play_dark_mage(character* player) {
         }
     }
     if (delta_x <= delta_y) {
-        cout << "QQ" << endl;
+        //cout << "QQ" << endl;
         if (delta_x > 0) {
             if (xcoordT > player_x) {
                 chosen_actions.push_back(LEFT);
@@ -279,7 +279,7 @@ int npc::play_dark_mage(character* player) {
             }
         }
     } else if (delta_x > delta_y) {
-        cout << "FF" << endl;
+        //cout << "FF" << endl;
         if (delta_y > 0) {
             if (ycoordT > player_y) {
                 chosen_actions.push_back(UP);

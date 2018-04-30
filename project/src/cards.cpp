@@ -60,12 +60,12 @@ vector<pair<int, int>> card::get_direction_area() {
     return direction_area;
 }
 
-void card::drawActionArea(sf::RenderTarget& target, SparseMatrix<Game_object> field) {
+void card::drawActionArea(sf::RenderTarget& target, SparseMatrix<Game_object> field, int x, int y) {
     choiceTexture.loadFromFile("images/direction.jpg");
     sf::Sprite choiceSprite(choiceTexture);
     for (size_t i = 0; i < direction_area.size(); i++) {
-        if (field.get(xcoord_start + direction_area[i].first + 1, ycoord_start + direction_area[i].second + 1) == 0) {
-            choiceSprite.setPosition((xcoord_start + direction_area[i].first) * 50, (ycoord_start + direction_area[i].second) * 50);
+        if (field.get(x + direction_area[i].first + 1, y + direction_area[i].second + 1) == 0) {
+            choiceSprite.setPosition((x + direction_area[i].first) * 50, (y + direction_area[i].second) * 50);
             target.draw(choiceSprite);
         }
     }
@@ -80,6 +80,7 @@ firebolt::firebolt(size_t x_start, size_t y_start) {
     ycoord_start = y_start;
     shirt_image_path = "images/cards/shirts/firebolt.png";
     spell_image_path = "images/cards/spells/firebolt.png";
+    previewTexture.loadFromFile("images/cards/spells/firebolt_preview.png");
     spellTexture.loadFromFile(spell_image_path);
     name = "FIREBOLT";
     tag = FIREBOLT;
@@ -97,24 +98,32 @@ firebolt::firebolt() {
     name = "FIREBOLT";
 }
 
-int firebolt::handleDirection(sf::Window& source, SparseMatrix<Game_object> field) {
+void firebolt::previewSpell(sf::RenderTarget& target, int xcoord, int ycoord) {
+    sf::Sprite previewSprite(previewTexture);
+    for (size_t i = 0; i < action_area.size(); i++) {
+        previewSprite.setPosition(xcoord + action_area[i].first, ycoord + action_area[i].second);
+        target.draw(previewSprite);
+    }
+}
+
+int firebolt::handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y) {
     while (true) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  //Onle one tap
-            if (sf::IntRect(xcoord_start * 50, (ycoord_start - 1) * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
-            field.get(xcoord_start + 1, (ycoord_start - 1) + 1) == 0) {  // UP
+            if (sf::IntRect(x * 50, (y - 1) * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            field.get(x + 1, (y - 1) + 1) == 0) {  // UP
                 return 0;
             }
-            if (sf::IntRect((xcoord_start + 1) * 50, ycoord_start * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
-            field.get((xcoord_start + 1) + 1, ycoord_start + 1) == 0) {  // RIGHT
+            if (sf::IntRect((x + 1) * 50, y * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            field.get((x + 1) + 1, y + 1) == 0) {  // RIGHT
                 return 1;
             }
-            if (sf::IntRect(xcoord_start * 50, (ycoord_start + 1) * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
-            field.get(xcoord_start + 1, (ycoord_start + 1) + 1) == 0) {  // DOWN
+            if (sf::IntRect(x * 50, (y + 1) * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            field.get(x + 1, (y + 1) + 1) == 0) {  // DOWN
                 return 2;
             }
-            if (sf::IntRect((xcoord_start - 1) * 50, ycoord_start * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
-            field.get((xcoord_start - 1) + 1, ycoord_start + 1) == 0) {  // LEFT
+            if (sf::IntRect((x - 1) * 50, y * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            field.get((x - 1) + 1, y + 1) == 0) {  // LEFT
                 return 3;
             }
         }

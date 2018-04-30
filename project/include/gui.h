@@ -57,24 +57,29 @@ public:
 class creature : public entity {
 protected:
     sf::Texture creatureTexture;
+    sf::Texture previewTexture;
     sf::Sprite creatureSprite;
     creature_type type;
     int delta_x, delta_y;  // For updateCurrent
 public:
+    vector<sf::Sprite> previewSprite;
     int x_pos, y_pos;
     static creature* create_creature(creature_type new_type, size_t xcoord, size_t ycoord);
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
+    virtual void drawPreview(sf::RenderTarget& target) = 0;
     int updateCurrent(character* person, float tick);  //Returns 1 to stop animation, 0 - other case
 };
 
 class dark_mage_draw : public creature {
 public:
+    void drawPreview(sf::RenderTarget& target);
     dark_mage_draw(size_t x_coord, size_t y_coord);
     int drawCurrent(sf::RenderTarget& target);
 };
 
 class bardess_draw : public creature {
 public:
+    void drawPreview(sf::RenderTarget& target);
     bardess_draw(size_t x_coord, size_t y_coord);
     int drawCurrent(sf::RenderTarget& target);
 };
@@ -116,7 +121,8 @@ private:
     bool isMoveSpell2;
     bool isNPCPlay;
     bool isNPC;
-    bool isDrawDirection;
+    //bool isDrawDirection;
+    bool isPreview;
     bool isChooseDirection;
     int cardsCounter;
     int cardsChoosed;
@@ -135,13 +141,17 @@ private:
     creature* creature2;
     game_map field_back;
     vector<CardID> cardNums;
+    int preview_xcoord, preview_ycoord;
     //string stat;
 public:
+    int get_xpreivew();
+    int get_ypreview();
+    void set_preview_coords(int new_x, int new_y);
     gui(character* pers1, character* pers2, game_map& field);
     int run();
     int set_cardNums (character* person, int num);
     void play(battle& fight);
-    //int handleDirection();
+    void preview(vector<CardID> chosen_actions);
 };
 
 #endif  // PROJECT_INCLUDE_GUI_H_

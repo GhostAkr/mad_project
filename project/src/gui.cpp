@@ -4,6 +4,20 @@
 #include "gui.h"
 
 //GUI METHODS
+
+int gui::get_xpreivew() {
+    return preview_xcoord;
+}
+
+int gui::get_ypreview() {
+    return preview_ycoord;
+}
+
+void gui::set_preview_coords(int new_x, int new_y) {
+    preview_xcoord = new_x;
+    preview_ycoord = new_y;
+}
+
 int gui::run() {
     while (window.isOpen()) {
         tick = theclock.getElapsedTime().asMicroseconds();
@@ -40,8 +54,9 @@ field_back(field)
     isMoveSpell1 = false;
     isNPCPlay = false;
     isNPC = false;
-    isDrawDirection = false;
+    //isDrawDirection = false;
     isChooseDirection = false;
+    isPreview = false;
     cardsCounter = 0;
     cardsChoosed = 0;
     moveChoosed = 0;
@@ -50,6 +65,48 @@ field_back(field)
     stepDirection2 = 0;
     person1 = pers1;
     person2 = pers2;
+    preview_xcoord = pers1->get_xcoord();
+    preview_ycoord = pers1->get_ycoord();
+}
+
+void gui::preview(vector<CardID> chosen_actions) {
+    //cout << chosen_actions.size() << endl;
+    for (size_t i = 0; i < chosen_actions.size(); i++) {
+        //sf::Sprite sprite;
+        switch (chosen_actions[i]) {
+            case UP:
+                //cout << "Test" << endl;
+                //cout << "Draw UP" << endl;
+                creature1->drawPreview(window);
+                break;
+            case RIGHT:
+                //cout << "Draw RIGHT" << endl;
+                //sf::Sprite sprite;
+                //sprite.setPosition(preview_xcoord, preview_ycoord);
+                //creature1->previewSprite.push_back(sprite);
+                creature1->drawPreview(window);
+                break;
+            case DOWN:
+                //sf::Sprite sprite;
+                //sprite.setPosition(preview_xcoord, preview_ycoord);
+                //creature1->previewSprite.push_back(sprite);
+                creature1->drawPreview(window);
+                break;
+            case LEFT:
+                //sf::Sprite sprite;
+                //sprite.setPosition(preview_xcoord, preview_ycoord);
+                //creature1->previewSprite.push_back(sprite);
+                creature1->drawPreview(window);
+                break;
+            default:
+                card* Card = card::create_card(chosen_actions[i]);
+                Card->drawActionArea(window, field_back.get_field(), preview_xcoord, preview_ycoord);
+                person1->directions.push_back(Card->handleDirection(window, field_back.get_field(), preview_xcoord, preview_ycoord));
+                Card->set_action_area(person1->directions.back());
+                Card->previewSpell(window, preview_xcoord, preview_ycoord);
+                break;
+        }
+    }
 }
 
 int gui::processEvents() {
@@ -63,12 +120,14 @@ int gui::processEvents() {
                 break;
         }
     }
+    /*
     if (isChooseDirection) {
         card* Card = card::create_card(person1->chosen_cards[cardsChoosed - 1], person1->get_xcoord(), person1->get_ycoord());
         person1->directions.push_back(Card->handleDirection(window, field_back.get_field()));
         isChooseDirection = false;
         isDrawDirection = false;
     }
+    */
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Getting only one tap
         if (sf::IntRect(20, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isBegBtn) {
@@ -133,7 +192,7 @@ int gui::processEvents() {
         }
         if (sf::IntRect(670, 20, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
             cout << "Choosed card 1" << endl;
-            isDrawDirection = true;
+            isPreview = true;
             person1->chosen_actions.push_back(person1->chosen_cards[0]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
@@ -149,7 +208,7 @@ int gui::processEvents() {
         }
         if (sf::IntRect(670, 210, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
             cout << "Choosed card 2" << endl;
-            isDrawDirection = true;
+            isPreview = true;
             person1->chosen_actions.push_back(person1->chosen_cards[1]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
@@ -164,7 +223,7 @@ int gui::processEvents() {
         }
         if (sf::IntRect(670, 400, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
             cout << "Choosed card 3" << endl;
-            isDrawDirection = true;
+            isPreview = true;
             person1->chosen_actions.push_back(person1->chosen_cards[2]);
             //if (person1->chosen_actions[person1->chosen_actions.size() - 1] == FIREBOLT) {
             //    cout << "Pushed " << person1->chosen_actions.size() << endl;
@@ -185,6 +244,11 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {}  // Only one tap
         cout << "Choosed move up" << endl;
+        preview_ycoord--;
+        sf::Sprite sprite;
+        sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
+        creature1->previewSprite.push_back(sprite);
+        isPreview = true;
         person1->chosen_actions.push_back(UP);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
@@ -201,6 +265,11 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {}  // Only one tap
         cout << "Choosed move right" << endl;
+        preview_xcoord++;
+        sf::Sprite sprite;
+        sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
+        creature1->previewSprite.push_back(sprite);
+        isPreview = true;
         person1->chosen_actions.push_back(RIGHT);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
@@ -216,6 +285,11 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {}  // Only one tap
         cout << "Choosed move down" << endl;
+        preview_ycoord++;
+        sf::Sprite sprite;
+        sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
+        creature1->previewSprite.push_back(sprite);
+        isPreview = true;
         person1->chosen_actions.push_back(DOWN);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
@@ -231,6 +305,11 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {}  // Only one tap
         cout << "Choosed move left" << endl;
+        preview_xcoord--;
+        sf::Sprite sprite;
+        sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
+        creature1->previewSprite.push_back(sprite);
+        isPreview = true;
         person1->chosen_actions.push_back(LEFT);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
@@ -380,6 +459,11 @@ int gui::render(game_map& field_back) {
         person2->play_dark_mage(person1);
         isNPCPlay = false;
     }
+    if (isPreview) {
+        //cout << "Test" << endl;
+        preview(person1->chosen_actions);
+    }
+    /*
     if (isDrawDirection) {
         cout << "TT" << endl;
         cout << person1->chosen_actions.size() << endl;
@@ -394,6 +478,7 @@ int gui::render(game_map& field_back) {
         isChooseDirection = true;
         //cout << "Test" << endl;
     }
+    */
     battle fight;
     if (isPlay) {
         this->play(fight);
@@ -431,6 +516,8 @@ int gui::render(game_map& field_back) {
         step = 0;
         stepDirection1 = 0;
         stepDirection2 = 0;
+        preview_xcoord = person1->get_xcoord();
+        preview_ycoord = person1->get_ycoord();
     }
     window.display();
     return 0;
@@ -646,6 +733,7 @@ int creature::updateCurrent(character* person, float tick) {
 // DARK MAGE METHODS
 
 dark_mage_draw::dark_mage_draw(size_t x_coord, size_t y_coord) {
+    previewTexture.loadFromFile("images/creatures/mage_preview.png");
     creatureTexture.loadFromFile("images/creatures/mage.png");
     creatureSprite.setTexture(creatureTexture);
     x_pos = x_coord * 50;
@@ -658,9 +746,21 @@ int dark_mage_draw::drawCurrent(sf::RenderTarget& target) {
     return 0;
 }
 
+void dark_mage_draw::drawPreview(sf::RenderTarget& target) {
+    //sf::Sprite previewSprite(previewTexture);
+    //previewSprite.setPosition(x * 50, y * 50);
+    //cout << "Drawing at x = " << x << ", y = " << y << endl;
+    for (size_t i = 0; i < previewSprite.size(); i++) {
+        previewSprite[i].setTexture(previewTexture);
+        target.draw(previewSprite[i]);
+    }
+    //target.draw(previewSprite);
+}
+
 // BARDESS METHODS
 
 bardess_draw::bardess_draw(size_t x_coord, size_t y_coord) {
+    previewTexture.loadFromFile("images/creatures/timmy_preview.png");
     creatureTexture.loadFromFile("images/creatures/timmy.png");
     creatureSprite.setTexture(creatureTexture);
     x_pos = x_coord * 50;
@@ -671,4 +771,15 @@ int bardess_draw::drawCurrent(sf::RenderTarget& target) {
     creatureSprite.setPosition(x_pos, y_pos);
     target.draw(creatureSprite);
     return 0;
+}
+
+void bardess_draw::drawPreview(sf::RenderTarget& target) {
+    //sf::Sprite previewSprite(previewTexture);
+    //previewSprite.setPosition(x * 50, y * 50);
+    //target.draw(previewSprite);
+    for (size_t i = 0; i < previewSprite.size(); i++) {
+        previewSprite[i].setTexture(previewTexture);
+        target.draw(previewSprite[i]);
+    }
+    //target.draw(previewSprite);
 }

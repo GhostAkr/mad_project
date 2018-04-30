@@ -39,6 +39,7 @@ protected:
     string name;
     sf::Texture choiceTexture;
     sf::Texture spellTexture;
+    sf::Texture previewTexture;
     int side;
     float tickDummy;
     sf::RenderTarget* targetDummy;
@@ -59,13 +60,15 @@ public:
     virtual void updateSpell(float tick, bool* isMoveSpell) = 0;
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
     virtual void set_action_area(int direction) = 0;
-    virtual int handleDirection(sf::Window& source, SparseMatrix<Game_object> field) = 0;
-    void drawActionArea(sf::RenderTarget& target, SparseMatrix<Game_object> field);
+    virtual int handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y) = 0;
+    virtual void previewSpell(sf::RenderTarget& target, int xcoord, int ycoord) = 0;
+    void drawActionArea(sf::RenderTarget& target, SparseMatrix<Game_object> field, int x, int y);
 };
 
 class firebolt : public card {
 public:
-    int handleDirection(sf::Window& source, SparseMatrix<Game_object> field);
+    void previewSpell(sf::RenderTarget& target, int xcoord, int ycoord);
+    int handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y);
     void set_action_area(int direction);
     void updateSpell(float tick, bool* isMoveSpell);
     int drawCurrent(sf::RenderTarget& target);
