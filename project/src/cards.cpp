@@ -61,13 +61,18 @@ vector<pair<int, int>> card::get_direction_area() {
 }
 
 void card::drawActionArea(sf::RenderTarget& target, SparseMatrix<Game_object> field, int x, int y) {
+    cout << "drawActionArea" << endl;
     choiceTexture.loadFromFile("images/direction.jpg");
     sf::Sprite choiceSprite(choiceTexture);
     for (size_t i = 0; i < direction_area.size(); i++) {
+        //cout << "Cycle" << endl;
         if (field.get(x + direction_area[i].first + 1, y + direction_area[i].second + 1) == 0) {
+            //cout << "Drawing" << endl;
+            //cout << "xpos = " << (x + direction_area[i].first) << endl;
+            //cout << "ypos = " << (y + direction_area[i].second) << endl;
             choiceSprite.setPosition((x + direction_area[i].first) * 50, (y + direction_area[i].second) * 50);
-            target.draw(choiceSprite);
         }
+        target.draw(choiceSprite);
     }
 }
 
@@ -86,6 +91,7 @@ firebolt::firebolt(size_t x_start, size_t y_start) {
     tag = FIREBOLT;
     dmg = 3;
     // Direction area
+    //cout << "Setting direction area" << endl;
     direction_area.push_back(pair<int, int> (0, -1));
     direction_area.push_back(pair<int, int> (1, 0));
     direction_area.push_back(pair<int, int> (0, 1));
@@ -101,7 +107,7 @@ firebolt::firebolt() {
 void firebolt::previewSpell(sf::RenderTarget& target, int xcoord, int ycoord) {
     sf::Sprite previewSprite(previewTexture);
     for (size_t i = 0; i < action_area.size(); i++) {
-        previewSprite.setPosition(xcoord + action_area[i].first, ycoord + action_area[i].second);
+        previewSprite.setPosition((xcoord + action_area[i].first) * 50, (ycoord + action_area[i].second) * 50);
         target.draw(previewSprite);
     }
 }

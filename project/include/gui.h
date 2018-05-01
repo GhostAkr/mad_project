@@ -62,8 +62,7 @@ protected:
     creature_type type;
     int delta_x, delta_y;  // For updateCurrent
 public:
-    //vector<sf::Sprite> previewSprite;
-    vector<pair<int, int>> startPoints;
+    vector<pair<int, int>> startPoints;  // Start points for each step
     int x_pos, y_pos;
     static creature* create_creature(creature_type new_type, size_t xcoord, size_t ycoord);
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
@@ -122,7 +121,7 @@ private:
     bool isMoveSpell2;
     bool isNPCPlay;
     bool isNPC;
-    //bool isDrawDirection;
+    bool isDrawDirection;
     bool isPreview;
     bool isChooseDirection;
     int cardsCounter;
@@ -133,7 +132,6 @@ private:
     size_t stepDirection2;
     sf::Clock theclock;
     float tick;
-    //sf::Time tick;
     scroll Scroll;
     card* Card;
     character* person1;
@@ -143,6 +141,7 @@ private:
     game_map field_back;
     vector<CardID> cardNums;
     int preview_xcoord, preview_ycoord;
+    vector<pair<int, int>> cardsStartPoints;
     //string stat;
 public:
     int get_xpreivew();
