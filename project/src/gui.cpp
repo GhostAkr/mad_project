@@ -245,9 +245,10 @@ int gui::processEvents() {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {}  // Only one tap
         cout << "Choosed move up" << endl;
         preview_ycoord--;
-        sf::Sprite sprite;
-        sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
-        creature1->previewSprite.push_back(sprite);
+        creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
+        //sf::Sprite sprite;
+        //sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
+        //creature1->previewSprite.push_back(sprite);
         isPreview = true;
         person1->chosen_actions.push_back(UP);
         moveChoosed++;
@@ -266,9 +267,10 @@ int gui::processEvents() {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {}  // Only one tap
         cout << "Choosed move right" << endl;
         preview_xcoord++;
-        sf::Sprite sprite;
-        sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
-        creature1->previewSprite.push_back(sprite);
+        creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
+        //sf::Sprite sprite;
+        //sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
+        //creature1->previewSprite.push_back(sprite);
         isPreview = true;
         person1->chosen_actions.push_back(RIGHT);
         moveChoosed++;
@@ -286,9 +288,10 @@ int gui::processEvents() {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {}  // Only one tap
         cout << "Choosed move down" << endl;
         preview_ycoord++;
-        sf::Sprite sprite;
-        sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
-        creature1->previewSprite.push_back(sprite);
+        creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
+        //sf::Sprite sprite;
+        //sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
+        //creature1->previewSprite.push_back(sprite);
         isPreview = true;
         person1->chosen_actions.push_back(DOWN);
         moveChoosed++;
@@ -306,9 +309,10 @@ int gui::processEvents() {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {}  // Only one tap
         cout << "Choosed move left" << endl;
         preview_xcoord--;
-        sf::Sprite sprite;
-        sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
-        creature1->previewSprite.push_back(sprite);
+        creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
+        //sf::Sprite sprite;
+        //sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
+        //creature1->previewSprite.push_back(sprite);
         isPreview = true;
         person1->chosen_actions.push_back(LEFT);
         moveChoosed++;
@@ -747,12 +751,13 @@ int dark_mage_draw::drawCurrent(sf::RenderTarget& target) {
 }
 
 void dark_mage_draw::drawPreview(sf::RenderTarget& target) {
-    //sf::Sprite previewSprite(previewTexture);
+    sf::Sprite previewSprite(previewTexture);
     //previewSprite.setPosition(x * 50, y * 50);
     //cout << "Drawing at x = " << x << ", y = " << y << endl;
-    for (size_t i = 0; i < previewSprite.size(); i++) {
-        previewSprite[i].setTexture(previewTexture);
-        target.draw(previewSprite[i]);
+    for (size_t i = 0; i < startPoints.size(); i++) {
+        //previewSprite.setTexture(previewTexture);
+        previewSprite.setPosition(startPoints[i].first * 50, startPoints[i].second * 50);
+        target.draw(previewSprite);
     }
     //target.draw(previewSprite);
 }
@@ -774,12 +779,13 @@ int bardess_draw::drawCurrent(sf::RenderTarget& target) {
 }
 
 void bardess_draw::drawPreview(sf::RenderTarget& target) {
-    //sf::Sprite previewSprite(previewTexture);
+    sf::Sprite previewSprite(previewTexture);
     //previewSprite.setPosition(x * 50, y * 50);
-    //target.draw(previewSprite);
-    for (size_t i = 0; i < previewSprite.size(); i++) {
-        previewSprite[i].setTexture(previewTexture);
-        target.draw(previewSprite[i]);
+    //cout << "Drawing at x = " << x << ", y = " << y << endl;
+    for (size_t i = 0; i < startPoints.size(); i++) {
+        //previewSprite.setTexture(previewTexture);
+        previewSprite.setPosition(startPoints[i].first * 50, startPoints[i].second * 50);
+        target.draw(previewSprite);
     }
     //target.draw(previewSprite);
 }

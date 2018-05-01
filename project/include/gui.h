@@ -62,7 +62,8 @@ protected:
     creature_type type;
     int delta_x, delta_y;  // For updateCurrent
 public:
-    vector<sf::Sprite> previewSprite;
+    //vector<sf::Sprite> previewSprite;
+    vector<pair<int, int>> startPoints;
     int x_pos, y_pos;
     static creature* create_creature(creature_type new_type, size_t xcoord, size_t ycoord);
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
