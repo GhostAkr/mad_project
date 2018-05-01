@@ -133,7 +133,8 @@ private:
     sf::Clock theclock;
     float tick;
     scroll Scroll;
-    card* Card;
+    card* PlayingCard1;
+    card* PlayingCard2;
     character* person1;
     character* person2;
     creature* creature1;

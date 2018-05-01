@@ -135,7 +135,7 @@ string firebolt::get_shirt_image_path() {
     return shirt_image_path;
 }
 
-void firebolt::updateSpell(float tick, bool* isMoveSpell) {
+void firebolt::updateSpell(float tick, bool* isMoveSpell, int side) {
     switch (side) {
         case 0:
             if (spell_y < 50) {

@@ -39,7 +39,8 @@ field_back(field)
     creature2 = creature::create_creature(pers2->cr_type, pers2->get_xcoord(), pers2->get_ycoord());
     bgTexture.loadFromFile("images/background.jpg");
     bgSprite.setTexture(bgTexture);
-    Card = NULL;
+    PlayingCard1 = NULL;
+    PlayingCard2 = NULL;
     scrollUp = false;
     scrollDown = false;
     isBegBtn = true;
@@ -52,6 +53,8 @@ field_back(field)
     isBattle = false;
     isDrawSpell1 = false;
     isMoveSpell1 = false;
+    isDrawSpell2 = false;
+    isMoveSpell2 = false;
     isNPCPlay = false;
     isNPC = false;
     isDrawDirection = false;
@@ -322,16 +325,27 @@ int gui::update() {
         }
     }
     if (isMoveSpell1) {
-        Card->updateSpell(tick, &isMoveSpell1);
+        PlayingCard1->updateSpell(tick, &isMoveSpell1, person1->directions[stepDirection1 - 1]);
         if (!isMoveSpell1) {
             isDrawSpell1 = false;
+        }
+    }
+    if (isMoveSpell2) {
+        //cout << "Test" << endl;
+        //cout << PlayingCard2->
+        PlayingCard2->updateSpell(tick, &isMoveSpell2, person2->directions[stepDirection2 - 1]);
+        //cout << "x = " << PlayingCard2->get_spell_x() << endl;
+        //cout << "y = " << PlayingCard2->get_spell_y() << endl;
+        //cout << "Test" << endl;
+        if (!isMoveSpell2) {
+            isDrawSpell2 = false;
         }
     }
     return 0;
 }
 
 void gui::play(battle& fight) {
-    if (step < 6 && !isMoveAnim1 && !isMoveAnim2) {
+    if (step < 6 && !isMoveAnim1 && !isMoveAnim2 && !isMoveSpell1 && !isMoveSpell2) {
         switch (person1->chosen_actions[step]) {
             case UP:
                 fight.move(person1, field_back, person1->get_xcoord(), person1->get_ycoord() - 1);
@@ -392,6 +406,24 @@ void gui::play(battle& fight) {
                 //cout << "NPC hit" << endl;
                 break;
         }
+        if (person1->chosen_actions[step] != UP && person1->chosen_actions[step] != RIGHT && person1->chosen_actions[step] != DOWN && person1->chosen_actions[step] != LEFT) {
+            PlayingCard1 = card::create_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord());
+            cout << "Player Direction = " << person1->directions[stepDirection1] << endl;
+            PlayingCard1->set_action_area(person1->directions[stepDirection1]);
+            fight.play_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord(), person1, person2, person1->directions[stepDirection1]);
+            isDrawSpell1 = true;
+            isMoveSpell1 = true;
+            stepDirection1++;
+        }
+        if (person2->chosen_actions[step] != UP && person2->chosen_actions[step] != RIGHT && person2->chosen_actions[step] != DOWN && person2->chosen_actions[step] != LEFT) {
+            PlayingCard2 = card::create_card(person2->chosen_actions[step], person2->get_xcoord(), person2->get_ycoord());
+            cout << "NPC Direction = " << person2->directions[stepDirection2] << endl;
+            PlayingCard2->set_action_area(person2->directions[stepDirection2]);
+            fight.play_card(person2->chosen_actions[step], person2->get_xcoord(), person2->get_ycoord(), person1, person2, person2->directions[stepDirection2]);
+            isDrawSpell2 = true;
+            isMoveSpell2 = true;
+            stepDirection2++;
+        }
         step++;
     }
 }
@@ -436,7 +468,6 @@ int gui::render(game_map& field_back) {
         preview(person1->chosen_actions);
     }
     if (isDrawDirection) {
-        cout << "TestQQQ" << endl;
         card* Card = card::create_card(person1->chosen_actions[cardsChoosed + moveChoosed - 1], preview_xcoord, preview_ycoord);
         Card->drawActionArea(window, field_back.get_field(), preview_xcoord, preview_ycoord);
         isChooseDirection = true;
@@ -446,10 +477,12 @@ int gui::render(game_map& field_back) {
         this->play(fight);
     }
     if (isDrawSpell1 && !isMoveAnim1 && !isMoveAnim2) {
-        Card->drawCurrent(window);
+        PlayingCard1->drawCurrent(window);
+    }
+    if (isDrawSpell2 && !isMoveAnim1 && !isMoveAnim2) {
+        PlayingCard2->drawCurrent(window);
     }
     if (step == 6 && !isMoveAnim1 && !isMoveAnim2) {
-        cout << "Exit" << endl;
         isBegBtn = true;
         person1->chosen_cards.clear();
         person1->chosen_actions.clear();
@@ -457,7 +490,8 @@ int gui::render(game_map& field_back) {
         person2->chosen_cards.clear();
         person2->chosen_actions.clear();
         person2->directions.clear();
-        Card = NULL;
+        PlayingCard1 = NULL;
+        PlayingCard2 = NULL;
         scrollUp = false;
         scrollDown = false;
         isBegBtn = true;

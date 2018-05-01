@@ -349,8 +349,9 @@ int battle::move(character* person, game_map& map, size_t new_xcoord, size_t new
   return 0;
 }
 
-int battle::play_card(CardID tag, int x, int y, character* player1, character* npc1) {
+int battle::play_card(CardID tag, int x, int y, character* player1, character* npc1, int direction) {
     card* current_card = card::create_card (tag, x, y);
+    current_card->set_action_area(direction);
     auto area = current_card->get_action_area();
     for (size_t i = 0; i < area.size(); ++i) {
         if((area[i].first + x == player1->get_xcoord()) and (area[i].second + y == player1->get_ycoord())) {

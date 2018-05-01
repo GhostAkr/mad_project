@@ -40,7 +40,7 @@ protected:
     sf::Texture choiceTexture;
     sf::Texture spellTexture;
     sf::Texture previewTexture;
-    int side;
+    //int side;
     float tickDummy;
     sf::RenderTarget* targetDummy;
     bool boolDummy;
@@ -57,7 +57,7 @@ public:
     string get_name();
     string get_spell_image_path();
     int get_dmg();
-    virtual void updateSpell(float tick, bool* isMoveSpell) = 0;
+    virtual void updateSpell(float tick, bool* isMoveSpell, int side) = 0;
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
     virtual void set_action_area(int direction) = 0;
     virtual int handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y) = 0;
@@ -70,7 +70,7 @@ public:
     void previewSpell(sf::RenderTarget& target, int xcoord, int ycoord);
     int handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y);
     void set_action_area(int direction);
-    void updateSpell(float tick, bool* isMoveSpell);
+    void updateSpell(float tick, bool* isMoveSpell, int side);
     int drawCurrent(sf::RenderTarget& target);
     string get_shirt_image_path();
     firebolt();
