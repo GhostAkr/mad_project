@@ -114,6 +114,10 @@ int gui::processEvents() {
         card* Card = card::create_card(person1->chosen_cards[cardsChoosed - 1], preview_xcoord, preview_ycoord);
         person1->directions.push_back(Card->handleDirection(window, field_back.get_field(), preview_xcoord, preview_ycoord));
         cardsStartPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
+        if ((cardsChoosed + moveChoosed) == 6) {
+            isPreview = false;
+            isPlay = true;
+        }
         isChooseDirection = false;
         isDrawDirection = false;
     }
@@ -188,10 +192,10 @@ int gui::processEvents() {
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
                 cout << "End of choice" << endl;
-                isPreview = false;
+                //isPreview = false;
                 isChoosingOptions = false;
                 isOptions = false;
-                isPlay = true;
+                //isPlay = true;
                 isBattle = true;
                 isNPCPlay = true;
             }
@@ -203,10 +207,10 @@ int gui::processEvents() {
             person1->chosen_actions.push_back(person1->chosen_cards[1]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
-                isPreview = false;
+                //isPreview = false;
                 isChoosingOptions = false;
                 isOptions = false;
-                isPlay = true;
+                //isPlay = true;
                 isBattle = true;
                 isNPCPlay = true;
             }
@@ -219,10 +223,10 @@ int gui::processEvents() {
             cardsChoosed++;
             cout << cardsChoosed << endl;
             if ((cardsChoosed + moveChoosed) == 6) {
-                isPreview = false;
+                //isPreview = false;
                 isChoosingOptions = false;
                 isOptions = false;
-                isPlay = true;
+                //isPlay = true;
                 isBattle = true;
                 isNPCPlay = true;
             }
@@ -331,12 +335,7 @@ int gui::update() {
         }
     }
     if (isMoveSpell2) {
-        //cout << "Test" << endl;
-        //cout << PlayingCard2->
         PlayingCard2->updateSpell(tick, &isMoveSpell2, person2->directions[stepDirection2 - 1]);
-        //cout << "x = " << PlayingCard2->get_spell_x() << endl;
-        //cout << "y = " << PlayingCard2->get_spell_y() << endl;
-        //cout << "Test" << endl;
         if (!isMoveSpell2) {
             isDrawSpell2 = false;
         }
@@ -364,16 +363,6 @@ void gui::play(battle& fight) {
                 isMoveAnim1 = true;
                 break;
             default:
-                /*
-                Card = card::create_card(person1->chosen_actions[step1], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection1]);
-                fight.play_card(person1->chosen_actions[step1], person1->get_xcoord(), person1->get_ycoord(), person1->directions[stepDirection1], person1, person2);
-                isDrawSpell1 = true;
-                isMoveSpell1 = true;
-                isNPC = true;
-                step1++;
-                stepDirection1++;
-                */
-                //cout << "Player hit" << endl;
                 break;
         }
         switch (person2->chosen_actions[step]) {
@@ -394,16 +383,6 @@ void gui::play(battle& fight) {
                 isMoveAnim2 = true;
                 break;
             default:
-                /*
-                Card = card::create_card(person2->chosen_actions[step2], person2->get_xcoord(), person2->get_ycoord(), person2->directions[stepDirection2]);
-                fight.play_card(person2->chosen_actions[step2], person2->get_xcoord(), person2->get_ycoord(), person2->directions[stepDirection2], person1, person2);
-                isDrawSpell1 = true;
-                isMoveSpell1 = true;
-                isNPC = false;
-                step2++;
-                stepDirection2++;
-                */
-                //cout << "NPC hit" << endl;
                 break;
         }
         if (person1->chosen_actions[step] != UP && person1->chosen_actions[step] != RIGHT && person1->chosen_actions[step] != DOWN && person1->chosen_actions[step] != LEFT) {
