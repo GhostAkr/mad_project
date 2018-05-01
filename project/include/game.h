@@ -82,7 +82,6 @@ public:
 
 class battle {
 public:
-    //battle();
     int fighting(character* person1, character* person2, game_map& map);
     int move(character* person, game_map& map, size_t new_xcoord, size_t new_ycoord);
     int play_card(CardID tag, int x, int y, character* player1, character* npc1);

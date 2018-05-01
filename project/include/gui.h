@@ -142,7 +142,6 @@ private:
     vector<CardID> cardNums;
     int preview_xcoord, preview_ycoord;
     vector<pair<int, int>> cardsStartPoints;
-    //string stat;
 public:
     int get_xpreivew();
     int get_ypreview();

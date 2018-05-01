@@ -1,9 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-//#include "game.h"
 #include "gui.h"
 
-//using namespace sf;
 using std::cout;
 using std::endl;
 

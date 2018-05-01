@@ -85,21 +85,11 @@ void gui::preview(vector<CardID> chosen_actions) {
                 creature1->drawPreview(window);
                 break;
             default:
-                //cout << "Preview" << endl;
-                //cout << "cardsStartPoints.size() = " << cardsStartPoints.size() << endl;
-                //cout << "person1->directions.size() = " << person1->directions.size() << endl;
-                //cout << "Begin of cycle" << endl;
                 for (size_t j = 0; j < cardsStartPoints.size(); j++) {
-                    //cout << "Preview cycle" << endl;
-                    //if (cardsStartPoints.size() == person1->directions.size()) {
                     card* Card = card::create_card(chosen_actions[i], cardsStartPoints[j].first, cardsStartPoints[j].second);
                     Card->set_action_area(person1->directions[j]);
                     Card->previewSpell(window, cardsStartPoints[j].first, cardsStartPoints[j].second);
-                    //}
                 }
-                //cout << "End of cycle" << endl;
-
-                //card* Card = card::create_card(chosen_actions[i]);
                 break;
         }
     }
@@ -118,8 +108,6 @@ int gui::processEvents() {
     }
 
     if (isChooseDirection) {
-        //cout << "preview_xcoord = " << preview_xcoord << endl;
-        //cout << "preview_ycoord = " << preview_ycoord << endl;
         card* Card = card::create_card(person1->chosen_cards[cardsChoosed - 1], preview_xcoord, preview_ycoord);
         person1->directions.push_back(Card->handleDirection(window, field_back.get_field(), preview_xcoord, preview_ycoord));
         cardsStartPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
@@ -194,18 +182,9 @@ int gui::processEvents() {
             isPreview = true;
             isDrawDirection = true;
             person1->chosen_actions.push_back(person1->chosen_cards[0]);
-            //cardsStartPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
-            //cout << "Test" << endl;
-            //card* Card = card::create_card(person1->chosen_actions.back(), preview_xcoord, preview_ycoord);
-            //Card->drawActionArea(window, field_back.get_field(), preview_xcoord, preview_ycoord);
-            //person1->directions.push_back(Card->handleDirection(window, field_back.get_field(), preview_xcoord, preview_ycoord));
-            //card
-            //cardsPreview.push_back(chosen_cards[0]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
                 cout << "End of choice" << endl;
-                //cardsChoosed = 0;
-                //moveChoosed = 0;
                 isPreview = false;
                 isChoosingOptions = false;
                 isOptions = false;
@@ -219,15 +198,8 @@ int gui::processEvents() {
             isPreview = true;
             isDrawDirection = true;
             person1->chosen_actions.push_back(person1->chosen_cards[1]);
-            //cardsStartPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
-            //card* Card = card::create_card(person1->chosen_actions.back(), preview_xcoord, preview_ycoord);
-            //Card->drawActionArea(window, field_back.get_field(), preview_xcoord, preview_ycoord);
-            //person1->directions.push_back(Card->handleDirection(window, field_back.get_field(), preview_xcoord, preview_ycoord));
             cardsChoosed++;
-            //cout << "Test" << endl;
             if ((cardsChoosed + moveChoosed) == 6) {
-                //cardsChoosed = 0;
-                //moveChoosed = 0;
                 isPreview = false;
                 isChoosingOptions = false;
                 isOptions = false;
@@ -241,18 +213,9 @@ int gui::processEvents() {
             isPreview = true;
             isDrawDirection = true;
             person1->chosen_actions.push_back(person1->chosen_cards[2]);
-            //cardsStartPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
-            //card* Card = card::create_card(person1->chosen_actions.back(), preview_xcoord, preview_ycoord);
-            //Card->drawActionArea(window, field_back.get_field(), preview_xcoord, preview_ycoord);
-            //person1->directions.push_back(Card->handleDirection(window, field_back.get_field(), preview_xcoord, preview_ycoord));
-            //if (person1->chosen_actions[person1->chosen_actions.size() - 1] == FIREBOLT) {
-            //    cout << "Pushed " << person1->chosen_actions.size() << endl;
-            //}
             cardsChoosed++;
             cout << cardsChoosed << endl;
             if ((cardsChoosed + moveChoosed) == 6) {
-                //cardsChoosed = 0;
-                //moveChoosed = 0;
                 isPreview = false;
                 isChoosingOptions = false;
                 isOptions = false;
@@ -267,15 +230,10 @@ int gui::processEvents() {
         cout << "Choosed move up" << endl;
         preview_ycoord--;
         creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
-        //sf::Sprite sprite;
-        //sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
-        //creature1->previewSprite.push_back(sprite);
         isPreview = true;
         person1->chosen_actions.push_back(UP);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
-            //cardsChoosed = 0;
-            //moveChoosed = 0;
             isPreview = false;
             isChoosingOptions = false;
             isOptions = false;
@@ -283,22 +241,16 @@ int gui::processEvents() {
             isBattle = true;
             isNPCPlay = true;
         }
-        //cout << person1->chosen_actions.size() << endl;
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {}  // Only one tap
         cout << "Choosed move right" << endl;
         preview_xcoord++;
         creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
-        //sf::Sprite sprite;
-        //sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
-        //creature1->previewSprite.push_back(sprite);
         isPreview = true;
         person1->chosen_actions.push_back(RIGHT);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
-            //cardsChoosed = 0;
-            //moveChoosed = 0;
             isPreview = false;
             isChoosingOptions = false;
             isOptions = false;
@@ -312,15 +264,10 @@ int gui::processEvents() {
         cout << "Choosed move down" << endl;
         preview_ycoord++;
         creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
-        //sf::Sprite sprite;
-        //sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
-        //creature1->previewSprite.push_back(sprite);
         isPreview = true;
         person1->chosen_actions.push_back(DOWN);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
-            //cardsChoosed = 0;
-            //moveChoosed = 0;
             isPreview = false;
             isChoosingOptions = false;
             isOptions = false;
@@ -334,9 +281,6 @@ int gui::processEvents() {
         cout << "Choosed move left" << endl;
         preview_xcoord--;
         creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
-        //sf::Sprite sprite;
-        //sprite.setPosition(preview_xcoord * 50, preview_ycoord * 50);
-        //creature1->previewSprite.push_back(sprite);
         isPreview = true;
         person1->chosen_actions.push_back(LEFT);
         moveChoosed++;
@@ -383,7 +327,6 @@ int gui::update() {
             isDrawSpell1 = false;
         }
     }
-    //cout << "Update" << endl;
     return 0;
 }
 
@@ -437,7 +380,7 @@ void gui::play(battle& fight) {
                 isMoveAnim2 = true;
                 break;
             default:
-            /*
+                /*
                 Card = card::create_card(person2->chosen_actions[step2], person2->get_xcoord(), person2->get_ycoord(), person2->directions[stepDirection2]);
                 fight.play_card(person2->chosen_actions[step2], person2->get_xcoord(), person2->get_ycoord(), person2->directions[stepDirection2], person1, person2);
                 isDrawSpell1 = true;
@@ -454,7 +397,6 @@ void gui::play(battle& fight) {
 }
 
 int gui::render(game_map& field_back) {
-    //cout << "Render1" << endl;
     window.clear();
     window.draw(bgSprite);
     battle_map field_front(field_back.get_field());
@@ -481,7 +423,6 @@ int gui::render(game_map& field_back) {
     startBTN.drawCurrent(window);
     Scroll.set_avalible_cards(person1->get_avalible_cards());
     Scroll.drawCurrent(window);
-    //cout << "Render2" << endl;
     if (isOptions) {
         actions Actions(person1->chosen_cards);
         Actions.drawCurrent(window, person1);
@@ -491,36 +432,15 @@ int gui::render(game_map& field_back) {
         person2->play_dark_mage(person1);
         isNPCPlay = false;
     }
-    //cout << "Render3" << endl;
     if (isPreview) {
-        //cout << "Test" << endl;
         preview(person1->chosen_actions);
     }
-    //cout << "Render4" << endl;
     if (isDrawDirection) {
         cout << "TestQQQ" << endl;
         card* Card = card::create_card(person1->chosen_actions[cardsChoosed + moveChoosed - 1], preview_xcoord, preview_ycoord);
-        //cout << "Test" << endl;
         Card->drawActionArea(window, field_back.get_field(), preview_xcoord, preview_ycoord);
-        //cout << "Test" << endl;
         isChooseDirection = true;
     }
-    /*
-    if (isDrawDirection) {
-        cout << "TT" << endl;
-        cout << person1->chosen_actions.size() << endl;
-        cout << "cardsChoosed = " << cardsChoosed << endl;
-        cout << "moveChoosed = " << moveChoosed << endl;
-        if (person1->chosen_actions[cardsChoosed + moveChoosed - 1] == UP) {
-            cout << "UP" << endl;
-            cout << cardsChoosed<< endl;
-        }
-        card* Card = card::create_card(person1->chosen_actions[cardsChoosed + moveChoosed - 1], person1->get_xcoord(), person1->get_ycoord());
-        Card->drawActionArea(window, field_back.get_field());
-        isChooseDirection = true;
-        //cout << "Test" << endl;
-    }
-    */
     battle fight;
     if (isPlay) {
         this->play(fight);
@@ -790,14 +710,10 @@ int dark_mage_draw::drawCurrent(sf::RenderTarget& target) {
 
 void dark_mage_draw::drawPreview(sf::RenderTarget& target) {
     sf::Sprite previewSprite(previewTexture);
-    //previewSprite.setPosition(x * 50, y * 50);
-    //cout << "Drawing at x = " << x << ", y = " << y << endl;
     for (size_t i = 0; i < startPoints.size(); i++) {
-        //previewSprite.setTexture(previewTexture);
         previewSprite.setPosition(startPoints[i].first * 50, startPoints[i].second * 50);
         target.draw(previewSprite);
     }
-    //target.draw(previewSprite);
 }
 
 // BARDESS METHODS
@@ -818,12 +734,8 @@ int bardess_draw::drawCurrent(sf::RenderTarget& target) {
 
 void bardess_draw::drawPreview(sf::RenderTarget& target) {
     sf::Sprite previewSprite(previewTexture);
-    //previewSprite.setPosition(x * 50, y * 50);
-    //cout << "Drawing at x = " << x << ", y = " << y << endl;
     for (size_t i = 0; i < startPoints.size(); i++) {
-        //previewSprite.setTexture(previewTexture);
         previewSprite.setPosition(startPoints[i].first * 50, startPoints[i].second * 50);
         target.draw(previewSprite);
     }
-    //target.draw(previewSprite);
 }

@@ -166,7 +166,6 @@ int npc::play_dark_mage(character* player) {
     int player_y = (int)player->get_ycoord();
     int xcoordT = (int)xcoord;
     int ycoordT = (int)ycoord;
-    //cout << player_x - xcoord;
     size_t delta_x = abs(player_x - xcoordT);
     size_t delta_y = abs(player_y - ycoordT);
     int dir = 0;
@@ -225,7 +224,6 @@ int npc::play_dark_mage(character* player) {
         }
     }
     if (delta_x <= delta_y) {
-        //cout << "QQ" << endl;
         if (delta_x > 0) {
             if (xcoordT > player_x) {
                 chosen_actions.push_back(LEFT);
@@ -279,7 +277,6 @@ int npc::play_dark_mage(character* player) {
             }
         }
     } else if (delta_x > delta_y) {
-        //cout << "FF" << endl;
         if (delta_y > 0) {
             if (ycoordT > player_y) {
                 chosen_actions.push_back(UP);
