@@ -480,6 +480,8 @@ int gui::render(game_map& field_back) {
         stepDirection2 = 0;
         preview_xcoord = person1->get_xcoord();
         preview_ycoord = person1->get_ycoord();
+        creature1->startPoints.clear();
+        cardsStartPoints.clear();
     }
     window.display();
     return 0;
