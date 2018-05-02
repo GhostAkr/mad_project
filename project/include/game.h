@@ -21,11 +21,11 @@ enum creature_type {
 class character {
 protected:
     int xcoord, ycoord;
-    vector<CardID> deck;
     int hp;
-    int money;
     character* characterDummy;
 public:
+    int money;
+    vector<CardID> deck;
     int get_money();
     vector<CardID> avalible_cards;
     vector<CardID> chosen_cards;

@@ -18,9 +18,9 @@ private:
     string shop_file_path;
     int player_money;
     vector<sf::Texture> shopTextures;
+public:
     vector<sf::Sprite> shopSprites;
     vector<CardID> shopCards;
-public:
     shop(int money);
     void drawCurrent(sf::RenderTarget& target);
 };
@@ -166,6 +166,7 @@ private:
     bool isMenuBtn;
     bool isShopBtn;
     bool isApplyBtn;
+    bool isShopCardsBtn;
     //Drawing flags
     bool isDrawSpell1;
     bool isDrawSpell2;

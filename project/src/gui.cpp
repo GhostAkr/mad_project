@@ -49,6 +49,7 @@ void gui::set_start_vals() {
     isShopBtn = true;
     isShop = false;
     isApplyBtn = false;
+    isShopCardsBtn = false;
     //cout << "After flags" << endl;
     isMainMenu = true;
     isActionWindow = false;
@@ -186,17 +187,34 @@ int gui::processEvents() {
     }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Getting only one tap
+        if (isShopCardsBtn) {
+            cout << "Reading" << endl;
+            cout << "shopSprites.size() = " << shopSprites.size() << endl;
+            for (size_t i = 0; i < shopSprites.size(); i++) {
+                if (sf::IntRect(shopSprites[i].getPosition().x, shopSprites[i].getPosition().y, 80, 180).contains(sf::Mouse::getPosition(window))) {
+                    card* CurCard = card::create_card(shopCards[i]);
+                    if (person1->money >= CurCard->get_cost()) {
+                        person1->deck.push_back(shopCards[i]);
+                        person1->money -= CurCard->get_cost();
+                    }
+                }
+            }
+        }
         if (sf::IntRect(20, 730, 200, 32).contains(sf::Mouse::getPosition(window)) && isApplyBtn) {
             isShop = false;
             isMainMenu = true;
             isApplyBtn = false;
             isShopBtn = true;
+            isShopCardsBtn = false;
+            isPlayBtn = true;
         }
         if (sf::IntRect(412, 386, 200, 32).contains(sf::Mouse::getPosition(window)) && isShopBtn) {
             isShopBtn = false;
             isShop = true;
             isMainMenu = false;
             isApplyBtn = true;
+            isShopCardsBtn = true;
+            isPlayBtn = false;
         }
         if (sf::IntRect(480, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isMenuBtn) {
             set_start_vals();
@@ -556,6 +574,8 @@ int gui::render(game_map& field_back) {
         apply_button applyBTN;
         applyBTN.drawCurrent(window);
         Shop.drawCurrent(window);
+        shopSprites = Shop.shopSprites;
+        shopCards = Shop.shopCards;
     }
     if (isMainMenu) {
         play_button playBTN;
