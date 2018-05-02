@@ -13,6 +13,15 @@ class entity {
 
 };
 
+class show_deck : public entity {
+private:
+    character* person;
+    vector<sf::Texture> cardsTextures;
+public:
+    show_deck(character* pers);
+    void drawCurrent(sf::RenderTarget& target);
+};
+
 class shop : public entity {
 private:
     string shop_file_path;
@@ -139,6 +148,12 @@ public:
     void drawCurrent(sf::RenderTarget& target);
 };
 
+class show_deck_button : public button {
+public:
+    show_deck_button();
+    void drawCurrent(sf::RenderTarget& target);
+};
+
 class gui {
 private:
     int processEvents();
@@ -151,6 +166,7 @@ private:
     bool isMainMenu;
     bool isActionWindow;
     bool isShop;
+    bool isDeck;
     // Animation flags
     bool scrollUp;
     bool scrollDown;
@@ -167,6 +183,7 @@ private:
     bool isShopBtn;
     bool isApplyBtn;
     bool isShopCardsBtn;
+    bool isDeckBtn;
     //Drawing flags
     bool isDrawSpell1;
     bool isDrawSpell2;

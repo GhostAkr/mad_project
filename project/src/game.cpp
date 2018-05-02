@@ -110,15 +110,6 @@ player::player(string map_path_player, creature_type type) {
     while (indeck >> tag) {
         deck.push_back(CardID(tag));
     }
-    /*
-    while (true) {
-        infile >> tag;
-        if (tag == 1111) {
-            break;
-        }
-        deck.push_back(CardID(tag));
-    }
-    */
     infile.close();
     indeck.close();
 }

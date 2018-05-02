@@ -50,6 +50,8 @@ void gui::set_start_vals() {
     isShop = false;
     isApplyBtn = false;
     isShopCardsBtn = false;
+    isDeckBtn = true;
+    isDeck = false;
     //cout << "After flags" << endl;
     isMainMenu = true;
     isActionWindow = false;
@@ -188,8 +190,6 @@ int gui::processEvents() {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Getting only one tap
         if (isShopCardsBtn) {
-            cout << "Reading" << endl;
-            cout << "shopSprites.size() = " << shopSprites.size() << endl;
             for (size_t i = 0; i < shopSprites.size(); i++) {
                 if (sf::IntRect(shopSprites[i].getPosition().x, shopSprites[i].getPosition().y, 80, 180).contains(sf::Mouse::getPosition(window))) {
                     card* CurCard = card::create_card(shopCards[i]);
@@ -200,6 +200,16 @@ int gui::processEvents() {
                 }
             }
         }
+        if (sf::IntRect(412, 438, 200, 32).contains(sf::Mouse::getPosition(window)) && isDeckBtn) {
+            isDeck = true;
+            isShopBtn = false;
+            isMainMenu = false;
+            isApplyBtn = true;
+            isShopCardsBtn = true;
+            isPlayBtn = false;
+            isDeckBtn = false;
+
+        }
         if (sf::IntRect(20, 730, 200, 32).contains(sf::Mouse::getPosition(window)) && isApplyBtn) {
             isShop = false;
             isMainMenu = true;
@@ -207,6 +217,8 @@ int gui::processEvents() {
             isShopBtn = true;
             isShopCardsBtn = false;
             isPlayBtn = true;
+            isDeck = false;
+            isDeckBtn = true;
         }
         if (sf::IntRect(412, 386, 200, 32).contains(sf::Mouse::getPosition(window)) && isShopBtn) {
             isShopBtn = false;
@@ -215,6 +227,7 @@ int gui::processEvents() {
             isApplyBtn = true;
             isShopCardsBtn = true;
             isPlayBtn = false;
+            isDeckBtn = false;
         }
         if (sf::IntRect(480, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isMenuBtn) {
             set_start_vals();
@@ -267,6 +280,7 @@ int gui::processEvents() {
             isMainMenu = false;
             isBegBtn = true;
             isMenuBtn = true;
+            isDeckBtn = false;
         }
         if (sf::IntRect(20, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isBegBtn) {
             cout << "Scroll Up" << endl;
@@ -569,6 +583,12 @@ void gui::play(battle& fight) {
 int gui::render(game_map& field_back) {
     window.clear();
     window.draw(bgSprite);
+    if (isDeck) {
+        show_deck Deck(person1);
+        apply_button applyBTN;
+        applyBTN.drawCurrent(window);
+        Deck.drawCurrent(window);
+    }
     if (isShop) {
         shop Shop(person1->get_money());
         apply_button applyBTN;
@@ -580,6 +600,8 @@ int gui::render(game_map& field_back) {
     if (isMainMenu) {
         play_button playBTN;
         shop_button shopBTN;
+        show_deck_button deckBTN;
+        deckBTN.drawCurrent(window);
         shopBTN.drawCurrent(window);
         playBTN.drawCurrent(window);
     }
@@ -798,7 +820,7 @@ void menu_button::drawCurrent(sf::RenderTarget& target) {
 shop_button::shop_button() {
     buttonTexture.loadFromFile("images/buttons/shop_button.png");
     buttonSprite.setTexture(buttonTexture);
-    x_pos = 411;
+    x_pos = 412;
     y_pos = 386;
 }
 
@@ -815,6 +837,18 @@ apply_button::apply_button() {
 }
 
 void apply_button::drawCurrent(sf::RenderTarget& target) {
+    buttonSprite.setPosition(x_pos, y_pos);
+    target.draw(buttonSprite);
+}
+
+show_deck_button::show_deck_button() {
+    buttonTexture.loadFromFile("images/buttons/show_deck_button.png");
+    buttonSprite.setTexture(buttonTexture);
+    x_pos = 412;
+    y_pos = 438;
+}
+
+void show_deck_button::drawCurrent(sf::RenderTarget& target) {
     buttonSprite.setPosition(x_pos, y_pos);
     target.draw(buttonSprite);
 }
@@ -963,6 +997,32 @@ void shop::drawCurrent(sf::RenderTarget& target) {
         infoText.setColor(sf::Color::Black);
         infoText.setPosition(col * 104 + 5, row * 180 + 230);
         target.draw(infoText);
+        col++;
+        if (col % 10 == 0) {
+            col = 0;
+            row++;
+        }
+    }
+}
+
+// DECK METHODS
+
+show_deck::show_deck(character* pers) {
+    person = pers;
+}
+
+void show_deck::drawCurrent(sf::RenderTarget& target) {
+    int row = 0, col = 0;
+    vector<CardID> deck(person->deck);
+    //cout << "Number of cards = " << deck.size() << endl;
+    for (size_t i = 0; i < deck.size(); i++) {
+        card* CurCard = card::create_card(deck[i]);
+        sf::Texture texture;
+        texture.loadFromFile(CurCard->get_shirt_image_path());
+        cardsTextures.push_back(texture);
+        sf::Sprite sprite(cardsTextures.back());
+        sprite.setPosition(col * 104 + 5, row * 200 + 45);
+        target.draw(sprite);
         col++;
         if (col % 10 == 0) {
             col = 0;
