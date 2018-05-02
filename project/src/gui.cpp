@@ -6,17 +6,19 @@
 //GUI METHODS
 
 int gui::get_xpreivew() {
-    return preview_xcoord;
+    return preview_coords.back().first;
 }
 
 int gui::get_ypreview() {
-    return preview_ycoord;
+    return preview_coords.back().second;
 }
 
+/*
 void gui::set_preview_coords(int new_x, int new_y) {
     preview_xcoord = new_x;
     preview_ycoord = new_y;
 }
+*/
 
 int gui::run() {
     while (window.isOpen()) {
@@ -92,11 +94,13 @@ void gui::preview(vector<CardID> chosen_actions) {
                 creature1->drawPreview(window);
                 break;
             default:
+                //cout << "Cards Size = " << cardsStartPoints.size() << endl;
                 for (size_t j = 0; j < cardsStartPoints.size(); j++) {
                     card* Card = card::create_card(chosen_actions[i], cardsStartPoints[j].first, cardsStartPoints[j].second);
                     Card->set_action_area(person1->directions[j]);
                     Card->previewSpell(window, cardsStartPoints[j].first, cardsStartPoints[j].second);
                 }
+                //cout << "Test" << endl;
                 break;
         }
     }
@@ -159,7 +163,7 @@ int gui::processEvents() {
                     cardsStartPoints.pop_back();
                     person1->chosen_actions.pop_back();
                     person1->directions.pop_back();
-                    preview_coords.pop_back();
+                    //preview_coords.pop_back();
                     cardsChoosed--;
                     break;
             }
@@ -518,8 +522,9 @@ int gui::render(game_map& field_back) {
             preview(person1->chosen_actions);
         }
         if (isDrawDirection) {
-            card* Card = card::create_card(person1->chosen_actions[cardsChoosed + moveChoosed - 1], preview_xcoord, preview_ycoord);
-            Card->drawActionArea(window, field_back.get_field(), preview_xcoord, preview_ycoord);
+            cout << "Preview Coord Size = " << preview_coords.size() << endl;
+            card* Card = card::create_card(person1->chosen_actions[cardsChoosed + moveChoosed - 1], preview_coords.back().first, preview_coords.back().second);
+            Card->drawActionArea(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second);
             isChooseDirection = true;
         }
         battle fight;
@@ -554,7 +559,7 @@ int gui::render(game_map& field_back) {
             isBattle = false;
             isDrawSpell1 = false;
             isMoveSpell1 = false;
-            //isNPCPlay = false;
+            isNPCPlay = false;
             //isNPC = false;
             cardsCounter = 0;
             cardsChoosed = 0;
@@ -562,8 +567,9 @@ int gui::render(game_map& field_back) {
             step = 0;
             stepDirection1 = 0;
             stepDirection2 = 0;
-            preview_xcoord = person1->get_xcoord();
-            preview_ycoord = person1->get_ycoord();
+            preview_coords.push_back(pair<int, int> (person1->get_xcoord(), person1->get_ycoord()));
+            //preview_xcoord = person1->get_xcoord();
+            //preview_ycoord = person1->get_ycoord();
             creature1->startPoints.clear();
             cardsStartPoints.clear();
         }

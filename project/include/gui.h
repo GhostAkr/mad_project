@@ -162,12 +162,12 @@ private:
     game_map field_back;
     vector<CardID> cardNums;
     vector<pair<int, int>> preview_coords;
-    int preview_xcoord, preview_ycoord;
+    //int preview_xcoord, preview_ycoord;
     vector<pair<int, int>> cardsStartPoints;
 public:
     int get_xpreivew();
     int get_ypreview();
-    void set_preview_coords(int new_x, int new_y);
+    //void set_preview_coords(int new_x, int new_y);
     gui(character* pers1, character* pers2, game_map& field);
     int run();
     int set_cardNums (character* person, int num);
