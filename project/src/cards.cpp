@@ -56,6 +56,10 @@ size_t card::get_spell_y() {
     return spell_y;
 }
 
+int card::get_cost() {
+    return cost;
+}
+
 vector<pair<int, int>> card::get_direction_area() {
     return direction_area;
 }
@@ -86,6 +90,7 @@ firebolt::firebolt(size_t x_start, size_t y_start) {
     name = "FIREBOLT";
     tag = FIREBOLT;
     dmg = 3;
+    cost = 100;
     // Direction area
     direction_area.push_back(pair<int, int> (0, -1));
     direction_area.push_back(pair<int, int> (1, 0));
@@ -96,6 +101,7 @@ firebolt::firebolt(size_t x_start, size_t y_start) {
 firebolt::firebolt() {
     shirt_image_path = "images/cards/shirts/firebolt.png";
     tag = FIREBOLT;
+    cost = 100;
     name = "FIREBOLT";
 }
 

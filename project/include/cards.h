@@ -44,8 +44,10 @@ protected:
     sf::RenderTarget* targetDummy;
     bool boolDummy;
     vector<pair<int, int>> direction_area;
+    int cost;
 public:
     vector<pair<int, int>> get_direction_area();
+    int get_cost();
     size_t get_spell_x();
     size_t get_spell_y();
     virtual ~card() {}

@@ -2,6 +2,10 @@
 
 // CHARACTER METHODS
 
+int character::get_money() {
+    return money;
+}
+
 int character::get_hp() {
     return hp;
 }
@@ -94,11 +98,19 @@ player::player(string map_path_player, creature_type type) {
     cr_type = type;
     hp = 100;
     ifstream infile(map_path_player);
-    if (!infile) {
+    ifstream indeck("data/player_deck");
+    if (!infile || !indeck) {
         cout << "Player creation error!" << endl;
     }
     infile >> xcoord >> ycoord;
+    cout << "Before reading money" << endl;
+    infile >> money;
+    cout << "After reading money" << endl;
     int tag;
+    while (indeck >> tag) {
+        deck.push_back(CardID(tag));
+    }
+    /*
     while (true) {
         infile >> tag;
         if (tag == 1111) {
@@ -106,7 +118,9 @@ player::player(string map_path_player, creature_type type) {
         }
         deck.push_back(CardID(tag));
     }
+    */
     infile.close();
+    indeck.close();
 }
 
 int player::create_avalible_cards() {

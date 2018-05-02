@@ -27,6 +27,7 @@ int gui::run() {
 }
 
 void gui::set_start_vals() {
+    cout << "Start vals" << endl;
     bgTexture.loadFromFile("images/background.jpg");
     bgSprite.setTexture(bgTexture);
     person1 = character::create_character(PLAYER, DARKMAGE);
@@ -44,6 +45,11 @@ void gui::set_start_vals() {
     //preview_coords.push_back(pair<int, int> (person1->get_xcoord(), person1->get_ycoord()));
     //creature1->startPoints.clear();
     //cardsStartPoints.clear();
+    //cout << "Before flags" << endl;
+    isShopBtn = true;
+    isShop = false;
+    isApplyBtn = false;
+    //cout << "After flags" << endl;
     isMainMenu = true;
     isActionWindow = false;
     isPlayBtn = true;
@@ -119,25 +125,13 @@ void gui::new_turn_vals() {
 }
 
 gui::~gui() {
-    //delete person1;
-    //delete person2;
-    //delete creature1;
-    //delete creature2;
+
 }
 
 gui::gui(game_map& field)
 :window(sf::VideoMode(1024, 768), "MAD"),
 field_back(field)
 {
-    //set_start_vals();
-    //person1 = character::create_character(PLAYER, DARKMAGE);
-    //person2 = character::create_character(ENEMY, DARKMAGE);
-    //person1->create_avalible_cards();
-    //person2->create_avalible_cards();
-    //creature1 = creature::create_creature(person1->cr_type, person1->get_xcoord(), person1->get_ycoord());
-    //creature2 = creature::create_creature(person2->cr_type, person2->get_xcoord(), person2->get_ycoord());
-    //person1 = pers1;
-    //person2 = pers2;
     set_start_vals();
 }
 
@@ -192,11 +186,19 @@ int gui::processEvents() {
     }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Getting only one tap
+        if (sf::IntRect(20, 730, 200, 32).contains(sf::Mouse::getPosition(window)) && isApplyBtn) {
+            isShop = false;
+            isMainMenu = true;
+            isApplyBtn = false;
+            isShopBtn = true;
+        }
+        if (sf::IntRect(412, 386, 200, 32).contains(sf::Mouse::getPosition(window)) && isShopBtn) {
+            isShopBtn = false;
+            isShop = true;
+            isMainMenu = false;
+            isApplyBtn = true;
+        }
         if (sf::IntRect(480, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isMenuBtn) {
-            //creature1 = creature::create_creature(pers1->cr_type, pers1->get_xcoord(), pers1->get_ycoord());
-            //creature2 = creature::create_creature(pers2->cr_type, pers2->get_xcoord(), pers2->get_ycoord());
-            //person1 = pers1;
-            //person2 = pers2;
             set_start_vals();
             isActionWindow = false;
             isMainMenu = true;
@@ -549,8 +551,16 @@ void gui::play(battle& fight) {
 int gui::render(game_map& field_back) {
     window.clear();
     window.draw(bgSprite);
+    if (isShop) {
+        shop Shop(person1->get_money());
+        apply_button applyBTN;
+        applyBTN.drawCurrent(window);
+        Shop.drawCurrent(window);
+    }
     if (isMainMenu) {
         play_button playBTN;
+        shop_button shopBTN;
+        shopBTN.drawCurrent(window);
         playBTN.drawCurrent(window);
     }
     if (isActionWindow) {
@@ -765,6 +775,30 @@ void menu_button::drawCurrent(sf::RenderTarget& target) {
     target.draw(buttonSprite);
 }
 
+shop_button::shop_button() {
+    buttonTexture.loadFromFile("images/buttons/shop_button.png");
+    buttonSprite.setTexture(buttonTexture);
+    x_pos = 411;
+    y_pos = 386;
+}
+
+void shop_button::drawCurrent(sf::RenderTarget& target) {
+    buttonSprite.setPosition(x_pos, y_pos);
+    target.draw(buttonSprite);
+}
+
+apply_button::apply_button() {
+    buttonTexture.loadFromFile("images/buttons/apply_button.png");
+    buttonSprite.setTexture(buttonTexture);
+    x_pos = 20;
+    y_pos = 730;
+}
+
+void apply_button::drawCurrent(sf::RenderTarget& target) {
+    buttonSprite.setPosition(x_pos, y_pos);
+    target.draw(buttonSprite);
+}
+
 // SCROLL METHODS
 
 scroll::scroll() {
@@ -808,7 +842,7 @@ int scroll::set_avalible_cards(vector <CardID> new_cards) {
     return 0;
 }
 
-//ACTIONS METHODS
+// ACTIONS METHODS
 
 actions::actions(vector<CardID> new_cards) {
     chosen_cards = new_cards;
@@ -861,6 +895,60 @@ int actions::drawCurrent(sf::RenderTarget& target, character* person1) {
     target.draw(card2Sprite);
     target.draw(card3Sprite);
     return 0;
+}
+
+// SHOP METHODS
+
+shop::shop(int money) {
+    shop_file_path = "data/shop";
+    player_money = money;
+}
+
+void shop::drawCurrent(sf::RenderTarget& target) {
+    int row = 0, col = 0;
+    stringstream coins;
+    string coinsSTR;
+    coins << player_money;
+    coins >> coinsSTR;
+    string info = "Your money: " + coinsSTR;
+    sf::Font font;
+    font.loadFromFile("data/font.ttf");
+    sf::Text infoText(info, font, 20);
+    infoText.setColor(sf::Color::Black);
+    infoText.setPosition(0, 0);
+    target.draw(infoText);
+    ifstream infile(shop_file_path);
+    if (!infile) {
+        cout << "Shop error" << endl;
+    }
+    int tag;
+    while (infile >> tag) {
+        card* Card = card::create_card(CardID(tag));
+        shopCards.push_back(CardID(tag));
+        sf::Texture texture;
+        texture.loadFromFile(Card->get_shirt_image_path());
+        shopTextures.push_back(texture);
+        sf::Sprite sprite(shopTextures.back());
+        sprite.setPosition(col * 104 + 5, row * 180 + 45);
+        shopSprites.push_back(sprite);
+        target.draw(shopSprites.back());
+        stringstream cost;
+        string costSTR;
+        cost << Card->get_cost();
+        cost >> costSTR;
+        string price = costSTR;
+        sf::Font font;
+        font.loadFromFile("data/font.ttf");
+        sf::Text infoText(price, font, 20);
+        infoText.setColor(sf::Color::Black);
+        infoText.setPosition(col * 104 + 5, row * 180 + 230);
+        target.draw(infoText);
+        col++;
+        if (col % 10 == 0) {
+            col = 0;
+            row++;
+        }
+    }
 }
 
 // CREATURE METHODS

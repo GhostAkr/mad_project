@@ -23,8 +23,10 @@ protected:
     int xcoord, ycoord;
     vector<CardID> deck;
     int hp;
+    int money;
     character* characterDummy;
 public:
+    int get_money();
     vector<CardID> avalible_cards;
     vector<CardID> chosen_cards;
     vector<CardID> chosen_actions;

@@ -13,6 +13,18 @@ class entity {
 
 };
 
+class shop : public entity {
+private:
+    string shop_file_path;
+    int player_money;
+    vector<sf::Texture> shopTextures;
+    vector<sf::Sprite> shopSprites;
+    vector<CardID> shopCards;
+public:
+    shop(int money);
+    void drawCurrent(sf::RenderTarget& target);
+};
+
 class battle_map : public entity {
 private:
     sf::Texture wallTexture;
@@ -115,6 +127,18 @@ public:
     void drawCurrent(sf::RenderTarget& target);
 };
 
+class shop_button : public button {
+public:
+    shop_button();
+    void drawCurrent(sf::RenderTarget& target);
+};
+
+class apply_button : public button {
+public:
+    apply_button();
+    void drawCurrent(sf::RenderTarget& target);
+};
+
 class gui {
 private:
     int processEvents();
@@ -126,6 +150,7 @@ private:
     // Windows flags
     bool isMainMenu;
     bool isActionWindow;
+    bool isShop;
     // Animation flags
     bool scrollUp;
     bool scrollDown;
@@ -139,6 +164,8 @@ private:
     bool isScrollBtn;
     bool isCancelBtn;
     bool isMenuBtn;
+    bool isShopBtn;
+    bool isApplyBtn;
     //Drawing flags
     bool isDrawSpell1;
     bool isDrawSpell2;
@@ -170,6 +197,8 @@ private:
     vector<CardID> cardNums;
     vector<pair<int, int>> preview_coords;
     vector<pair<int, int>> cardsStartPoints;
+    vector<sf::Sprite> shopSprites;
+    vector<CardID> shopCards;
     //int* code;
 public:
     void set_start_vals();
