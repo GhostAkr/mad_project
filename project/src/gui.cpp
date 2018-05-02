@@ -59,7 +59,7 @@ field_back(field)
     isDrawSpell2 = false;
     isMoveSpell2 = false;
     isNPCPlay = false;
-    //isNPC = false;
+    isCancelBtn = false;
     isDrawDirection = false;
     isChooseDirection = false;
     isPreview = false;
@@ -71,8 +71,9 @@ field_back(field)
     stepDirection2 = 0;
     person1 = pers1;
     person2 = pers2;
-    preview_xcoord = pers1->get_xcoord();
-    preview_ycoord = pers1->get_ycoord();
+    preview_coords.push_back(pair<int, int> (pers1->get_xcoord(), pers1->get_ycoord()));
+    //preview_xcoord = pers1->get_xcoord();
+    //preview_ycoord = pers1->get_ycoord();
 }
 
 void gui::preview(vector<CardID> chosen_actions) {
@@ -114,9 +115,9 @@ int gui::processEvents() {
     }
 
     if (isChooseDirection) {
-        card* Card = card::create_card(person1->chosen_cards[cardsChoosed - 1], preview_xcoord, preview_ycoord);
-        person1->directions.push_back(Card->handleDirection(window, field_back.get_field(), preview_xcoord, preview_ycoord));
-        cardsStartPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
+        card* Card = card::create_card(person1->chosen_cards[cardsChoosed - 1], preview_coords.back().first, preview_coords.back().second);
+        person1->directions.push_back(Card->handleDirection(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second));
+        cardsStartPoints.push_back(pair<int, int> (preview_coords.back().first, preview_coords.back().second));
         if ((cardsChoosed + moveChoosed) == 6) {
             isPreview = false;
             isPlay = true;
@@ -127,7 +128,46 @@ int gui::processEvents() {
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Getting only one tap
-        if (sf::IntRect(500, 500, 200, 32).contains(sf::Mouse::getPosition(window)) && isPlayBtn) {
+        if (sf::IntRect(250, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isCancelBtn) {
+            cout << "Cancel" << endl;
+            switch (person1->chosen_actions.back()) {
+                case UP:
+                    creature1->startPoints.pop_back();
+                    person1->chosen_actions.pop_back();
+                    preview_coords.pop_back();
+                    moveChoosed--;
+                    break;
+                case RIGHT:
+                    creature1->startPoints.pop_back();
+                    person1->chosen_actions.pop_back();
+                    preview_coords.pop_back();
+                    moveChoosed--;
+                    break;
+                case DOWN:
+                    creature1->startPoints.pop_back();
+                    person1->chosen_actions.pop_back();
+                    preview_coords.pop_back();
+                    moveChoosed--;
+                    break;
+                case LEFT:
+                    creature1->startPoints.pop_back();
+                    person1->chosen_actions.pop_back();
+                    preview_coords.pop_back();
+                    moveChoosed--;
+                    break;
+                default:
+                    cardsStartPoints.pop_back();
+                    person1->chosen_actions.pop_back();
+                    person1->directions.pop_back();
+                    preview_coords.pop_back();
+                    cardsChoosed--;
+                    break;
+            }
+            if (person1->chosen_actions.size() == 0) {
+                isCancelBtn = false;
+            }
+        }
+        if (sf::IntRect(412, 334, 200, 32).contains(sf::Mouse::getPosition(window)) && isPlayBtn) {
             cout << "Let's Play!" << endl;
             isActionWindow = true;
             isMainMenu = false;
@@ -197,6 +237,7 @@ int gui::processEvents() {
             cout << "Choosed card 1" << endl;
             isPreview = true;
             isDrawDirection = true;
+            isCancelBtn = true;
             person1->chosen_actions.push_back(person1->chosen_cards[0]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
@@ -211,6 +252,7 @@ int gui::processEvents() {
             cout << "Choosed card 2" << endl;
             isPreview = true;
             isDrawDirection = true;
+            isCancelBtn = true;
             person1->chosen_actions.push_back(person1->chosen_cards[1]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
@@ -224,6 +266,7 @@ int gui::processEvents() {
             cout << "Choosed card 3" << endl;
             isPreview = true;
             isDrawDirection = true;
+            isCancelBtn = true;
             person1->chosen_actions.push_back(person1->chosen_cards[2]);
             cardsChoosed++;
             cout << cardsChoosed << endl;
@@ -238,9 +281,15 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {}  // Only one tap
         cout << "Choosed move up" << endl;
-        preview_ycoord--;
-        creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
+        //preview_ycoord--;
+        int new_x = preview_coords.back().first;
+        int new_y = preview_coords.back().second - 1;
+        preview_coords.push_back(pair<int, int> (new_x, new_y));
+        cout << "X = " << preview_coords.back().first << endl;
+        cout << "Y = " << preview_coords.back().second << endl;
+        creature1->startPoints.push_back(pair<int, int> (preview_coords.back().first, preview_coords.back().second));
         isPreview = true;
+        isCancelBtn = true;
         person1->chosen_actions.push_back(UP);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
@@ -255,9 +304,13 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {}  // Only one tap
         cout << "Choosed move right" << endl;
-        preview_xcoord++;
-        creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
+        //preview_xcoord++;
+        int new_x = preview_coords.back().first + 1;
+        int new_y = preview_coords.back().second;
+        preview_coords.push_back(pair<int, int> (new_x, new_y));
+        creature1->startPoints.push_back(pair<int, int> (preview_coords.back().first, preview_coords.back().second));
         isPreview = true;
+        isCancelBtn = true;
         person1->chosen_actions.push_back(RIGHT);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
@@ -272,9 +325,13 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {}  // Only one tap
         cout << "Choosed move down" << endl;
-        preview_ycoord++;
-        creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
+        //preview_ycoord++;
+        int new_x = preview_coords.back().first;
+        int new_y = preview_coords.back().second + 1;
+        preview_coords.push_back(pair<int, int> (new_x, new_y));
+        creature1->startPoints.push_back(pair<int, int> (preview_coords.back().first, preview_coords.back().second));
         isPreview = true;
+        isCancelBtn = true;
         person1->chosen_actions.push_back(DOWN);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
@@ -289,9 +346,13 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {}  // Only one tap
         cout << "Choosed move left" << endl;
-        preview_xcoord--;
-        creature1->startPoints.push_back(pair<int, int> (preview_xcoord, preview_ycoord));
+        //preview_xcoord--;
+        int new_x = preview_coords.back().first - 1;
+        int new_y = preview_coords.back().second;
+        preview_coords.push_back(pair<int, int> (new_x, new_y));
+        creature1->startPoints.push_back(pair<int, int> (preview_coords.back().first, preview_coords.back().second));
         isPreview = true;
+        isCancelBtn = true;
         person1->chosen_actions.push_back(LEFT);
         moveChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
@@ -390,7 +451,7 @@ void gui::play(battle& fight) {
         }
         if (person1->chosen_actions[step] != UP && person1->chosen_actions[step] != RIGHT && person1->chosen_actions[step] != DOWN && person1->chosen_actions[step] != LEFT) {
             PlayingCard1 = card::create_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord());
-            cout << "Player Direction = " << person1->directions[stepDirection1] << endl;
+            //cout << "Player Direction = " << person1->directions[stepDirection1] << endl;
             PlayingCard1->set_action_area(person1->directions[stepDirection1]);
             fight.play_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord(), person1, person2, person1->directions[stepDirection1]);
             isDrawSpell1 = true;
@@ -399,7 +460,7 @@ void gui::play(battle& fight) {
         }
         if (person2->chosen_actions[step] != UP && person2->chosen_actions[step] != RIGHT && person2->chosen_actions[step] != DOWN && person2->chosen_actions[step] != LEFT) {
             PlayingCard2 = card::create_card(person2->chosen_actions[step], person2->get_xcoord(), person2->get_ycoord());
-            cout << "NPC Direction = " << person2->directions[stepDirection2] << endl;
+            //cout << "NPC Direction = " << person2->directions[stepDirection2] << endl;
             PlayingCard2->set_action_area(person2->directions[stepDirection2]);
             fight.play_card(person2->chosen_actions[step], person2->get_xcoord(), person2->get_ycoord(), person1, person2, person2->directions[stepDirection2]);
             isDrawSpell2 = true;
@@ -439,6 +500,8 @@ int gui::render(game_map& field_back) {
         creature1->drawCurrent(window);
         creature2->drawCurrent(window);
         start_turn_button startBTN;
+        cancel_button cancelBTN;
+        cancelBTN.drawCurrent(window);
         startBTN.drawCurrent(window);
         Scroll.set_avalible_cards(person1->get_avalible_cards());
         Scroll.drawCurrent(window);
@@ -588,11 +651,23 @@ int start_turn_button::drawCurrent(sf::RenderTarget& target) {
 play_button::play_button() {
     buttonTexture.loadFromFile("images/buttons/play_button.png");
     buttonSprite.setTexture(buttonTexture);
-    x_pos = 500;
-    y_pos = 500;
+    x_pos = 412;
+    y_pos = 334;
 }
 
 void play_button::drawCurrent(sf::RenderTarget& target) {
+    buttonSprite.setPosition(x_pos, y_pos);
+    target.draw(buttonSprite);
+}
+
+cancel_button::cancel_button() {
+    buttonTexture.loadFromFile("images/buttons/cancel_button.png");
+    buttonSprite.setTexture(buttonTexture);
+    x_pos = 250;
+    y_pos = 670;
+}
+
+void cancel_button::drawCurrent(sf::RenderTarget& target) {
     buttonSprite.setPosition(x_pos, y_pos);
     target.draw(buttonSprite);
 }

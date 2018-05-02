@@ -103,6 +103,12 @@ public:
     void drawCurrent(sf::RenderTarget& target);
 };
 
+class cancel_button : public button {
+public:
+    cancel_button();
+    void drawCurrent(sf::RenderTarget& target);
+};
+
 class gui {
 private:
     int processEvents();
@@ -125,6 +131,7 @@ private:
     bool isPlayBtn;
     bool isBegBtn;
     bool isScrollBtn;
+    bool isCancelBtn;
     //Drawing flags
     bool isDrawSpell1;
     bool isDrawSpell2;
@@ -134,7 +141,6 @@ private:
     bool isPlay;
     bool isBattle;
     bool isNPCPlay;
-    //bool isNPC;
     bool isDrawDirection;
     bool isPreview;
     bool isChooseDirection;
@@ -155,6 +161,7 @@ private:
     creature* creature2;
     game_map field_back;
     vector<CardID> cardNums;
+    vector<pair<int, int>> preview_coords;
     int preview_xcoord, preview_ycoord;
     vector<pair<int, int>> cardsStartPoints;
 public:
