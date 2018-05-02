@@ -39,11 +39,14 @@ field_back(field)
     creature2 = creature::create_creature(pers2->cr_type, pers2->get_xcoord(), pers2->get_ycoord());
     bgTexture.loadFromFile("images/background.jpg");
     bgSprite.setTexture(bgTexture);
+    isPlayBtn = true;
+    isMainMenu = true;
+    isActionWindow = false;
     PlayingCard1 = NULL;
     PlayingCard2 = NULL;
     scrollUp = false;
     scrollDown = false;
-    isBegBtn = true;
+    isBegBtn = false;
     isScrollBtn = false;
     isOptions = false;
     isChoosingOptions = false;
@@ -56,7 +59,7 @@ field_back(field)
     isDrawSpell2 = false;
     isMoveSpell2 = false;
     isNPCPlay = false;
-    isNPC = false;
+    //isNPC = false;
     isDrawDirection = false;
     isChooseDirection = false;
     isPreview = false;
@@ -124,6 +127,12 @@ int gui::processEvents() {
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Getting only one tap
+        if (sf::IntRect(500, 500, 200, 32).contains(sf::Mouse::getPosition(window)) && isPlayBtn) {
+            cout << "Let's Play!" << endl;
+            isActionWindow = true;
+            isMainMenu = false;
+            isBegBtn = true;
+        }
         if (sf::IntRect(20, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isBegBtn) {
             cout << "Scroll Up" << endl;
             scrollUp = true;
@@ -192,10 +201,8 @@ int gui::processEvents() {
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
                 cout << "End of choice" << endl;
-                //isPreview = false;
                 isChoosingOptions = false;
                 isOptions = false;
-                //isPlay = true;
                 isBattle = true;
                 isNPCPlay = true;
             }
@@ -207,10 +214,8 @@ int gui::processEvents() {
             person1->chosen_actions.push_back(person1->chosen_cards[1]);
             cardsChoosed++;
             if ((cardsChoosed + moveChoosed) == 6) {
-                //isPreview = false;
                 isChoosingOptions = false;
                 isOptions = false;
-                //isPlay = true;
                 isBattle = true;
                 isNPCPlay = true;
             }
@@ -223,10 +228,8 @@ int gui::processEvents() {
             cardsChoosed++;
             cout << cardsChoosed << endl;
             if ((cardsChoosed + moveChoosed) == 6) {
-                //isPreview = false;
                 isChoosingOptions = false;
                 isOptions = false;
-                //isPlay = true;
                 isBattle = true;
                 isNPCPlay = true;
             }
@@ -410,92 +413,99 @@ void gui::play(battle& fight) {
 int gui::render(game_map& field_back) {
     window.clear();
     window.draw(bgSprite);
-    battle_map field_front(field_back.get_field());
-    field_front.drawCurrent(window);
-    //NEED IMPROVEMENT (Stats info)
-    stringstream hp1, hp2;
-    string hp1Str;
-    string hp2Str;
-    hp1 << person1->get_hp();
-    hp2 << person2->get_hp();
-    hp1 >> hp1Str;
-    hp2 >> hp2Str;
-    string stat = "Your HP: " + hp1Str + "\nEnemy HP: " + hp2Str;
-    sf::Font font;
-    font.loadFromFile("data/font.ttf");
-    sf::Text choiceText(stat, font, 20);
-    choiceText.setColor(sf::Color::Black);
-    choiceText.setPosition(840, 650);
-    window.draw(choiceText);
-    //NEED IMPROVEMENT
-    creature1->drawCurrent(window);
-    creature2->drawCurrent(window);
-    start_turn_button startBTN;
-    startBTN.drawCurrent(window);
-    Scroll.set_avalible_cards(person1->get_avalible_cards());
-    Scroll.drawCurrent(window);
-    if (isOptions) {
-        actions Actions(person1->chosen_cards);
-        Actions.drawCurrent(window, person1);
-        isChoosingOptions = true;
+    if (isMainMenu) {
+        play_button playBTN;
+        playBTN.drawCurrent(window);
     }
-    if (isNPCPlay) {
-        person2->play_dark_mage(person1);
-        isNPCPlay = false;
+    if (isActionWindow) {
+        battle_map field_front(field_back.get_field());
+        field_front.drawCurrent(window);
+        //NEED IMPROVEMENT (Stats info)
+        stringstream hp1, hp2;
+        string hp1Str;
+        string hp2Str;
+        hp1 << person1->get_hp();
+        hp2 << person2->get_hp();
+        hp1 >> hp1Str;
+        hp2 >> hp2Str;
+        string stat = "Your HP: " + hp1Str + "\nEnemy HP: " + hp2Str;
+        sf::Font font;
+        font.loadFromFile("data/font.ttf");
+        sf::Text choiceText(stat, font, 20);
+        choiceText.setColor(sf::Color::Black);
+        choiceText.setPosition(840, 650);
+        window.draw(choiceText);
+        //NEED IMPROVEMENT
+        creature1->drawCurrent(window);
+        creature2->drawCurrent(window);
+        start_turn_button startBTN;
+        startBTN.drawCurrent(window);
+        Scroll.set_avalible_cards(person1->get_avalible_cards());
+        Scroll.drawCurrent(window);
+        if (isOptions) {
+            actions Actions(person1->chosen_cards);
+            Actions.drawCurrent(window, person1);
+            isChoosingOptions = true;
+        }
+        if (isNPCPlay) {
+            person2->play_dark_mage(person1);
+            isNPCPlay = false;
+        }
+        if (isPreview) {
+            preview(person1->chosen_actions);
+        }
+        if (isDrawDirection) {
+            card* Card = card::create_card(person1->chosen_actions[cardsChoosed + moveChoosed - 1], preview_xcoord, preview_ycoord);
+            Card->drawActionArea(window, field_back.get_field(), preview_xcoord, preview_ycoord);
+            isChooseDirection = true;
+        }
+        battle fight;
+        if (isPlay) {
+            this->play(fight);
+        }
+        if (isDrawSpell1 && !isMoveAnim1 && !isMoveAnim2) {
+            PlayingCard1->drawCurrent(window);
+        }
+        if (isDrawSpell2 && !isMoveAnim1 && !isMoveAnim2) {
+            PlayingCard2->drawCurrent(window);
+        }
+        if (step == 6 && !isMoveAnim1 && !isMoveAnim2) {
+            isBegBtn = true;
+            person1->chosen_cards.clear();
+            person1->chosen_actions.clear();
+            person1->directions.clear();
+            person2->chosen_cards.clear();
+            person2->chosen_actions.clear();
+            person2->directions.clear();
+            PlayingCard1 = NULL;
+            PlayingCard2 = NULL;
+            scrollUp = false;
+            scrollDown = false;
+            isBegBtn = true;
+            isScrollBtn = false;
+            isOptions = false;
+            isChoosingOptions = false;
+            isPlay = false;
+            isMoveAnim1 = false;
+            isMoveAnim2 = false;
+            isBattle = false;
+            isDrawSpell1 = false;
+            isMoveSpell1 = false;
+            //isNPCPlay = false;
+            //isNPC = false;
+            cardsCounter = 0;
+            cardsChoosed = 0;
+            moveChoosed = 0;
+            step = 0;
+            stepDirection1 = 0;
+            stepDirection2 = 0;
+            preview_xcoord = person1->get_xcoord();
+            preview_ycoord = person1->get_ycoord();
+            creature1->startPoints.clear();
+            cardsStartPoints.clear();
+        }
     }
-    if (isPreview) {
-        preview(person1->chosen_actions);
-    }
-    if (isDrawDirection) {
-        card* Card = card::create_card(person1->chosen_actions[cardsChoosed + moveChoosed - 1], preview_xcoord, preview_ycoord);
-        Card->drawActionArea(window, field_back.get_field(), preview_xcoord, preview_ycoord);
-        isChooseDirection = true;
-    }
-    battle fight;
-    if (isPlay) {
-        this->play(fight);
-    }
-    if (isDrawSpell1 && !isMoveAnim1 && !isMoveAnim2) {
-        PlayingCard1->drawCurrent(window);
-    }
-    if (isDrawSpell2 && !isMoveAnim1 && !isMoveAnim2) {
-        PlayingCard2->drawCurrent(window);
-    }
-    if (step == 6 && !isMoveAnim1 && !isMoveAnim2) {
-        isBegBtn = true;
-        person1->chosen_cards.clear();
-        person1->chosen_actions.clear();
-        person1->directions.clear();
-        person2->chosen_cards.clear();
-        person2->chosen_actions.clear();
-        person2->directions.clear();
-        PlayingCard1 = NULL;
-        PlayingCard2 = NULL;
-        scrollUp = false;
-        scrollDown = false;
-        isBegBtn = true;
-        isScrollBtn = false;
-        isOptions = false;
-        isChoosingOptions = false;
-        isPlay = false;
-        isMoveAnim1 = false;
-        isMoveAnim2 = false;
-        isBattle = false;
-        isDrawSpell1 = false;
-        isMoveSpell1 = false;
-        isNPCPlay = false;
-        isNPC = false;
-        cardsCounter = 0;
-        cardsChoosed = 0;
-        moveChoosed = 0;
-        step = 0;
-        stepDirection1 = 0;
-        stepDirection2 = 0;
-        preview_xcoord = person1->get_xcoord();
-        preview_ycoord = person1->get_ycoord();
-        creature1->startPoints.clear();
-        cardsStartPoints.clear();
-    }
+
     window.display();
     return 0;
 }
@@ -573,6 +583,18 @@ int start_turn_button::drawCurrent(sf::RenderTarget& target) {
     buttonSprite.setPosition(x_pos, y_pos);
     target.draw(buttonSprite);
     return 0;
+}
+
+play_button::play_button() {
+    buttonTexture.loadFromFile("images/buttons/play_button.png");
+    buttonSprite.setTexture(buttonTexture);
+    x_pos = 500;
+    y_pos = 500;
+}
+
+void play_button::drawCurrent(sf::RenderTarget& target) {
+    buttonSprite.setPosition(x_pos, y_pos);
+    target.draw(buttonSprite);
 }
 
 // SCROLL METHODS

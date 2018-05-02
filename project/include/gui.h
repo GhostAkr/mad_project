@@ -97,6 +97,12 @@ public:
     int drawCurrent(sf::RenderTarget& target);
 };
 
+class play_button : public button {
+public:
+    play_button();
+    void drawCurrent(sf::RenderTarget& target);
+};
+
 class gui {
 private:
     int processEvents();
@@ -105,22 +111,30 @@ private:
     sf::RenderWindow window;
     sf::Texture bgTexture;  // Background
     sf::Sprite bgSprite;
+    // Windows flags
+    bool isMainMenu;
+    bool isActionWindow;
+    // Animation flags
     bool scrollUp;
     bool scrollDown;
-    bool isBegBtn;
-    bool isScrollBtn;
-    bool isOptions;
-    bool isChoosingOptions;
     bool isMoveAnim1;
     bool isMoveAnim2;
+    bool isMoveSpell1;
+    bool isMoveSpell2;
+    // Buttons flags
+    bool isPlayBtn;
+    bool isBegBtn;
+    bool isScrollBtn;
+    //Drawing flags
+    bool isDrawSpell1;
+    bool isDrawSpell2;
+    // Other elements flags
+    bool isOptions;
+    bool isChoosingOptions;
     bool isPlay;
     bool isBattle;
-    bool isDrawSpell1;
-    bool isMoveSpell1;
-    bool isDrawSpell2;
-    bool isMoveSpell2;
     bool isNPCPlay;
-    bool isNPC;
+    //bool isNPC;
     bool isDrawDirection;
     bool isPreview;
     bool isChooseDirection;
