@@ -40,7 +40,6 @@ protected:
     sf::Texture choiceTexture;
     sf::Texture spellTexture;
     sf::Texture previewTexture;
-    //int side;
     float tickDummy;
     sf::RenderTarget* targetDummy;
     bool boolDummy;

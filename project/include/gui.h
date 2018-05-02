@@ -109,6 +109,12 @@ public:
     void drawCurrent(sf::RenderTarget& target);
 };
 
+class menu_button : public button {
+public:
+    menu_button();
+    void drawCurrent(sf::RenderTarget& target);
+};
+
 class gui {
 private:
     int processEvents();
@@ -132,6 +138,7 @@ private:
     bool isBegBtn;
     bool isScrollBtn;
     bool isCancelBtn;
+    bool isMenuBtn;
     //Drawing flags
     bool isDrawSpell1;
     bool isDrawSpell2;
@@ -162,13 +169,15 @@ private:
     game_map field_back;
     vector<CardID> cardNums;
     vector<pair<int, int>> preview_coords;
-    //int preview_xcoord, preview_ycoord;
     vector<pair<int, int>> cardsStartPoints;
+    //int* code;
 public:
+    void set_start_vals();
+    void new_turn_vals();
     int get_xpreivew();
     int get_ypreview();
-    //void set_preview_coords(int new_x, int new_y);
-    gui(character* pers1, character* pers2, game_map& field);
+    gui(game_map& field);
+    ~gui();
     int run();
     int set_cardNums (character* person, int num);
     void play(battle& fight);

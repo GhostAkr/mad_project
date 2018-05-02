@@ -13,13 +13,6 @@ int gui::get_ypreview() {
     return preview_coords.back().second;
 }
 
-/*
-void gui::set_preview_coords(int new_x, int new_y) {
-    preview_xcoord = new_x;
-    preview_ycoord = new_y;
-}
-*/
-
 int gui::run() {
     while (window.isOpen()) {
         tick = theclock.getElapsedTime().asMicroseconds();
@@ -33,22 +26,33 @@ int gui::run() {
     return 0;
 }
 
-gui::gui(character* pers1, character* pers2, game_map& field)
-:window(sf::VideoMode(1024, 768), "MAD"),
-field_back(field)
-{
-    creature1 = creature::create_creature(pers1->cr_type, pers1->get_xcoord(), pers1->get_ycoord());
-    creature2 = creature::create_creature(pers2->cr_type, pers2->get_xcoord(), pers2->get_ycoord());
+void gui::set_start_vals() {
     bgTexture.loadFromFile("images/background.jpg");
     bgSprite.setTexture(bgTexture);
-    isPlayBtn = true;
+    person1 = character::create_character(PLAYER, DARKMAGE);
+    person2 = character::create_character(ENEMY, DARKMAGE);
+    person1->create_avalible_cards();
+    person2->create_avalible_cards();
+    creature1 = creature::create_creature(person1->cr_type, person1->get_xcoord(), person1->get_ycoord());
+    creature2 = creature::create_creature(person2->cr_type, person2->get_xcoord(), person2->get_ycoord());
+    //person1->chosen_cards.clear();
+    //person1->chosen_actions.clear();
+    //person1->directions.clear();
+    //person2->chosen_cards.clear();
+    //person2->chosen_actions.clear();
+    //person2->directions.clear();
+    //preview_coords.push_back(pair<int, int> (person1->get_xcoord(), person1->get_ycoord()));
+    //creature1->startPoints.clear();
+    //cardsStartPoints.clear();
     isMainMenu = true;
     isActionWindow = false;
+    isPlayBtn = true;
     PlayingCard1 = NULL;
     PlayingCard2 = NULL;
     scrollUp = false;
     scrollDown = false;
     isBegBtn = false;
+    isMenuBtn = false;
     isScrollBtn = false;
     isOptions = false;
     isChoosingOptions = false;
@@ -71,11 +75,70 @@ field_back(field)
     step = 0;
     stepDirection1 = 0;
     stepDirection2 = 0;
-    person1 = pers1;
-    person2 = pers2;
-    preview_coords.push_back(pair<int, int> (pers1->get_xcoord(), pers1->get_ycoord()));
-    //preview_xcoord = pers1->get_xcoord();
-    //preview_ycoord = pers1->get_ycoord();
+    preview_coords.push_back(pair<int, int> (person1->get_xcoord(), person1->get_ycoord()));
+}
+
+void gui::new_turn_vals() {
+    person1->chosen_cards.clear();
+    person1->chosen_actions.clear();
+    person1->directions.clear();
+    person2->chosen_cards.clear();
+    person2->chosen_actions.clear();
+    person2->directions.clear();
+    preview_coords.push_back(pair<int, int> (person1->get_xcoord(), person1->get_ycoord()));
+    creature1->startPoints.clear();
+    cardsStartPoints.clear();
+    PlayingCard1 = NULL;
+    PlayingCard2 = NULL;
+    scrollUp = false;
+    scrollDown = false;
+    isBegBtn = true;
+    isMenuBtn = true;
+    isScrollBtn = false;
+    isOptions = false;
+    isChoosingOptions = false;
+    isPlay = false;
+    isMoveAnim1 = false;
+    isMoveAnim2 = false;
+    isBattle = false;
+    isDrawSpell1 = false;
+    isMoveSpell1 = false;
+    isDrawSpell2 = false;
+    isMoveSpell2 = false;
+    isNPCPlay = false;
+    isCancelBtn = false;
+    isDrawDirection = false;
+    isChooseDirection = false;
+    isPreview = false;
+    cardsCounter = 0;
+    cardsChoosed = 0;
+    moveChoosed = 0;
+    step = 0;
+    stepDirection1 = 0;
+    stepDirection2 = 0;
+}
+
+gui::~gui() {
+    //delete person1;
+    //delete person2;
+    //delete creature1;
+    //delete creature2;
+}
+
+gui::gui(game_map& field)
+:window(sf::VideoMode(1024, 768), "MAD"),
+field_back(field)
+{
+    //set_start_vals();
+    //person1 = character::create_character(PLAYER, DARKMAGE);
+    //person2 = character::create_character(ENEMY, DARKMAGE);
+    //person1->create_avalible_cards();
+    //person2->create_avalible_cards();
+    //creature1 = creature::create_creature(person1->cr_type, person1->get_xcoord(), person1->get_ycoord());
+    //creature2 = creature::create_creature(person2->cr_type, person2->get_xcoord(), person2->get_ycoord());
+    //person1 = pers1;
+    //person2 = pers2;
+    set_start_vals();
 }
 
 void gui::preview(vector<CardID> chosen_actions) {
@@ -94,13 +157,11 @@ void gui::preview(vector<CardID> chosen_actions) {
                 creature1->drawPreview(window);
                 break;
             default:
-                //cout << "Cards Size = " << cardsStartPoints.size() << endl;
                 for (size_t j = 0; j < cardsStartPoints.size(); j++) {
                     card* Card = card::create_card(chosen_actions[i], cardsStartPoints[j].first, cardsStartPoints[j].second);
                     Card->set_action_area(person1->directions[j]);
                     Card->previewSpell(window, cardsStartPoints[j].first, cardsStartPoints[j].second);
                 }
-                //cout << "Test" << endl;
                 break;
         }
     }
@@ -111,13 +172,13 @@ int gui::processEvents() {
     while (window.pollEvent(event)) {
         switch (event.type) {
             case sf::Event::Closed:
+                //*code = 1;
                 window.close();
                 break;
             default:
                 break;
         }
     }
-
     if (isChooseDirection) {
         card* Card = card::create_card(person1->chosen_cards[cardsChoosed - 1], preview_coords.back().first, preview_coords.back().second);
         person1->directions.push_back(Card->handleDirection(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second));
@@ -129,9 +190,17 @@ int gui::processEvents() {
         isChooseDirection = false;
         isDrawDirection = false;
     }
-
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Getting only one tap
+        if (sf::IntRect(480, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isMenuBtn) {
+            //creature1 = creature::create_creature(pers1->cr_type, pers1->get_xcoord(), pers1->get_ycoord());
+            //creature2 = creature::create_creature(pers2->cr_type, pers2->get_xcoord(), pers2->get_ycoord());
+            //person1 = pers1;
+            //person2 = pers2;
+            set_start_vals();
+            isActionWindow = false;
+            isMainMenu = true;
+        }
         if (sf::IntRect(250, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isCancelBtn) {
             cout << "Cancel" << endl;
             switch (person1->chosen_actions.back()) {
@@ -173,9 +242,11 @@ int gui::processEvents() {
         }
         if (sf::IntRect(412, 334, 200, 32).contains(sf::Mouse::getPosition(window)) && isPlayBtn) {
             cout << "Let's Play!" << endl;
+            set_start_vals();
             isActionWindow = true;
             isMainMenu = false;
             isBegBtn = true;
+            isMenuBtn = true;
         }
         if (sf::IntRect(20, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isBegBtn) {
             cout << "Scroll Up" << endl;
@@ -505,6 +576,8 @@ int gui::render(game_map& field_back) {
         creature2->drawCurrent(window);
         start_turn_button startBTN;
         cancel_button cancelBTN;
+        menu_button menuBTN;
+        menuBTN.drawCurrent(window);
         cancelBTN.drawCurrent(window);
         startBTN.drawCurrent(window);
         Scroll.set_avalible_cards(person1->get_avalible_cards());
@@ -538,13 +611,21 @@ int gui::render(game_map& field_back) {
             PlayingCard2->drawCurrent(window);
         }
         if (step == 6 && !isMoveAnim1 && !isMoveAnim2) {
-            isBegBtn = true;
+            new_turn_vals();
+            /*
             person1->chosen_cards.clear();
             person1->chosen_actions.clear();
             person1->directions.clear();
             person2->chosen_cards.clear();
             person2->chosen_actions.clear();
             person2->directions.clear();
+            preview_coords.push_back(pair<int, int> (person1->get_xcoord(), person1->get_ycoord()));
+            creature1->startPoints.clear();
+            cardsStartPoints.clear();
+            set_start_vals();
+            */
+            /*
+            isBegBtn = true;
             PlayingCard1 = NULL;
             PlayingCard2 = NULL;
             scrollUp = false;
@@ -560,21 +641,15 @@ int gui::render(game_map& field_back) {
             isDrawSpell1 = false;
             isMoveSpell1 = false;
             isNPCPlay = false;
-            //isNPC = false;
             cardsCounter = 0;
             cardsChoosed = 0;
             moveChoosed = 0;
             step = 0;
             stepDirection1 = 0;
             stepDirection2 = 0;
-            preview_coords.push_back(pair<int, int> (person1->get_xcoord(), person1->get_ycoord()));
-            //preview_xcoord = person1->get_xcoord();
-            //preview_ycoord = person1->get_ycoord();
-            creature1->startPoints.clear();
-            cardsStartPoints.clear();
+            */
         }
     }
-
     window.display();
     return 0;
 }
@@ -674,6 +749,18 @@ cancel_button::cancel_button() {
 }
 
 void cancel_button::drawCurrent(sf::RenderTarget& target) {
+    buttonSprite.setPosition(x_pos, y_pos);
+    target.draw(buttonSprite);
+}
+
+menu_button::menu_button() {
+    buttonTexture.loadFromFile("images/buttons/menu_button.png");
+    buttonSprite.setTexture(buttonTexture);
+    x_pos = 480;
+    y_pos = 670;
+}
+
+void menu_button::drawCurrent(sf::RenderTarget& target) {
     buttonSprite.setPosition(x_pos, y_pos);
     target.draw(buttonSprite);
 }
