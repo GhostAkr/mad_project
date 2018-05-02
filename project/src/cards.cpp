@@ -66,7 +66,7 @@ vector<pair<int, int>> card::get_direction_area() {
 
 void card::drawActionArea(sf::RenderTarget& target, SparseMatrix<Game_object> field, int x, int y) {
     cout << "drawActionArea" << endl;
-    choiceTexture.loadFromFile("images/direction.jpg");
+    choiceTexture.loadFromFile("images/direction.png");
     sf::Sprite choiceSprite(choiceTexture);
     for (size_t i = 0; i < direction_area.size(); i++) {
         if (field.get(x + direction_area[i].first + 1, y + direction_area[i].second + 1) == 0) {

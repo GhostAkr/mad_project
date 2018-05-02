@@ -718,7 +718,7 @@ battle_map::battle_map(SparseMatrix <Game_object> src_field) {
     map_height = 13;
     map_width = 13;
     field = src_field;
-    wallTexture.loadFromFile("images/wall.png");
+    wallTexture.loadFromFile("images/wall.jpg");
     cellTexture.loadFromFile("images/empty_cell.png");
     this->set_mapSprite();
 }
