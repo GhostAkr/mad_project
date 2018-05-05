@@ -36,23 +36,12 @@ void gui::set_start_vals() {
     person2->create_avalible_cards();
     creature1 = creature::create_creature(person1->cr_type, person1->get_xcoord(), person1->get_ycoord());
     creature2 = creature::create_creature(person2->cr_type, person2->get_xcoord(), person2->get_ycoord());
-    //person1->chosen_cards.clear();
-    //person1->chosen_actions.clear();
-    //person1->directions.clear();
-    //person2->chosen_cards.clear();
-    //person2->chosen_actions.clear();
-    //person2->directions.clear();
-    //preview_coords.push_back(pair<int, int> (person1->get_xcoord(), person1->get_ycoord()));
-    //creature1->startPoints.clear();
-    //cardsStartPoints.clear();
-    //cout << "Before flags" << endl;
     isShopBtn = true;
     isShop = false;
     isApplyBtn = false;
     isShopCardsBtn = false;
     isDeckBtn = true;
     isDeck = false;
-    //cout << "After flags" << endl;
     isMainMenu = true;
     isActionWindow = false;
     isPlayBtn = true;
@@ -560,7 +549,6 @@ void gui::play(battle& fight) {
         }
         if (person1->chosen_actions[step] != UP && person1->chosen_actions[step] != RIGHT && person1->chosen_actions[step] != DOWN && person1->chosen_actions[step] != LEFT) {
             PlayingCard1 = card::create_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord());
-            //cout << "Player Direction = " << person1->directions[stepDirection1] << endl;
             PlayingCard1->set_action_area(person1->directions[stepDirection1]);
             fight.play_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord(), person1, person2, person1->directions[stepDirection1]);
             isDrawSpell1 = true;
@@ -569,7 +557,6 @@ void gui::play(battle& fight) {
         }
         if (person2->chosen_actions[step] != UP && person2->chosen_actions[step] != RIGHT && person2->chosen_actions[step] != DOWN && person2->chosen_actions[step] != LEFT) {
             PlayingCard2 = card::create_card(person2->chosen_actions[step], person2->get_xcoord(), person2->get_ycoord());
-            //cout << "NPC Direction = " << person2->directions[stepDirection2] << endl;
             PlayingCard2->set_action_area(person2->directions[stepDirection2]);
             fight.play_card(person2->chosen_actions[step], person2->get_xcoord(), person2->get_ycoord(), person1, person2, person2->directions[stepDirection2]);
             isDrawSpell2 = true;
@@ -664,42 +651,6 @@ int gui::render(game_map& field_back) {
         }
         if (step == 6 && !isMoveAnim1 && !isMoveAnim2) {
             new_turn_vals();
-            /*
-            person1->chosen_cards.clear();
-            person1->chosen_actions.clear();
-            person1->directions.clear();
-            person2->chosen_cards.clear();
-            person2->chosen_actions.clear();
-            person2->directions.clear();
-            preview_coords.push_back(pair<int, int> (person1->get_xcoord(), person1->get_ycoord()));
-            creature1->startPoints.clear();
-            cardsStartPoints.clear();
-            set_start_vals();
-            */
-            /*
-            isBegBtn = true;
-            PlayingCard1 = NULL;
-            PlayingCard2 = NULL;
-            scrollUp = false;
-            scrollDown = false;
-            isBegBtn = true;
-            isScrollBtn = false;
-            isOptions = false;
-            isChoosingOptions = false;
-            isPlay = false;
-            isMoveAnim1 = false;
-            isMoveAnim2 = false;
-            isBattle = false;
-            isDrawSpell1 = false;
-            isMoveSpell1 = false;
-            isNPCPlay = false;
-            cardsCounter = 0;
-            cardsChoosed = 0;
-            moveChoosed = 0;
-            step = 0;
-            stepDirection1 = 0;
-            stepDirection2 = 0;
-            */
         }
     }
     window.display();
@@ -1014,7 +965,6 @@ show_deck::show_deck(character* pers) {
 void show_deck::drawCurrent(sf::RenderTarget& target) {
     int row = 0, col = 0;
     vector<CardID> deck(person->deck);
-    //cout << "Number of cards = " << deck.size() << endl;
     for (size_t i = 0; i < deck.size(); i++) {
         card* CurCard = card::create_card(deck[i]);
         sf::Texture texture;

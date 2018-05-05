@@ -217,7 +217,6 @@ private:
     vector<pair<int, int>> cardsStartPoints;
     vector<sf::Sprite> shopSprites;
     vector<CardID> shopCards;
-    //int* code;
 public:
     void set_start_vals();
     void new_turn_vals();
