@@ -144,9 +144,10 @@ void gui::preview(vector<CardID> chosen_actions) {
                 break;
             default:
                 for (size_t j = 0; j < cardsStartPoints.size(); j++) {
-                    card* Card = card::create_card(chosen_actions[i], cardsStartPoints[j].first, cardsStartPoints[j].second);
-                    Card->set_action_area(person1->directions[j]);
-                    Card->previewSpell(window, cardsStartPoints[j].first, cardsStartPoints[j].second);
+                    card* CurCard = card::create_card(chosen_actions[i], cardsStartPoints[j].first, cardsStartPoints[j].second);
+                    CurCard->set_action_area(person1->directions[j]);
+                    CurCard->previewSpell(window, cardsStartPoints[j].first, cardsStartPoints[j].second);
+                    delete CurCard;
                 }
                 break;
         }
@@ -166,8 +167,8 @@ int gui::processEvents() {
         }
     }
     if (isChooseDirection) {
-        card* Card = card::create_card(person1->chosen_cards[cardsChoosed - 1], preview_coords.back().first, preview_coords.back().second);
-        person1->directions.push_back(Card->handleDirection(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second));
+        card* CurCard = card::create_card(person1->chosen_cards[cardsChoosed - 1], preview_coords.back().first, preview_coords.back().second);
+        person1->directions.push_back(CurCard->handleDirection(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second));
         cardsStartPoints.push_back(pair<int, int> (preview_coords.back().first, preview_coords.back().second));
         if ((cardsChoosed + moveChoosed) == 6) {
             isPreview = false;
@@ -175,6 +176,7 @@ int gui::processEvents() {
         }
         isChooseDirection = false;
         isDrawDirection = false;
+        delete CurCard;
     }
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Getting only one tap
@@ -186,6 +188,7 @@ int gui::processEvents() {
                         person1->deck.push_back(shopCards[i]);
                         person1->money -= CurCard->get_cost();
                     }
+                    delete CurCard;
                 }
             }
         }
@@ -548,6 +551,9 @@ void gui::play(battle& fight) {
                 break;
         }
         if (person1->chosen_actions[step] != UP && person1->chosen_actions[step] != RIGHT && person1->chosen_actions[step] != DOWN && person1->chosen_actions[step] != LEFT) {
+            if (PlayingCard1 != NULL) {
+                delete PlayingCard1;
+            }
             PlayingCard1 = card::create_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord());
             PlayingCard1->set_action_area(person1->directions[stepDirection1]);
             fight.play_card(person1->chosen_actions[step], person1->get_xcoord(), person1->get_ycoord(), person1, person2, person1->directions[stepDirection1]);
@@ -556,6 +562,9 @@ void gui::play(battle& fight) {
             stepDirection1++;
         }
         if (person2->chosen_actions[step] != UP && person2->chosen_actions[step] != RIGHT && person2->chosen_actions[step] != DOWN && person2->chosen_actions[step] != LEFT) {
+            if (PlayingCard2 != NULL) {
+                delete PlayingCard2;
+            }
             PlayingCard2 = card::create_card(person2->chosen_actions[step], person2->get_xcoord(), person2->get_ycoord());
             PlayingCard2->set_action_area(person2->directions[stepDirection2]);
             fight.play_card(person2->chosen_actions[step], person2->get_xcoord(), person2->get_ycoord(), person1, person2, person2->directions[stepDirection2]);
@@ -635,9 +644,10 @@ int gui::render(game_map& field_back) {
         }
         if (isDrawDirection) {
             cout << "Preview Coord Size = " << preview_coords.size() << endl;
-            card* Card = card::create_card(person1->chosen_actions[cardsChoosed + moveChoosed - 1], preview_coords.back().first, preview_coords.back().second);
-            Card->drawActionArea(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second);
+            card* CurCard = card::create_card(person1->chosen_actions[cardsChoosed + moveChoosed - 1], preview_coords.back().first, preview_coords.back().second);
+            CurCard->drawActionArea(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second);
             isChooseDirection = true;
+            delete CurCard;
         }
         battle fight;
         if (isPlay) {
@@ -825,10 +835,11 @@ int scroll::drawCurrent(sf::RenderTarget& target) {
     scrollSprite.setPosition(x_pos, y_pos);
     target.draw(scrollSprite);
     for (size_t i = 0; i < 5; i++) {
-        card* Card = card::create_card(avalible_cards[i]);
+        card* CurCard = card::create_card(avalible_cards[i]);
         sf::Texture texture;
-        texture.loadFromFile(Card->get_shirt_image_path());
+        texture.loadFromFile(CurCard->get_shirt_image_path());
         cardTexture.push_back(texture);
+        delete CurCard;
     }
     for (size_t i = 0; i < 5; i++) {
         sf::Sprite sprite(cardTexture[i]);
@@ -853,10 +864,11 @@ actions::actions(vector<CardID> new_cards) {
     chosen_cards = new_cards;
     for (size_t i = 0; i < 3; i++) {
         if (chosen_cards[i] != VOID) {
-            card* Card = card::create_card(chosen_cards[i]);
+            card* CurCard = card::create_card(chosen_cards[i]);
             sf::Texture texture;
-            texture.loadFromFile(Card->get_shirt_image_path());
+            texture.loadFromFile(CurCard->get_shirt_image_path());
             cardTexture.push_back(texture);
+            delete CurCard;
         }
     }
 }
@@ -878,9 +890,10 @@ int actions::drawCurrent(sf::RenderTarget& target, character* person1) {
                 choiceString += "LEFT\n";
                 break;
             default:
-                card* Card = card::create_card(person1->chosen_actions[i]);
-                string new_action = Card->get_name();
+                card* CurCard = card::create_card(person1->chosen_actions[i]);
+                string new_action = CurCard->get_name();
                 choiceString += (new_action + "\n");
+                delete CurCard;
                 break;
         }
     }
@@ -928,10 +941,10 @@ void shop::drawCurrent(sf::RenderTarget& target) {
     }
     int tag;
     while (infile >> tag) {
-        card* Card = card::create_card(CardID(tag));
+        card* CurCard = card::create_card(CardID(tag));
         shopCards.push_back(CardID(tag));
         sf::Texture texture;
-        texture.loadFromFile(Card->get_shirt_image_path());
+        texture.loadFromFile(CurCard->get_shirt_image_path());
         shopTextures.push_back(texture);
         sf::Sprite sprite(shopTextures.back());
         sprite.setPosition(col * 104 + 5, row * 180 + 45);
@@ -939,7 +952,7 @@ void shop::drawCurrent(sf::RenderTarget& target) {
         target.draw(shopSprites.back());
         stringstream cost;
         string costSTR;
-        cost << Card->get_cost();
+        cost << CurCard->get_cost();
         cost >> costSTR;
         string price = costSTR;
         sf::Font font;
@@ -953,6 +966,7 @@ void shop::drawCurrent(sf::RenderTarget& target) {
             col = 0;
             row++;
         }
+        delete CurCard;
     }
 }
 
@@ -978,6 +992,7 @@ void show_deck::drawCurrent(sf::RenderTarget& target) {
             col = 0;
             row++;
         }
+        delete CurCard;
     }
 }
 
