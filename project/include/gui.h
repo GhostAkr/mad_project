@@ -84,7 +84,7 @@ protected:
     int delta_x, delta_y;  // For updateCurrent
 public:
     vector<pair<int, int>> startPoints;  // Start points for each step
-    int x_pos, y_pos;
+    float x_pos, y_pos;
     static creature* create_creature(creature_type new_type, size_t xcoord, size_t ycoord);
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
     virtual void drawPreview(sf::RenderTarget& target) = 0;
@@ -157,7 +157,7 @@ public:
 class gui {
 private:
     int processEvents();
-    int update();
+    int update(sf::Time tick);
     int render(game_map& field_back);
     sf::RenderWindow window;
     sf::Texture bgTexture;  // Background
@@ -202,8 +202,8 @@ private:
     size_t step;
     size_t stepDirection1;
     size_t stepDirection2;
-    sf::Clock theclock;
-    float tick;
+    //sf::Clock theclock;
+    //float tick;
     scroll Scroll;
     card* PlayingCard1;
     card* PlayingCard2;

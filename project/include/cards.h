@@ -29,7 +29,7 @@ enum Game_object
 
 class card {
 protected:
-    size_t spell_x, spell_y;
+    float spell_x, spell_y;
     size_t xcoord_start, ycoord_start;
     string shirt_image_path;
     string spell_image_path;

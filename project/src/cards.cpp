@@ -147,25 +147,25 @@ void firebolt::updateSpell(float tick, bool* isMoveSpell, int side) {
             if (spell_y < 50) {
                 *isMoveSpell = false;
             }
-            spell_y -= 1 * tick;
+            spell_y -= tick;
             break;
         case 1:
             if (spell_x > 600) {
                 *isMoveSpell = false;
             }
-            spell_x += 1 * tick;
+            spell_x += tick;
             break;
         case 2:
             if (spell_y > 600) {
                 *isMoveSpell = false;
             }
-            spell_y += 1 * tick;
+            spell_y += tick;
             break;
         case 3:
             if (spell_x < 50) {
                 *isMoveSpell = false;
             }
-            spell_x -= 1 * tick;
+            spell_x -= tick;
             break;
     }
 }
