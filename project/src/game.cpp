@@ -103,9 +103,7 @@ player::player(string map_path_player, creature_type type) {
         cout << "Player creation error!" << endl;
     }
     infile >> xcoord >> ycoord;
-    cout << "Before reading money" << endl;
     infile >> money;
-    cout << "After reading money" << endl;
     int tag;
     while (indeck >> tag) {
         deck.push_back(CardID(tag));

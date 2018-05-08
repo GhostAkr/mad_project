@@ -19,22 +19,14 @@ int gui::run() {
     sf::Clock theclock;
     sf::Time timeSinceLastUpdate = sf::Time::Zero;
     while (window.isOpen()) {
-        //sf::Time dt = theclock.restart();
-        //tick = theclock.getElapsedTime().asMicroseconds();
-        //theclock.restart();
-        //tick /= 5000;
         processEvents();
         timeSinceLastUpdate += theclock.restart();
         while (timeSinceLastUpdate > TimePerFrame) {
-            //cout << "Updating" << endl;
-            //cout << TimePerFrame << endl;
             timeSinceLastUpdate -= TimePerFrame;
             processEvents();
             update(TimePerFrame);
         }
-        //update(dt);
         render(field_back);
-        //sf::sleep(sf::microseconds(1));
     }
     return 0;
 }
@@ -172,7 +164,6 @@ int gui::processEvents() {
     while (window.pollEvent(event)) {
         switch (event.type) {
             case sf::Event::Closed:
-                //*code = 1;
                 window.close();
                 break;
             default:
@@ -395,7 +386,6 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {}  // Only one tap
         cout << "Choosed move up" << endl;
-        //preview_ycoord--;
         int new_x = preview_coords.back().first;
         int new_y = preview_coords.back().second - 1;
         preview_coords.push_back(pair<int, int> (new_x, new_y));
@@ -418,7 +408,6 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {}  // Only one tap
         cout << "Choosed move right" << endl;
-        //preview_xcoord++;
         int new_x = preview_coords.back().first + 1;
         int new_y = preview_coords.back().second;
         preview_coords.push_back(pair<int, int> (new_x, new_y));
@@ -439,7 +428,6 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {}  // Only one tap
         cout << "Choosed move down" << endl;
-        //preview_ycoord++;
         int new_x = preview_coords.back().first;
         int new_y = preview_coords.back().second + 1;
         preview_coords.push_back(pair<int, int> (new_x, new_y));
@@ -460,7 +448,6 @@ int gui::processEvents() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && isChoosingOptions && moveChoosed < 3) {
         while (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {}  // Only one tap
         cout << "Choosed move left" << endl;
-        //preview_xcoord--;
         int new_x = preview_coords.back().first - 1;
         int new_y = preview_coords.back().second;
         preview_coords.push_back(pair<int, int> (new_x, new_y));
@@ -486,7 +473,6 @@ int gui::update(sf::Time tick) {
     float ScrollSpeed = 0.0005;
     if (scrollUp) {
         movementScrollUp.y -= ScrollSpeed;
-        //cout << movement.y * tick.asMicroseconds() << endl;
         Scroll.set_coords(0, movementScrollUp.y * tick.asMicroseconds());
         if (Scroll.get_y_pos() < 50) {
             scrollUp = false;
@@ -494,7 +480,6 @@ int gui::update(sf::Time tick) {
         }
     }
     sf::Vector2f movementScrollDown(0.f, 0.f);
-    //float ScrollSpeed = 0.005;
     if (scrollDown) {
         movementScrollDown.y += ScrollSpeed;
         Scroll.set_coords(0, movementScrollDown.y * tick.asMicroseconds());
@@ -503,52 +488,29 @@ int gui::update(sf::Time tick) {
             isOptions = true;
         }
     }
-    //sf::Vector2f move1(0.f, 0.f);
     float moveSpeed = 0.00005;
     if (isMoveAnim1) {
-        //isMoveAnim1 = false;
-        cout << "PLAYER TICK = " << moveSpeed * tick.asMicroseconds() << endl;
         if (creature1->updateCurrent(person1, moveSpeed * tick.asMicroseconds()) == 1) {  // Stop animation
             isMoveAnim1 = false;
-            cout << "Player Move End" << endl;
         }
-        cout << "x_pos = " << creature1->x_pos << endl;
-        cout << "y_pos = " << creature1->y_pos << endl;
-        cout << "x = " << person1->get_xcoord() * 50 << endl;
-        cout << "y = " << person1->get_ycoord() * 50 << endl;
     }
-    //sf::Vector2f move2(0.f, 0.f);
     if (isMoveAnim2) {
-        cout << "NPC TICK = " << moveSpeed * tick.asMicroseconds() << endl;
         if (creature2->updateCurrent(person2, moveSpeed * tick.asMicroseconds()) == 1) {  // Stop animation
             isMoveAnim2 = false;
-            cout << "NPC Move End" << endl;
         }
-        cout << "x_pos = " << creature2->x_pos << endl;
-        cout << "y_pos = " << creature2->y_pos << endl;
-        cout << "x = " << person2->get_xcoord() << endl;
-        cout << "y = " << person2->get_ycoord() << endl;
     }
     float spellSpeed = 0.0002;
     if (isMoveSpell1) {
-        //isMoveSpell1 = false;
-        //isDrawSpell1 = false;
-
         PlayingCard1->updateSpell(spellSpeed * tick.asMicroseconds(), &isMoveSpell1, person1->directions[stepDirection1 - 1]);
         if (!isMoveSpell1) {
             isDrawSpell1 = false;
         }
-
     }
     if (isMoveSpell2) {
-        //isMoveSpell2 = false;
-        //isDrawSpell2 = false;
-
         PlayingCard2->updateSpell(spellSpeed * tick.asMicroseconds(), &isMoveSpell2, person2->directions[stepDirection2 - 1]);
         if (!isMoveSpell2) {
             isDrawSpell2 = false;
         }
-
     }
     return 0;
 }
@@ -1062,18 +1024,13 @@ int creature::updateCurrent(character* person, float tick) {
     int dst_x = person->get_xcoord() * 50;
     int dst_y = person->get_ycoord() * 50;
     int eps = 5;  //Stop animation in this area
-    //float speed = 2.5;
     if (abs(x_pos - dst_x) < eps && abs(y_pos - dst_y) < eps) {  //Stop animation conditions
         return 1;
     }
     if (abs(dst_x - x_pos) != 0) {
-        cout << "Playing X" << endl;
-        cout << "X before = " << x_pos << endl;
         x_pos += (dst_x - x_pos) / abs(dst_x - x_pos) * tick;
-        cout << "X after = " << x_pos << endl;
     }
     if (abs(dst_y - y_pos) != 0) {
-        cout << "Playing Y" << endl;
         y_pos += (dst_y - y_pos) / abs(dst_y - y_pos) * tick;
     }
     return 0;
