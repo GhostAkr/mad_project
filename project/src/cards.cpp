@@ -247,8 +247,9 @@ int spark::handleDirection(sf::Window& source, SparseMatrix<Game_object> field, 
     while (true) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  //Onle one tap
-            if (sf::IntRect(x * 50, y * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
-            field.get(x + 1, y + 1) == 0) {  // UP
+            if (sf::IntRect(x * 50, y * 50, 50, 50).contains(sf::Mouse::getPosition(source))) {  // UP
+                cout << "Choosed" << endl;
+                cout << Game_object(field.get(x + 1, y + 1));
                 return 0;
             }
         }

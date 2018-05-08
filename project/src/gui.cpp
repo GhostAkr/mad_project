@@ -133,6 +133,7 @@ field_back(field)
 }
 
 void gui::preview(vector<CardID> chosen_actions) {
+    size_t j = 0;
     for (size_t i = 0; i < chosen_actions.size(); i++) {
         switch (chosen_actions[i]) {
             case UP:
@@ -148,12 +149,22 @@ void gui::preview(vector<CardID> chosen_actions) {
                 creature1->drawPreview(window);
                 break;
             default:
-                for (size_t j = 0; j < cardsStartPoints.size(); j++) {
+                if (j < cardsStartPoints.size()) {
                     card* CurCard = card::create_card(chosen_actions[i], cardsStartPoints[j].first, cardsStartPoints[j].second);
                     CurCard->set_action_area(person1->directions[j]);
                     CurCard->previewSpell(window, cardsStartPoints[j].first, cardsStartPoints[j].second);
+                    j++;
                     delete CurCard;
                 }
+                //for (size_t j = 0; j < cardsStartPoints.size(); j++) {
+                    //cout << "Start Point X = " << cardsStartPoints[j].first << endl;
+                    //cout << "Start Point Y = " << cardsStartPoints[j].second << endl;
+                    //card* CurCard = card::create_card(chosen_actions[i], cardsStartPoints[j].first, cardsStartPoints[j].second);
+                    //CurCard->set_action_area(person1->directions[j]);
+                    //CurCard->previewSpell(window, cardsStartPoints[j].first, cardsStartPoints[j].second);
+                    //j++;
+                    //delete CurCard;
+            //    }
                 break;
         }
     }
@@ -172,6 +183,9 @@ int gui::processEvents() {
     }
     if (isChooseDirection) {
         card* CurCard = card::create_card(person1->chosen_cards[cardsChoosed - 1], preview_coords.back().first, preview_coords.back().second);
+        if (person1->chosen_cards[0] == FIREBOLT) {
+            cout << "Firebolt" << endl;
+        }
         person1->directions.push_back(CurCard->handleDirection(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second));
         cardsStartPoints.push_back(pair<int, int> (preview_coords.back().first, preview_coords.back().second));
         if ((cardsChoosed + moveChoosed) == 6) {
@@ -261,7 +275,6 @@ int gui::processEvents() {
                     cardsStartPoints.pop_back();
                     person1->chosen_actions.pop_back();
                     person1->directions.pop_back();
-                    //preview_coords.pop_back();
                     cardsChoosed--;
                     break;
             }
@@ -277,6 +290,7 @@ int gui::processEvents() {
             isBegBtn = true;
             isMenuBtn = true;
             isDeckBtn = false;
+            isPlayBtn = false;
         }
         if (sf::IntRect(20, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isBegBtn) {
             cout << "Scroll Up" << endl;
@@ -389,7 +403,7 @@ int gui::processEvents() {
         int new_x = preview_coords.back().first;
         int new_y = preview_coords.back().second - 1;
         preview_coords.push_back(pair<int, int> (new_x, new_y));
-        cout << "X = " << preview_coords.back().first << endl;
+        //cout << "X = " << preview_coords.back().first << endl;
         cout << "Y = " << preview_coords.back().second << endl;
         creature1->startPoints.push_back(pair<int, int> (preview_coords.back().first, preview_coords.back().second));
         isPreview = true;
