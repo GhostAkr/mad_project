@@ -53,7 +53,7 @@ vector<CardID> character::get_avalible_cards() {
 game_map::game_map(string map_path) : field(1) {
     ifstream infile(map_path);
     if (!infile) {
-        cout << "ERROR!!!" << endl;
+        cout << "Error while reading map file" << endl;
     }
     infile >> n_of_lines >> n_of_cols;
     field = SparseMatrix<Game_object>(n_of_lines, n_of_cols);

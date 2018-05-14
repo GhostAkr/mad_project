@@ -71,7 +71,7 @@ vector<pair<int, int>> card::get_direction_area() {
 }
 
 void card::drawActionArea(sf::RenderTarget& target, SparseMatrix<Game_object> field, int x, int y) {
-    cout << "drawActionArea" << endl;
+    cout << "Drawing avalible directions" << endl;
     choiceTexture.loadFromFile("images/direction.png");
     sf::Sprite choiceSprite(choiceTexture);
     for (size_t i = 0; i < direction_area.size(); i++) {
@@ -245,12 +245,17 @@ void spark::previewSpell(sf::RenderTarget& target, int xcoord, int ycoord) {
 
 int spark::handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y) {
     while (true) {
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Only one tap
-            if (sf::IntRect(x * 50, y * 50, 50, 50).contains(sf::Mouse::getPosition(source))) {  // UP
-                cout << "Choosed" << endl;
-                cout << Game_object(field.get(x + 1, y + 1));
-                return 0;
+        sf::Event event;
+        while (source.pollEvent(event)) {
+            switch (event.type) {
+                case sf::Event::MouseButtonReleased:
+                    if (sf::IntRect(x * 50, y * 50, 50, 50).contains(sf::Mouse::getPosition(source))) {  // UP
+                        field.get(x + 1, y + 1);  // Dummy
+                        return 0;
+                    }
+                    break;
+                default:
+                    break;
             }
         }
     }

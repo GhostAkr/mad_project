@@ -33,7 +33,6 @@ int gui::run() {
 }
 
 void gui::set_start_vals() {
-    cout << "Start vals" << endl;
     bgTexture.loadFromFile("images/background.jpg");
     bgSprite.setTexture(bgTexture);
     person1 = character::create_character(PLAYER, DARKMAGE);
@@ -514,7 +513,6 @@ void gui::handleActionCards() {
         person1->chosen_actions.push_back(person1->chosen_cards[0]);
         cardsChoosed++;
         if ((cardsChoosed + moveChoosed) == 6) {
-            cout << "End of choice" << endl;
             isChoosingOptions = false;
             isOptions = false;
             isBattle = true;
@@ -542,7 +540,6 @@ void gui::handleActionCards() {
         isCancelBtn = true;
         person1->chosen_actions.push_back(person1->chosen_cards[2]);
         cardsChoosed++;
-        cout << cardsChoosed << endl;
         if ((cardsChoosed + moveChoosed) == 6) {
             isChoosingOptions = false;
             isOptions = false;
@@ -733,7 +730,6 @@ int gui::render(game_map& field_back) {
             preview(person1->chosen_actions);
         }
         if (isDrawDirection) {
-            cout << "Preview Coord Size = " << preview_coords.size() << endl;
             card* CurCard = card::create_card(person1->chosen_actions[cardsChoosed + moveChoosed - 1], preview_coords.back().first, preview_coords.back().second);
             CurCard->drawActionArea(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second);
             isChooseDirection = true;
