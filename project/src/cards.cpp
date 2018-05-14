@@ -4,7 +4,7 @@
 using std::cout;
 using std::endl;
 
-//CARD METHODS
+// CARD METHODS
 
 card* card::create_card(CardID name) {
     card* ret;
@@ -82,7 +82,7 @@ void card::drawActionArea(sf::RenderTarget& target, SparseMatrix<Game_object> fi
     }
 }
 
-//FIREBOLT METHODS
+// FIREBOLT METHODS
 
 firebolt::firebolt(int x_start, int y_start) {
     spell_x = x_start * 50;
@@ -122,7 +122,7 @@ void firebolt::previewSpell(sf::RenderTarget& target, int xcoord, int ycoord) {
 int firebolt::handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y) {
     while (true) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  //Onle one tap
+            while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Only one tap
             if (sf::IntRect(x * 50, (y - 1) * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
             field.get(x + 1, (y - 1) + 1) == 0) {  // UP
                 return 0;
@@ -246,7 +246,7 @@ void spark::previewSpell(sf::RenderTarget& target, int xcoord, int ycoord) {
 int spark::handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y) {
     while (true) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  //Onle one tap
+            while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Only one tap
             if (sf::IntRect(x * 50, y * 50, 50, 50).contains(sf::Mouse::getPosition(source))) {  // UP
                 cout << "Choosed" << endl;
                 cout << Game_object(field.get(x + 1, y + 1));

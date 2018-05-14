@@ -88,7 +88,7 @@ public:
     static creature* create_creature(creature_type new_type, size_t xcoord, size_t ycoord);
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
     virtual void drawPreview(sf::RenderTarget& target) = 0;
-    int updateCurrent(character* person, float tick);  //Returns 1 to stop animation, 0 - other case
+    int updateCurrent(character* person, float tick);  // Returns 1 to stop animation, 0 - other case
 };
 
 class dark_mage_draw : public creature {

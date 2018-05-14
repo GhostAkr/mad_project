@@ -3,7 +3,7 @@
 #include <SFML/System.hpp>
 #include "gui.h"
 
-//GUI METHODS
+// GUI METHODS
 
 int gui::get_xpreivew() {
     return preview_coords.back().first;
@@ -695,7 +695,7 @@ int gui::render(game_map& field_back) {
     if (isActionWindow) {
         battle_map field_front(field_back.get_field());
         field_front.drawCurrent(window);
-        //NEED IMPROVEMENT (Stats info)
+        // Stats info
         stringstream hp1, hp2;
         string hp1Str;
         string hp2Str;
@@ -710,7 +710,6 @@ int gui::render(game_map& field_back) {
         choiceText.setColor(sf::Color::Black);
         choiceText.setPosition(840, 650);
         window.draw(choiceText);
-        //NEED IMPROVEMENT
         creature1->drawCurrent(window);
         creature2->drawCurrent(window);
         start_turn_button startBTN;
@@ -825,8 +824,6 @@ start_turn_button::start_turn_button() {
     buttonSprite.setTexture(buttonTexture);
     btnWidth = 200;
     btnHeight = 32;
-    //xRatio = 20 / 1024;
-    //yRatio = 670 / 1024;
     x_pos = 20;
     y_pos = 670;
 }
@@ -1123,8 +1120,8 @@ creature* creature::create_creature(creature_type new_type, size_t xcoord, size_
 int creature::updateCurrent(character* person, float tick) {
     int dst_x = person->get_xcoord() * 50;
     int dst_y = person->get_ycoord() * 50;
-    int eps = 5;  //Stop animation in this area
-    if (abs(x_pos - dst_x) < eps && abs(y_pos - dst_y) < eps) {  //Stop animation conditions
+    int eps = 5;  // Stop animation in this area
+    if (abs(x_pos - dst_x) < eps && abs(y_pos - dst_y) < eps) {  // Stop animation conditions
         return 1;
     }
     if (abs(dst_x - x_pos) != 0) {
