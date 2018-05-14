@@ -107,9 +107,15 @@ public:
 
 class button : public entity {
 protected:
+    //sf::Texture buttonTexture;
+    //sf::Sprite buttonSprite;
+public:
     sf::Texture buttonTexture;
     sf::Sprite buttonSprite;
-    size_t x_pos, y_pos;
+    int btnWidth;
+    int btnHeight;
+    //float xRatio, yRatio;
+    int x_pos, y_pos;
 };
 
 class start_turn_button : public button {
@@ -162,6 +168,9 @@ private:
     sf::RenderWindow window;
     sf::Texture bgTexture;  // Background
     sf::Sprite bgSprite;
+    // Window specs
+    int windowWidth;
+    int windowHeight;
     // Windows flags
     bool isMainMenu;
     bool isActionWindow;
@@ -202,8 +211,6 @@ private:
     size_t step;
     size_t stepDirection1;
     size_t stepDirection2;
-    //sf::Clock theclock;
-    //float tick;
     scroll Scroll;
     card* PlayingCard1;
     card* PlayingCard2;
@@ -218,6 +225,15 @@ private:
     vector<sf::Sprite> shopSprites;
     vector<CardID> shopCards;
 public:
+    // Handling buttons
+    void handlePlayBTN();
+    void handleShopBTN();
+    void handleShowDeckBTN();
+    void handleApplyBTN();
+    void handleStartBTN();
+    void handleCancelBTN();
+    void handleMenuBTN();
+    // Other methods
     void set_start_vals();
     void new_turn_vals();
     int get_xpreivew();

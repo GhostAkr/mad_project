@@ -27,6 +27,7 @@ int gui::run() {
             update(TimePerFrame);
         }
         render(field_back);
+        window.clear();
     }
     return 0;
 }
@@ -129,6 +130,8 @@ gui::gui(game_map& field)
 :window(sf::VideoMode(1024, 768), "MAD"),
 field_back(field)
 {
+    windowWidth = 1024;
+    windowHeight = 768;
     set_start_vals();
 }
 
@@ -156,15 +159,6 @@ void gui::preview(vector<CardID> chosen_actions) {
                     j++;
                     delete CurCard;
                 }
-                //for (size_t j = 0; j < cardsStartPoints.size(); j++) {
-                    //cout << "Start Point X = " << cardsStartPoints[j].first << endl;
-                    //cout << "Start Point Y = " << cardsStartPoints[j].second << endl;
-                    //card* CurCard = card::create_card(chosen_actions[i], cardsStartPoints[j].first, cardsStartPoints[j].second);
-                    //CurCard->set_action_area(person1->directions[j]);
-                    //CurCard->previewSpell(window, cardsStartPoints[j].first, cardsStartPoints[j].second);
-                    //j++;
-                    //delete CurCard;
-            //    }
                 break;
         }
     }
@@ -172,10 +166,17 @@ void gui::preview(vector<CardID> chosen_actions) {
 
 int gui::processEvents() {
     sf::Event event;
+    sf::FloatRect visibleArea;
     while (window.pollEvent(event)) {
         switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                break;
+            case sf::Event::Resized:
+            {
+                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                window.setView(sf::View(visibleArea));
+            }
                 break;
             default:
                 break;
@@ -183,9 +184,6 @@ int gui::processEvents() {
     }
     if (isChooseDirection) {
         card* CurCard = card::create_card(person1->chosen_cards[cardsChoosed - 1], preview_coords.back().first, preview_coords.back().second);
-        if (person1->chosen_cards[0] == FIREBOLT) {
-            cout << "Firebolt" << endl;
-        }
         person1->directions.push_back(CurCard->handleDirection(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second));
         cardsStartPoints.push_back(pair<int, int> (preview_coords.back().first, preview_coords.back().second));
         if ((cardsChoosed + moveChoosed) == 6) {
@@ -282,6 +280,7 @@ int gui::processEvents() {
                 isCancelBtn = false;
             }
         }
+        /*
         if (sf::IntRect(412, 334, 200, 32).contains(sf::Mouse::getPosition(window)) && isPlayBtn) {
             cout << "Let's Play!" << endl;
             set_start_vals();
@@ -292,6 +291,7 @@ int gui::processEvents() {
             isDeckBtn = false;
             isPlayBtn = false;
         }
+        */
         if (sf::IntRect(20, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isBegBtn) {
             cout << "Scroll Up" << endl;
             scrollUp = true;
@@ -482,6 +482,21 @@ int gui::processEvents() {
     return 0;
 }
 
+// Handling methods
+
+void gui::handlePlayBTN() {
+    if (sf::IntRect(412, 334, 200, 32).contains(sf::Mouse::getPosition(window)) && isPlayBtn) {
+        cout << "Let's Play!" << endl;
+        set_start_vals();
+        isActionWindow = true;
+        isMainMenu = false;
+        isBegBtn = true;
+        isMenuBtn = true;
+        isDeckBtn = false;
+        isPlayBtn = false;
+    }
+}
+
 int gui::update(sf::Time tick) {
     sf::Vector2f movementScrollUp(0.f, 0.f);
     float ScrollSpeed = 0.0005;
@@ -621,6 +636,9 @@ int gui::render(game_map& field_back) {
         deckBTN.drawCurrent(window);
         shopBTN.drawCurrent(window);
         playBTN.drawCurrent(window);
+        sf::Vector2f position = playBTN.buttonSprite.getPosition();
+        cout << "Play X = " << position.x << endl;
+        cout << "Play Y = " << position.y << endl;
     }
     if (isActionWindow) {
         battle_map field_front(field_back.get_field());
@@ -753,6 +771,10 @@ int battle_map::drawCurrent(sf::RenderTarget& target) {
 start_turn_button::start_turn_button() {
     buttonTexture.loadFromFile("images/buttons/begin_button.png");
     buttonSprite.setTexture(buttonTexture);
+    btnWidth = 200;
+    btnHeight = 32;
+    //xRatio = 20 / 1024;
+    //yRatio = 670 / 1024;
     x_pos = 20;
     y_pos = 670;
 }
@@ -766,6 +788,8 @@ int start_turn_button::drawCurrent(sf::RenderTarget& target) {
 play_button::play_button() {
     buttonTexture.loadFromFile("images/buttons/play_button.png");
     buttonSprite.setTexture(buttonTexture);
+    btnWidth = 200;
+    btnHeight = 32;
     x_pos = 412;
     y_pos = 334;
 }
@@ -778,6 +802,8 @@ void play_button::drawCurrent(sf::RenderTarget& target) {
 cancel_button::cancel_button() {
     buttonTexture.loadFromFile("images/buttons/cancel_button.png");
     buttonSprite.setTexture(buttonTexture);
+    btnWidth = 200;
+    btnHeight = 32;
     x_pos = 250;
     y_pos = 670;
 }
@@ -790,6 +816,8 @@ void cancel_button::drawCurrent(sf::RenderTarget& target) {
 menu_button::menu_button() {
     buttonTexture.loadFromFile("images/buttons/menu_button.png");
     buttonSprite.setTexture(buttonTexture);
+    btnWidth = 200;
+    btnHeight = 32;
     x_pos = 480;
     y_pos = 670;
 }
@@ -802,6 +830,8 @@ void menu_button::drawCurrent(sf::RenderTarget& target) {
 shop_button::shop_button() {
     buttonTexture.loadFromFile("images/buttons/shop_button.png");
     buttonSprite.setTexture(buttonTexture);
+    btnWidth = 200;
+    btnHeight = 32;
     x_pos = 412;
     y_pos = 386;
 }
@@ -814,6 +844,8 @@ void shop_button::drawCurrent(sf::RenderTarget& target) {
 apply_button::apply_button() {
     buttonTexture.loadFromFile("images/buttons/apply_button.png");
     buttonSprite.setTexture(buttonTexture);
+    btnWidth = 200;
+    btnHeight = 32;
     x_pos = 20;
     y_pos = 730;
 }
@@ -826,6 +858,8 @@ void apply_button::drawCurrent(sf::RenderTarget& target) {
 show_deck_button::show_deck_button() {
     buttonTexture.loadFromFile("images/buttons/show_deck_button.png");
     buttonSprite.setTexture(buttonTexture);
+    btnWidth = 200;
+    btnHeight = 32;
     x_pos = 412;
     y_pos = 438;
 }
