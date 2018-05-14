@@ -107,14 +107,11 @@ public:
 
 class button : public entity {
 protected:
-    //sf::Texture buttonTexture;
-    //sf::Sprite buttonSprite;
-public:
     sf::Texture buttonTexture;
     sf::Sprite buttonSprite;
+public:
     int btnWidth;
     int btnHeight;
-    //float xRatio, yRatio;
     int x_pos, y_pos;
 };
 
@@ -225,14 +222,25 @@ private:
     vector<sf::Sprite> shopSprites;
     vector<CardID> shopCards;
 public:
-    // Handling buttons
-    void handlePlayBTN();
-    void handleShopBTN();
-    void handleShowDeckBTN();
-    void handleApplyBTN();
-    void handleStartBTN();
-    void handleCancelBTN();
-    void handleMenuBTN();
+    void handleButtons();
+    void handleKeyboard(sf::Event keyEvent);
+    // Handling methods for each key
+    void handleMoveUp(sf::Event keyEvent);
+    void handleMoveRight(sf::Event keyEvent);
+    void handleMoveDown(sf::Event keyEvent);
+    void handleMoveLeft(sf::Event keyEvent);
+    // Handling methods for each button
+    void handlePlayBTN(play_button& playBTN);
+    void handleShopBTN(shop_button& shopBTN);
+    void handleShowDeckBTN(show_deck_button& deckBTN);
+    void handleApplyBTN(apply_button& applyBTN);
+    void handleShopCards();
+    void handleStartBTN(start_turn_button& startBTN);
+    void handleCancelBTN(cancel_button& cancelBTN);
+    void handleMenuBTN(menu_button& menuBTN);
+    void handleScrollCards();
+    void handleActionCards();
+    void handleDirection();
     // Other methods
     void set_start_vals();
     void new_turn_vals();

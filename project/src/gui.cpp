@@ -164,6 +164,33 @@ void gui::preview(vector<CardID> chosen_actions) {
     }
 }
 
+void gui::handleButtons() {
+    play_button playBTN;
+    handlePlayBTN(playBTN);
+    shop_button shopBTN;
+    handleShopBTN(shopBTN);
+    show_deck_button deckBTN;
+    handleShowDeckBTN(deckBTN);
+    apply_button applyBTN;
+    handleApplyBTN(applyBTN);
+    handleShopCards();
+    start_turn_button startBTN;
+    handleStartBTN(startBTN);
+    cancel_button cancelBTN;
+    handleCancelBTN(cancelBTN);
+    menu_button menuBTN;
+    handleMenuBTN(menuBTN);
+    handleScrollCards();
+    handleActionCards();
+}
+
+void gui::handleKeyboard(sf::Event keyEvent) {
+    handleMoveUp(keyEvent);
+    handleMoveRight(keyEvent);
+    handleMoveDown(keyEvent);
+    handleMoveLeft(keyEvent);
+}
+
 int gui::processEvents() {
     sf::Event event;
     sf::FloatRect visibleArea;
@@ -178,10 +205,25 @@ int gui::processEvents() {
                 window.setView(sf::View(visibleArea));
             }
                 break;
+            case sf::Event::MouseButtonReleased:
+                if (event.mouseButton.button == sf::Mouse::Left) {  // Handling buttons
+                    handleButtons();
+                }
+                break;
+            case sf::Event::KeyReleased:
+                handleKeyboard(event);
+                break;
             default:
                 break;
         }
     }
+    handleDirection();
+    return 0;
+}
+
+// Handling methods
+
+void gui::handleDirection() {
     if (isChooseDirection) {
         card* CurCard = card::create_card(person1->chosen_cards[cardsChoosed - 1], preview_coords.back().first, preview_coords.back().second);
         person1->directions.push_back(CurCard->handleDirection(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second));
@@ -194,217 +236,14 @@ int gui::processEvents() {
         isDrawDirection = false;
         delete CurCard;
     }
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Getting only one tap
-        if (isShopCardsBtn) {
-            for (size_t i = 0; i < shopSprites.size(); i++) {
-                if (sf::IntRect(shopSprites[i].getPosition().x, shopSprites[i].getPosition().y, 80, 180).contains(sf::Mouse::getPosition(window))) {
-                    card* CurCard = card::create_card(shopCards[i]);
-                    if (person1->money >= CurCard->get_cost()) {
-                        person1->deck.push_back(shopCards[i]);
-                        person1->money -= CurCard->get_cost();
-                    }
-                    delete CurCard;
-                }
-            }
-        }
-        if (sf::IntRect(412, 438, 200, 32).contains(sf::Mouse::getPosition(window)) && isDeckBtn) {
-            isDeck = true;
-            isShopBtn = false;
-            isMainMenu = false;
-            isApplyBtn = true;
-            isShopCardsBtn = true;
-            isPlayBtn = false;
-            isDeckBtn = false;
+}
 
-        }
-        if (sf::IntRect(20, 730, 200, 32).contains(sf::Mouse::getPosition(window)) && isApplyBtn) {
-            isShop = false;
-            isMainMenu = true;
-            isApplyBtn = false;
-            isShopBtn = true;
-            isShopCardsBtn = false;
-            isPlayBtn = true;
-            isDeck = false;
-            isDeckBtn = true;
-        }
-        if (sf::IntRect(412, 386, 200, 32).contains(sf::Mouse::getPosition(window)) && isShopBtn) {
-            isShopBtn = false;
-            isShop = true;
-            isMainMenu = false;
-            isApplyBtn = true;
-            isShopCardsBtn = true;
-            isPlayBtn = false;
-            isDeckBtn = false;
-        }
-        if (sf::IntRect(480, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isMenuBtn) {
-            set_start_vals();
-            isActionWindow = false;
-            isMainMenu = true;
-        }
-        if (sf::IntRect(250, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isCancelBtn) {
-            cout << "Cancel" << endl;
-            switch (person1->chosen_actions.back()) {
-                case UP:
-                    creature1->startPoints.pop_back();
-                    person1->chosen_actions.pop_back();
-                    preview_coords.pop_back();
-                    moveChoosed--;
-                    break;
-                case RIGHT:
-                    creature1->startPoints.pop_back();
-                    person1->chosen_actions.pop_back();
-                    preview_coords.pop_back();
-                    moveChoosed--;
-                    break;
-                case DOWN:
-                    creature1->startPoints.pop_back();
-                    person1->chosen_actions.pop_back();
-                    preview_coords.pop_back();
-                    moveChoosed--;
-                    break;
-                case LEFT:
-                    creature1->startPoints.pop_back();
-                    person1->chosen_actions.pop_back();
-                    preview_coords.pop_back();
-                    moveChoosed--;
-                    break;
-                default:
-                    cardsStartPoints.pop_back();
-                    person1->chosen_actions.pop_back();
-                    person1->directions.pop_back();
-                    cardsChoosed--;
-                    break;
-            }
-            if (person1->chosen_actions.size() == 0) {
-                isCancelBtn = false;
-            }
-        }
-        /*
-        if (sf::IntRect(412, 334, 200, 32).contains(sf::Mouse::getPosition(window)) && isPlayBtn) {
-            cout << "Let's Play!" << endl;
-            set_start_vals();
-            isActionWindow = true;
-            isMainMenu = false;
-            isBegBtn = true;
-            isMenuBtn = true;
-            isDeckBtn = false;
-            isPlayBtn = false;
-        }
-        */
-        if (sf::IntRect(20, 670, 200, 32).contains(sf::Mouse::getPosition(window)) && isBegBtn) {
-            cout << "Scroll Up" << endl;
-            scrollUp = true;
-            isBegBtn = false;
-        }
-        if (sf::IntRect(120, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
-            cout << "1 Card" << endl;
-            person1->chosen_cards.push_back(person1->avalible_cards[0]);
-            cardsCounter++;
-            if (cardsCounter == 3) {
-                cout << "Scroll down" << endl;
-                isScrollBtn = false;
-                scrollDown = true;
-                cardsCounter = 0;
-            }
-        }
-        if (sf::IntRect(240, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
-            cout << "2 Card" << endl;
-            person1->chosen_cards.push_back(person1->avalible_cards[1]);
-            cardsCounter++;
-            if (cardsCounter == 3) {
-                cout << "Scroll down" << endl;
-                isScrollBtn = false;
-                scrollDown = true;
-                cardsCounter = 0;
-            }
-        }
-        if (sf::IntRect(360, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
-            cout << "3 Card" << endl;
-            person1->chosen_cards.push_back(person1->avalible_cards[2]);
-            cardsCounter++;
-            if (cardsCounter == 3) {
-                cout << "Scroll down" << endl;
-                isScrollBtn = false;
-                scrollDown = true;
-                cardsCounter = 0;
-            }
-        }
-        if (sf::IntRect(480, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
-            cout << "4 Card" << endl;
-            person1->chosen_cards.push_back(person1->avalible_cards[3]);
-            cardsCounter++;
-            if (cardsCounter == 3) {
-                cout << "Scroll down" << endl;
-                isScrollBtn = false;
-                scrollDown = true;
-                cardsCounter = 0;
-            }
-        }
-        if (sf::IntRect(600, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
-            cout << "5 Card" << endl;
-            person1->chosen_cards.push_back(person1->avalible_cards[4]);
-            cardsCounter++;
-            if (cardsCounter == 3) {
-                cout << "Scroll down" << endl;
-                isScrollBtn = false;
-                scrollDown = true;
-                cardsCounter = 0;
-            }
-        }
-        if (sf::IntRect(670, 20, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
-            cout << "Choosed card 1" << endl;
-            isPreview = true;
-            isDrawDirection = true;
-            isCancelBtn = true;
-            person1->chosen_actions.push_back(person1->chosen_cards[0]);
-            cardsChoosed++;
-            if ((cardsChoosed + moveChoosed) == 6) {
-                cout << "End of choice" << endl;
-                isChoosingOptions = false;
-                isOptions = false;
-                isBattle = true;
-                isNPCPlay = true;
-            }
-        }
-        if (sf::IntRect(670, 210, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
-            cout << "Choosed card 2" << endl;
-            isPreview = true;
-            isDrawDirection = true;
-            isCancelBtn = true;
-            person1->chosen_actions.push_back(person1->chosen_cards[1]);
-            cardsChoosed++;
-            if ((cardsChoosed + moveChoosed) == 6) {
-                isChoosingOptions = false;
-                isOptions = false;
-                isBattle = true;
-                isNPCPlay = true;
-            }
-        }
-        if (sf::IntRect(670, 400, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
-            cout << "Choosed card 3" << endl;
-            isPreview = true;
-            isDrawDirection = true;
-            isCancelBtn = true;
-            person1->chosen_actions.push_back(person1->chosen_cards[2]);
-            cardsChoosed++;
-            cout << cardsChoosed << endl;
-            if ((cardsChoosed + moveChoosed) == 6) {
-                isChoosingOptions = false;
-                isOptions = false;
-                isBattle = true;
-                isNPCPlay = true;
-            }
-        }
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) && isChoosingOptions && moveChoosed < 3) {
-        while (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {}  // Only one tap
+void gui::handleMoveUp(sf::Event keyEvent) {
+    if ((keyEvent.key.code == sf::Keyboard::W) && isChoosingOptions && moveChoosed < 3) {
         cout << "Choosed move up" << endl;
         int new_x = preview_coords.back().first;
         int new_y = preview_coords.back().second - 1;
         preview_coords.push_back(pair<int, int> (new_x, new_y));
-        //cout << "X = " << preview_coords.back().first << endl;
-        cout << "Y = " << preview_coords.back().second << endl;
         creature1->startPoints.push_back(pair<int, int> (preview_coords.back().first, preview_coords.back().second));
         isPreview = true;
         isCancelBtn = true;
@@ -419,8 +258,10 @@ int gui::processEvents() {
             isNPCPlay = true;
         }
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
-        while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {}  // Only one tap
+}
+
+void gui::handleMoveRight(sf::Event keyEvent) {
+    if ((keyEvent.key.code == sf::Keyboard::D) && isChoosingOptions && moveChoosed < 3) {
         cout << "Choosed move right" << endl;
         int new_x = preview_coords.back().first + 1;
         int new_y = preview_coords.back().second;
@@ -439,8 +280,10 @@ int gui::processEvents() {
             isNPCPlay = true;
         }
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) && isChoosingOptions && moveChoosed < 3) {
-        while (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {}  // Only one tap
+}
+
+void gui::handleMoveDown(sf::Event keyEvent) {
+    if ((keyEvent.key.code == sf::Keyboard::S) && isChoosingOptions && moveChoosed < 3) {
         cout << "Choosed move down" << endl;
         int new_x = preview_coords.back().first;
         int new_y = preview_coords.back().second + 1;
@@ -459,8 +302,9 @@ int gui::processEvents() {
             isNPCPlay = true;
         }
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && isChoosingOptions && moveChoosed < 3) {
-        while (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {}  // Only one tap
+}
+void gui::handleMoveLeft(sf::Event keyEvent) {
+    if ((keyEvent.key.code == sf::Keyboard::A) && isChoosingOptions && moveChoosed < 3) {
         cout << "Choosed move left" << endl;
         int new_x = preview_coords.back().first - 1;
         int new_y = preview_coords.back().second;
@@ -479,13 +323,10 @@ int gui::processEvents() {
             isNPCPlay = true;
         }
     }
-    return 0;
 }
 
-// Handling methods
-
-void gui::handlePlayBTN() {
-    if (sf::IntRect(412, 334, 200, 32).contains(sf::Mouse::getPosition(window)) && isPlayBtn) {
+void gui::handlePlayBTN(play_button& playBTN) {
+    if (sf::IntRect(playBTN.x_pos, playBTN.y_pos, playBTN.btnWidth, playBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isPlayBtn) {
         cout << "Let's Play!" << endl;
         set_start_vals();
         isActionWindow = true;
@@ -494,6 +335,220 @@ void gui::handlePlayBTN() {
         isMenuBtn = true;
         isDeckBtn = false;
         isPlayBtn = false;
+    }
+}
+
+void gui::handleShopBTN(shop_button& shopBTN) {
+    if (sf::IntRect(shopBTN.x_pos, shopBTN.y_pos, shopBTN.btnWidth, shopBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isShopBtn) {
+        isShopBtn = false;
+        isShop = true;
+        isMainMenu = false;
+        isApplyBtn = true;
+        isShopCardsBtn = true;
+        isPlayBtn = false;
+        isDeckBtn = false;
+    }
+}
+
+void gui::handleShowDeckBTN(show_deck_button& deckBTN) {
+    if (sf::IntRect(deckBTN.x_pos, deckBTN.y_pos, deckBTN.btnWidth, deckBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isDeckBtn) {
+        isDeck = true;
+        isShopBtn = false;
+        isMainMenu = false;
+        isApplyBtn = true;
+        isShopCardsBtn = true;
+        isPlayBtn = false;
+        isDeckBtn = false;
+    }
+}
+
+void gui::handleApplyBTN(apply_button& applyBTN) {
+    if (sf::IntRect(applyBTN.x_pos, applyBTN.y_pos, applyBTN.btnWidth, applyBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isApplyBtn) {
+        isShop = false;
+        isMainMenu = true;
+        isApplyBtn = false;
+        isShopBtn = true;
+        isShopCardsBtn = false;
+        isPlayBtn = true;
+        isDeck = false;
+        isDeckBtn = true;
+    }
+}
+
+void gui::handleShopCards() {
+    if (isShopCardsBtn) {
+        for (size_t i = 0; i < shopSprites.size(); i++) {
+            if (sf::IntRect(shopSprites[i].getPosition().x, shopSprites[i].getPosition().y, 80, 180).contains(sf::Mouse::getPosition(window))) {
+                card* CurCard = card::create_card(shopCards[i]);
+                if (person1->money >= CurCard->get_cost()) {
+                    person1->deck.push_back(shopCards[i]);
+                    person1->money -= CurCard->get_cost();
+                }
+                delete CurCard;
+            }
+        }
+    }
+}
+
+void gui::handleStartBTN(start_turn_button& startBTN) {
+    if (sf::IntRect(startBTN.x_pos, startBTN.y_pos, startBTN.btnWidth, startBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isBegBtn) {
+        cout << "Scroll Up" << endl;
+        scrollUp = true;
+        isBegBtn = false;
+    }
+}
+
+void gui::handleCancelBTN(cancel_button& cancelBTN) {
+    if (sf::IntRect(cancelBTN.x_pos, cancelBTN.y_pos, cancelBTN.btnWidth, cancelBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isCancelBtn) {
+        cout << "Cancel" << endl;
+        switch (person1->chosen_actions.back()) {
+            case UP:
+                creature1->startPoints.pop_back();
+                person1->chosen_actions.pop_back();
+                preview_coords.pop_back();
+                moveChoosed--;
+                break;
+            case RIGHT:
+                creature1->startPoints.pop_back();
+                person1->chosen_actions.pop_back();
+                preview_coords.pop_back();
+                moveChoosed--;
+                break;
+            case DOWN:
+                creature1->startPoints.pop_back();
+                person1->chosen_actions.pop_back();
+                preview_coords.pop_back();
+                moveChoosed--;
+                break;
+            case LEFT:
+                creature1->startPoints.pop_back();
+                person1->chosen_actions.pop_back();
+                preview_coords.pop_back();
+                moveChoosed--;
+                break;
+            default:
+                cardsStartPoints.pop_back();
+                person1->chosen_actions.pop_back();
+                person1->directions.pop_back();
+                cardsChoosed--;
+                break;
+        }
+        if (person1->chosen_actions.size() == 0) {
+            isCancelBtn = false;
+        }
+    }
+}
+
+void gui::handleMenuBTN(menu_button& menuBTN) {
+    if (sf::IntRect(menuBTN.x_pos, menuBTN.y_pos, menuBTN.btnWidth, menuBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isMenuBtn) {
+        set_start_vals();
+        isActionWindow = false;
+        isMainMenu = true;
+    }
+}
+
+void gui::handleScrollCards() {
+    if (sf::IntRect(120, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+        cout << "1 Card" << endl;
+        person1->chosen_cards.push_back(person1->avalible_cards[0]);
+        cardsCounter++;
+        if (cardsCounter == 3) {
+            cout << "Scroll down" << endl;
+            isScrollBtn = false;
+            scrollDown = true;
+            cardsCounter = 0;
+        }
+    }
+    if (sf::IntRect(240, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+        cout << "2 Card" << endl;
+        person1->chosen_cards.push_back(person1->avalible_cards[1]);
+        cardsCounter++;
+        if (cardsCounter == 3) {
+            cout << "Scroll down" << endl;
+            isScrollBtn = false;
+            scrollDown = true;
+            cardsCounter = 0;
+        }
+    }
+    if (sf::IntRect(360, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+        cout << "3 Card" << endl;
+        person1->chosen_cards.push_back(person1->avalible_cards[2]);
+        cardsCounter++;
+        if (cardsCounter == 3) {
+            cout << "Scroll down" << endl;
+            isScrollBtn = false;
+            scrollDown = true;
+            cardsCounter = 0;
+        }
+    }
+    if (sf::IntRect(480, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+        cout << "4 Card" << endl;
+        person1->chosen_cards.push_back(person1->avalible_cards[3]);
+        cardsCounter++;
+        if (cardsCounter == 3) {
+            cout << "Scroll down" << endl;
+            isScrollBtn = false;
+            scrollDown = true;
+            cardsCounter = 0;
+        }
+    }
+    if (sf::IntRect(600, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+        cout << "5 Card" << endl;
+        person1->chosen_cards.push_back(person1->avalible_cards[4]);
+        cardsCounter++;
+        if (cardsCounter == 3) {
+            cout << "Scroll down" << endl;
+            isScrollBtn = false;
+            scrollDown = true;
+            cardsCounter = 0;
+        }
+    }
+}
+
+void gui::handleActionCards() {
+    if (sf::IntRect(670, 20, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
+        cout << "Choosed card 1" << endl;
+        isPreview = true;
+        isDrawDirection = true;
+        isCancelBtn = true;
+        person1->chosen_actions.push_back(person1->chosen_cards[0]);
+        cardsChoosed++;
+        if ((cardsChoosed + moveChoosed) == 6) {
+            cout << "End of choice" << endl;
+            isChoosingOptions = false;
+            isOptions = false;
+            isBattle = true;
+            isNPCPlay = true;
+        }
+    }
+    if (sf::IntRect(670, 210, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
+        cout << "Choosed card 2" << endl;
+        isPreview = true;
+        isDrawDirection = true;
+        isCancelBtn = true;
+        person1->chosen_actions.push_back(person1->chosen_cards[1]);
+        cardsChoosed++;
+        if ((cardsChoosed + moveChoosed) == 6) {
+            isChoosingOptions = false;
+            isOptions = false;
+            isBattle = true;
+            isNPCPlay = true;
+        }
+    }
+    if (sf::IntRect(670, 400, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
+        cout << "Choosed card 3" << endl;
+        isPreview = true;
+        isDrawDirection = true;
+        isCancelBtn = true;
+        person1->chosen_actions.push_back(person1->chosen_cards[2]);
+        cardsChoosed++;
+        cout << cardsChoosed << endl;
+        if ((cardsChoosed + moveChoosed) == 6) {
+            isChoosingOptions = false;
+            isOptions = false;
+            isBattle = true;
+            isNPCPlay = true;
+        }
     }
 }
 
@@ -636,9 +691,6 @@ int gui::render(game_map& field_back) {
         deckBTN.drawCurrent(window);
         shopBTN.drawCurrent(window);
         playBTN.drawCurrent(window);
-        sf::Vector2f position = playBTN.buttonSprite.getPosition();
-        cout << "Play X = " << position.x << endl;
-        cout << "Play Y = " << position.y << endl;
     }
     if (isActionWindow) {
         battle_map field_front(field_back.get_field());
