@@ -694,7 +694,11 @@ int gui::render(game_map& field_back) {
         shopCards = Shop.shopCards;
     }
     if (isMainMenu) {
-        
+        sf::Texture logoTexture;
+        logoTexture.loadFromFile("images/logo.png");
+        sf::Sprite logoSprite(logoTexture);
+        logoSprite.setPosition(270, 85);
+        window.draw(logoSprite);
         play_button playBTN;
         shop_button shopBTN;
         show_deck_button deckBTN;
