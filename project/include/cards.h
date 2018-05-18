@@ -63,7 +63,7 @@ public:
     virtual void updateSpell(float tick, bool* isMoveSpell, int side) = 0;
     virtual int drawCurrent(sf::RenderTarget& target) = 0;
     virtual void set_action_area(int direction) = 0;
-    virtual int handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y) = 0;
+    virtual int handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y, int xScale, int yScale) = 0;
     virtual void previewSpell(sf::RenderTarget& target, int xcoord, int ycoord) = 0;
     void drawActionArea(sf::RenderTarget& target, SparseMatrix<Game_object> field, int x, int y);
 };
@@ -71,7 +71,7 @@ public:
 class firebolt : public card {
 public:
     void previewSpell(sf::RenderTarget& target, int xcoord, int ycoord);
-    int handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y);
+    int handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y, int xScale, int yScale);
     void set_action_area(int direction);
     void updateSpell(float tick, bool* isMoveSpell, int side);
     int drawCurrent(sf::RenderTarget& target);
@@ -84,7 +84,7 @@ public:
 class spark : public card {
 public:
     void previewSpell(sf::RenderTarget& target, int xcoord, int ycoord);
-    int handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y);
+    int handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y, int xScale, int yScale);
     void set_action_area(int direction);
     void updateSpell(float tick, bool* isMoveSpell, int side);
     int drawCurrent(sf::RenderTarget& target);

@@ -119,23 +119,23 @@ void firebolt::previewSpell(sf::RenderTarget& target, int xcoord, int ycoord) {
     }
 }
 
-int firebolt::handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y) {
+int firebolt::handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y, int xScale, int yScale) {
     while (true) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             while (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {}  // Only one tap
-            if (sf::IntRect(x * 50, (y - 1) * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            if (sf::IntRect(xScale + x * 50, yScale + (y - 1) * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
             field.get(x + 1, (y - 1) + 1) == 0) {  // UP
                 return 0;
             }
-            if (sf::IntRect((x + 1) * 50, y * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            if (sf::IntRect(xScale + (x + 1) * 50, yScale + y * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
             field.get((x + 1) + 1, y + 1) == 0) {  // RIGHT
                 return 1;
             }
-            if (sf::IntRect(x * 50, (y + 1) * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            if (sf::IntRect(xScale + x * 50, yScale + (y + 1) * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
             field.get(x + 1, (y + 1) + 1) == 0) {  // DOWN
                 return 2;
             }
-            if (sf::IntRect((x - 1) * 50, y * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
+            if (sf::IntRect(xScale + (x - 1) * 50, yScale + y * 50, 50, 50).contains(sf::Mouse::getPosition(source)) &&
             field.get((x - 1) + 1, y + 1) == 0) {  // LEFT
                 return 3;
             }
@@ -243,13 +243,13 @@ void spark::previewSpell(sf::RenderTarget& target, int xcoord, int ycoord) {
     }
 }
 
-int spark::handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y) {
+int spark::handleDirection(sf::Window& source, SparseMatrix<Game_object> field, int x, int y, int xScale, int yScale) {
     while (true) {
         sf::Event event;
         while (source.pollEvent(event)) {
             switch (event.type) {
                 case sf::Event::MouseButtonReleased:
-                    if (sf::IntRect(x * 50, y * 50, 50, 50).contains(sf::Mouse::getPosition(source))) {  // UP
+                    if (sf::IntRect(xScale + x * 50, yScale + y * 50, 50, 50).contains(sf::Mouse::getPosition(source))) {  // UP
                         field.get(x + 1, y + 1);  // Dummy
                         return 0;
                     }

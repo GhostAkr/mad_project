@@ -36,7 +36,7 @@ void gui::set_start_vals() {
     bgTexture.loadFromFile("images/background.jpg");
     bgSprite.setTexture(bgTexture);
     person1 = character::create_character(PLAYER, DARKMAGE);
-    person2 = character::create_character(ENEMY, DARKMAGE);
+    person2 = character::create_character(ENEMY, BARDESS);
     person1->create_avalible_cards();
     person2->create_avalible_cards();
     creature1 = creature::create_creature(person1->cr_type, person1->get_xcoord(), person1->get_ycoord());
@@ -131,6 +131,11 @@ field_back(field)
 {
     windowWidth = 1024;
     windowHeight = 768;
+    dxScale = 0;
+    dyScale = 0;
+    view.setCenter(512.0, 384.0);
+    view.setSize(1024.0, 768.0);
+    window.setView(view);
     set_start_vals();
 }
 
@@ -190,6 +195,14 @@ void gui::handleKeyboard(sf::Event keyEvent) {
     handleMoveLeft(keyEvent);
 }
 
+void gui::resize(sf::Event event) {
+    int x = event.size.width;
+    int y = event.size.height;
+    dxScale = (x - 1024) / 2;
+    dyScale = (y - 768) / 2;
+    window.setView(sf::View(window.getView().getCenter(), sf::Vector2f((float)event.size.width, (float)event.size.height)));
+}
+
 int gui::processEvents() {
     sf::Event event;
     sf::FloatRect visibleArea;
@@ -200,8 +213,7 @@ int gui::processEvents() {
                 break;
             case sf::Event::Resized:
             {
-                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-                window.setView(sf::View(visibleArea));
+                resize(event);
             }
                 break;
             case sf::Event::MouseButtonReleased:
@@ -225,7 +237,7 @@ int gui::processEvents() {
 void gui::handleDirection() {
     if (isChooseDirection) {
         card* CurCard = card::create_card(person1->chosen_cards[cardsChoosed - 1], preview_coords.back().first, preview_coords.back().second);
-        person1->directions.push_back(CurCard->handleDirection(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second));
+        person1->directions.push_back(CurCard->handleDirection(window, field_back.get_field(), preview_coords.back().first, preview_coords.back().second, dxScale, dyScale));
         cardsStartPoints.push_back(pair<int, int> (preview_coords.back().first, preview_coords.back().second));
         if ((cardsChoosed + moveChoosed) == 6) {
             isPreview = false;
@@ -325,7 +337,7 @@ void gui::handleMoveLeft(sf::Event keyEvent) {
 }
 
 void gui::handlePlayBTN(play_button& playBTN) {
-    if (sf::IntRect(playBTN.x_pos, playBTN.y_pos, playBTN.btnWidth, playBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isPlayBtn) {
+    if (sf::IntRect(dxScale + playBTN.x_pos, dyScale + playBTN.y_pos, playBTN.btnWidth, playBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isPlayBtn) {
         cout << "Let's Play!" << endl;
         set_start_vals();
         isActionWindow = true;
@@ -338,7 +350,7 @@ void gui::handlePlayBTN(play_button& playBTN) {
 }
 
 void gui::handleShopBTN(shop_button& shopBTN) {
-    if (sf::IntRect(shopBTN.x_pos, shopBTN.y_pos, shopBTN.btnWidth, shopBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isShopBtn) {
+    if (sf::IntRect(dxScale + shopBTN.x_pos, dyScale + shopBTN.y_pos, shopBTN.btnWidth, shopBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isShopBtn) {
         isShopBtn = false;
         isShop = true;
         isMainMenu = false;
@@ -350,7 +362,7 @@ void gui::handleShopBTN(shop_button& shopBTN) {
 }
 
 void gui::handleShowDeckBTN(show_deck_button& deckBTN) {
-    if (sf::IntRect(deckBTN.x_pos, deckBTN.y_pos, deckBTN.btnWidth, deckBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isDeckBtn) {
+    if (sf::IntRect(dxScale + deckBTN.x_pos, dyScale + deckBTN.y_pos, deckBTN.btnWidth, deckBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isDeckBtn) {
         isDeck = true;
         isShopBtn = false;
         isMainMenu = false;
@@ -362,7 +374,7 @@ void gui::handleShowDeckBTN(show_deck_button& deckBTN) {
 }
 
 void gui::handleApplyBTN(apply_button& applyBTN) {
-    if (sf::IntRect(applyBTN.x_pos, applyBTN.y_pos, applyBTN.btnWidth, applyBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isApplyBtn) {
+    if (sf::IntRect(dxScale + applyBTN.x_pos, dyScale + applyBTN.y_pos, applyBTN.btnWidth, applyBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isApplyBtn) {
         isShop = false;
         isMainMenu = true;
         isApplyBtn = false;
@@ -377,7 +389,7 @@ void gui::handleApplyBTN(apply_button& applyBTN) {
 void gui::handleShopCards() {
     if (isShopCardsBtn) {
         for (size_t i = 0; i < shopSprites.size(); i++) {
-            if (sf::IntRect(shopSprites[i].getPosition().x, shopSprites[i].getPosition().y, 80, 180).contains(sf::Mouse::getPosition(window))) {
+            if (sf::IntRect(dxScale + shopSprites[i].getPosition().x, dyScale + shopSprites[i].getPosition().y, 80, 180).contains(sf::Mouse::getPosition(window))) {
                 card* CurCard = card::create_card(shopCards[i]);
                 if (person1->money >= CurCard->get_cost()) {
                     person1->deck.push_back(shopCards[i]);
@@ -390,7 +402,7 @@ void gui::handleShopCards() {
 }
 
 void gui::handleStartBTN(start_turn_button& startBTN) {
-    if (sf::IntRect(startBTN.x_pos, startBTN.y_pos, startBTN.btnWidth, startBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isBegBtn) {
+    if (sf::IntRect(dxScale + startBTN.x_pos, dyScale + startBTN.y_pos, startBTN.btnWidth, startBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isBegBtn) {
         cout << "Scroll Up" << endl;
         scrollUp = true;
         isBegBtn = false;
@@ -398,7 +410,7 @@ void gui::handleStartBTN(start_turn_button& startBTN) {
 }
 
 void gui::handleCancelBTN(cancel_button& cancelBTN) {
-    if (sf::IntRect(cancelBTN.x_pos, cancelBTN.y_pos, cancelBTN.btnWidth, cancelBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isCancelBtn) {
+    if (sf::IntRect(dxScale + cancelBTN.x_pos, dyScale + cancelBTN.y_pos, cancelBTN.btnWidth, cancelBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isCancelBtn) {
         cout << "Cancel" << endl;
         switch (person1->chosen_actions.back()) {
             case UP:
@@ -439,7 +451,7 @@ void gui::handleCancelBTN(cancel_button& cancelBTN) {
 }
 
 void gui::handleMenuBTN(menu_button& menuBTN) {
-    if (sf::IntRect(menuBTN.x_pos, menuBTN.y_pos, menuBTN.btnWidth, menuBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isMenuBtn) {
+    if (sf::IntRect(dxScale + menuBTN.x_pos, dyScale + menuBTN.y_pos, menuBTN.btnWidth, menuBTN.btnHeight).contains(sf::Mouse::getPosition(window)) && isMenuBtn) {
         set_start_vals();
         isActionWindow = false;
         isMainMenu = true;
@@ -447,7 +459,7 @@ void gui::handleMenuBTN(menu_button& menuBTN) {
 }
 
 void gui::handleScrollCards() {
-    if (sf::IntRect(120, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+    if (sf::IntRect(dxScale + 120, dyScale + Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
         cout << "1 Card" << endl;
         person1->chosen_cards.push_back(person1->avalible_cards[0]);
         cardsCounter++;
@@ -458,7 +470,7 @@ void gui::handleScrollCards() {
             cardsCounter = 0;
         }
     }
-    if (sf::IntRect(240, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+    if (sf::IntRect(dxScale + 240, dyScale + Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
         cout << "2 Card" << endl;
         person1->chosen_cards.push_back(person1->avalible_cards[1]);
         cardsCounter++;
@@ -469,7 +481,7 @@ void gui::handleScrollCards() {
             cardsCounter = 0;
         }
     }
-    if (sf::IntRect(360, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+    if (sf::IntRect(dxScale + 360, dyScale + Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
         cout << "3 Card" << endl;
         person1->chosen_cards.push_back(person1->avalible_cards[2]);
         cardsCounter++;
@@ -480,7 +492,7 @@ void gui::handleScrollCards() {
             cardsCounter = 0;
         }
     }
-    if (sf::IntRect(480, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+    if (sf::IntRect(dxScale + 480, dyScale + Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
         cout << "4 Card" << endl;
         person1->chosen_cards.push_back(person1->avalible_cards[3]);
         cardsCounter++;
@@ -491,7 +503,7 @@ void gui::handleScrollCards() {
             cardsCounter = 0;
         }
     }
-    if (sf::IntRect(600, Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
+    if (sf::IntRect(dxScale + 600, dyScale + Scroll.get_y_pos() + 165, 80, 180).contains(sf::Mouse::getPosition(window)) && isScrollBtn) {
         cout << "5 Card" << endl;
         person1->chosen_cards.push_back(person1->avalible_cards[4]);
         cardsCounter++;
@@ -505,7 +517,7 @@ void gui::handleScrollCards() {
 }
 
 void gui::handleActionCards() {
-    if (sf::IntRect(670, 20, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
+    if (sf::IntRect(dxScale + 670, dyScale + 20, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
         cout << "Choosed card 1" << endl;
         isPreview = true;
         isDrawDirection = true;
@@ -519,7 +531,7 @@ void gui::handleActionCards() {
             isNPCPlay = true;
         }
     }
-    if (sf::IntRect(670, 210, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
+    if (sf::IntRect(dxScale + 670, dyScale + 210, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
         cout << "Choosed card 2" << endl;
         isPreview = true;
         isDrawDirection = true;
@@ -533,7 +545,7 @@ void gui::handleActionCards() {
             isNPCPlay = true;
         }
     }
-    if (sf::IntRect(670, 400, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
+    if (sf::IntRect(dxScale + 670, dyScale + 400, 80, 180).contains(sf::Mouse::getPosition(window)) && isChoosingOptions && cardsChoosed < 3) {
         cout << "Choosed card 3" << endl;
         isPreview = true;
         isDrawDirection = true;
@@ -564,7 +576,7 @@ int gui::update(sf::Time tick) {
     if (scrollDown) {
         movementScrollDown.y += ScrollSpeed;
         Scroll.set_coords(0, movementScrollDown.y * tick.asMicroseconds());
-        if (Scroll.get_y_pos() > 768) {
+        if (Scroll.get_y_pos() > 1000) {
             scrollDown = false;
             isOptions = true;
         }
@@ -682,6 +694,7 @@ int gui::render(game_map& field_back) {
         shopCards = Shop.shopCards;
     }
     if (isMainMenu) {
+        
         play_button playBTN;
         shop_button shopBTN;
         show_deck_button deckBTN;

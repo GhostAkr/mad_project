@@ -159,12 +159,14 @@ public:
 
 class gui {
 private:
+    int dxScale, dyScale;
     int processEvents();
     int update(sf::Time tick);
     int render(game_map& field_back);
     sf::RenderWindow window;
     sf::Texture bgTexture;  // Background
     sf::Sprite bgSprite;
+    sf::View view;
     // Window specs
     int windowWidth;
     int windowHeight;
@@ -252,6 +254,7 @@ public:
     int set_cardNums (character* person, int num);
     void play(battle& fight);
     void preview(vector<CardID> chosen_actions);
+    void resize(sf::Event event);
 };
 
 #endif  // PROJECT_INCLUDE_GUI_H_
